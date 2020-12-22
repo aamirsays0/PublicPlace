@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Post;
+use App\Picture;
+use App\Friend;
+use App\Custom\FriendsList;
+use App\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+class HomeController extends Controller
+{
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function index()
+    {
+/*         $allpost = Post::with(['user','pictures'])->get();
+ */       
+    //Latest post Showing
+        $id = Auth::id();
+        $friendreq = Friend::with('user')
+                ->where("friend_id",$id)
+                 ->where('approved','0')->get();
+    
+                //dd($friends);
+                
+            /* $friends = Friend::with(['user','friendInfo'])
+               ->where('approved','1')
+               ->where('blocked','0')
+               ->where("friend_id",$id)
+               ->orWhere("user_id",$id)
+               ->get();
+              $friendsList =array($id);
+               foreach($friends as $friend){
+                   if($friend->user_id == $id){
+                       $friendsList[]= $friend->friend_id;
+                   }
+                   else{
+                       $friendsList[] = $friend->user_id;
+                   }
+               }
+               //dd($friends);
+               $friendsList = FriendsList::Friends($id);
+               //dd($friendsList);
+              */
+              $allFriends = FriendsList::Friends($id);
+              //dd($allFriends);
+              $friends = User::with('profiles')
+               ->whereIn('id',$allFriends)
+                ->get();
+                //dd($friends->count());
+           $allpost = Post::with(['user','pictures','comments.user', 'reactions'])
+           ->whereIn('user_id',$allFriends)
+           ->whereIn('privacy', ['public', 'friends'])
+           ->orderBy('created_at', 'desc')
+ //          ->skip(0)
+   //        ->take(10)
+     //      ->get();
+           ->paginate(10);
+           $sentRequest = FriendsList::Friends(Auth::id());
+           //dd($allpost); 
+        //return view('home', compact('allpost'));
+        return view('home')
+        ->with('posts', $allpost)
+        ->with('requests', $friendreq)
+        ->with('friends', $friends)->with('req', $sentRequest);
+
+    }
+}
