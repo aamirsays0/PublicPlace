@@ -17,6 +17,7 @@
 		<link rel="stylesheet" href="{{asset('css/style.css')}}">
 		<link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
+    <link rel="stylesheet" href="{{asset('css/lightbox.min.css')}}" />
     <link rel="stylesheet" href="{{asset('css/headerNewStyles.css')}}"/>
     
     <!--Google Font-->
@@ -35,52 +36,46 @@
       <!-- Timeline
       ================================================= -->
       <div class="timeline">
-        <div class="timeline-cover" style="background-image: url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ')">
-
+        <div class="timeline-cover" style="background-image: url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ')" data-lightbox="cp">
+        <div id="showcpbtncontainer">
+         <span><i class ="fa fa-expand text-dark"></i></span>
+        </div>
           <!--Timeline Menu for Large Screens-->
           <div class="timeline-nav-bar hidden-sm hidden-xs">
             <div class="row">
               <div class="col-md-3">
                 <div class="profile-info">
+                <a href="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" data-lightbox="pp">
                   <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="img-responsive profile-photo">
-                  <h3>{{Auth::user()->name}}</h3>
-                  <p class="text-muted">Creative Director</p>
+                  <h4>{{isset($userinfo->profiles->f_name , $userinfo->profiles->l_name) ? $userinfo->profiles->f_name.' '.$userinfo->profiles->l_name : $userinfo->name}}</h4>
                 </div>
               </div>
               <div class="col-md-9">
                 <ul class="list-inline profile-menu">
-                  <li><a href="timeline.html">Timeline</a></li>
-                  <li><a href="timeline-about.html" class="active">About</a></li>
+                  <li><a href="{{url('profiles/'.$userinfo->id)}}">Timeline</a></li>
+                  <li><a href="timeline-about.html">About</a></li>
                   <li><a href="timeline-album.html">Album</a></li>
-                  <li><a href="timeline-friends.html">Friends</a></li>
-                </ul>
-                <ul class="follow-me list-inline">
-                  <li>1,299 people following her</li>
-                  <li><button class="btn-primary">Add Friend</button></li>
+                  <li><a href="{{url('friends/'.$userinfo->id)}}">Friends</a></li>
                 </ul>
               </div>
             </div>
           </div><!--Timeline Menu for Large Screens End-->
 
-          <!--Timeline Menu for Small Screens-->
-          <div class="navbar-mobile hidden-lg hidden-md">
-            <div class="profile-info">
-              <img src="images/users/user-1.jpg" alt="" class="img-responsive profile-photo">
-              <h4>Sarah Cruiz</h4>
-              <p class="text-muted">Creative Director</p>
-            </div>
-            <div class="mobile-menu">
-              <ul class="list-inline">
-                <li><a href="timline.html">Timeline</a></li>
-                <li><a href="timeline-about.html" class="active">About</a></li>
-                <li><a href="timeline-album.html">Album</a></li>
-                <li><a href="timeline-friends.html">Friends</a></li>
-              </ul>
-              <button class="btn-primary">Add Friend</button>
-            </div>
-          </div><!--Timeline Menu for Small Screens End-->
-
         </div>
+    <div id="cpmodal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+           <img class="img-fluid" id="modal_image_container" src="" alt="">
+         </div>
+     </div>
+  </div>
+</div>
         <div id="page-contents">
           <div class="row">
             <div class="col-md-3">
@@ -98,8 +93,18 @@
               <!-- Edit Work and Education
               ================================================= -->
               <div class="edit-profile-container">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <div class="block-title">
-                  <h4 class="grey d-inline"><i class="icon ion-ios-book-outline"></i>My education</h4>
+                  <h4 class="grey d-inline"><i class="icon ion-ios-book-outline"></i> My education</h4>
                   <button class="btn btn-primary pull-right" id="edu_toggle_btn">+</button>
                   <div class="line"></div>
                   <div class="line"></div></div>
@@ -168,23 +173,30 @@
      <th>Session</th>
      <th>Level</th>
      <th>Major</th>
-     <th>Desc</th>
      <th>Action</th>
      </tr>
      @forelse($userinfo->education as $education)
       <tr>
-        <td>{{$loop->index}}</td>
+        <td>{{$loop->iteration}}</td>
         <td>{{$education->institute}}</td>
         <td>{{$education->sess}}</td>
         <td>{{$education->level}}</td>
         <td>{{$education->major}}</td>
-        <td>{{$education->description}}</td>
+        <td>{{$education->graduate}}</td>
         <td><a href="#"><span class="fa fa-edit"></span> </a>
-        <a href="#"><span class="fa fa-trash"></span></a></td>
+            @if (Auth::check())
+                    @if(count((array) $userinfo->education) > 0)
+                    @if($education->user->id == Auth::user()->id)
+                    {!! Form::open(['url' => 'deleteEducation/'.$education->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
+                    <button title="Delete info" class="fa fa-trash" onclick="return confirm('are sure you want to delete this info?')"></button>
+                    {!! Form::close() !!}
+                    @endif
+                    @endif
+                   @endif</td>
       </tr>
 
      @empty
-      <tr><td><h3>No info found. Add some education info</h3></td></tr>
+      <tr><td><h5>No info found. Add some education info</h5></td></tr>
       
      @endforelse
      </table>
@@ -193,16 +205,16 @@
    </div>
     <div class="block-title">
 
-                  <h4 class="grey d-inline"><i class="icon ion-ios-briefcase-outline"></i>Work Experiences</h4>
+                  <h4 class="grey d-inline"><i class="icon ion-ios-briefcase-outline"></i> Work Experiences</h4>
                   <button class="btn btn-primary pull-right" id="work_toggle_btn">+</button>
                   <div class="line"></div>
                   <div class="line"></div>
                   
          </div>
          
-         <div id="work_form_container">
+    <div id="work_form_container">
 
-   <div class="edit-block">
+           <div class="edit-block">
                           {!! Form::open([
                          'url' => 'work',
                               'class'=>'form'
@@ -251,8 +263,8 @@
                     {!! Form::close() !!}
                 </div>
                </div>
-               <div class="workrecord_container">
-               <div id="work_form_container">
+<div class="workrecord_container">
+  <div id="work_form_container">
    <table class="table table-bordered">
      <tr>
      <th>#</th>
@@ -261,143 +273,63 @@
      <th>From</th>
      <th>To</th>
      <th>City/Town</th>
-     <th>Desc</th>
      <th>Action</th>
      </tr>
      @forelse($userinfo->works as $works)
       <tr>
-        <td>{{$loop->index}}</td>
+        <td>{{$loop->iteration}}</td>
         <td>{{$works->company}}</td>
         <td>{{$works->designation}}</td>
         <td>{{$works->workfrom}}</td>
         <td>{{$works->workto}}</td>
         <td>{{$works->city}}</td>
-        <td>{{$works->description}}</td>
         <td>{{$works->working}}</td>
         <td><a href="#"><span class="fa fa-edit"></span> </a>
-        <a href="#"><span class="fa fa-trash"></span></a></td>
+        @if (Auth::check())
+                    @if(count((array) $userinfo->works) > 0)
+                    @if($works->user->id == Auth::user()->id)
+                    {!! Form::open(['url' => 'deleteWork/'.$works->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
+                    <button title="Delete info" class="fa fa-trash" onclick="return confirm('are sure you want to delete this info?')"></button>
+                    {!! Form::close() !!}
+                    @endif
+                    @endif
+                   @endif</td>
       </tr>
 
      @empty
-      <tr><td><h3>No info found. Add some education info</h3></td></tr>
-      
+      <h5>No info found. Add some work info</h5>
      @endforelse
      </table>
          </div>
                </div>
             </div>
             </div>
-            <div class="col-md-2 staticactivity" style="width: 224px;">
-
-<div id="sticky-sidebar">
-<h4 class="grey">Your Activity</h4>
- <div class="feed-item"> 
- <div class="live-activity">
-  <?php
-   $olddate = "";
-   $newdate = "";
-   $first = true;
-   $content = "";
-   foreach($allActivity as $singleActivity){
-     $newdate = $singleActivity->created_at->format('Y-m-d');
-     if($first){
-         $olddate = $singleActivity->created_at->format('Y-m-d');
-     }
-     if($olddate === $newdate){
-         if($first == true){
-             $first = false;
-             $content .="<p class='text-muted'>".$newdate."</p>";
-         }
-         $content .= \App\Custom\Activity::getview($singleActivity);
-     }
-     else{
-         $content .="</div>";
-         $content .="<p class='text-muted'>".$newdate."</p>";
-         $content .= \App\Custom\Activity::getview($singleActivity);
-     }
-     $olddate = $newdate;
-   }
-   echo $content."</div>";
-   ?>
-   </div>
-   {{$allActivity->links()}}
-   </div>
-   </div></div>
-   </div>
+            <div class="col-md-2 static">
+          <div id="sticky-sidebar">
+            <h4 class="grey">Your activities</h4>
+            @foreach ($allActivity as $activity)
+              <div class="feed-item">
+                <div class="live-activity">
+                  <p>
+                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link">You {{ $activity->type }}ed on a Post</a>
+                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ $activity->post->user->name }}</a>
+                  </p>
+                  <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
+                </div>
+              </div>
+            @endforeach          
+          </div>
+        </div>   </div>
 
 
     <!-- Footer
     ================================================= -->
-    <footer id="footer">
-      <div class="container">
-      	<div class="row">
-          <div class="footer-wrapper">
-            <div class="col-md-3 col-sm-3">
-              <a href=""><img src="images/logo-black.png" alt="" class="footer-logo"></a>
-              <ul class="list-inline social-icons">
-              	<li><a href="#"><i class="icon ion-social-facebook"></i></a></li>
-              	<li><a href="#"><i class="icon ion-social-twitter"></i></a></li>
-              	<li><a href="#"><i class="icon ion-social-googleplus"></i></a></li>
-              	<li><a href="#"><i class="icon ion-social-pinterest"></i></a></li>
-              	<li><a href="#"><i class="icon ion-social-linkedin"></i></a></li>
-              </ul>
-            </div>
-            <div class="col-md-2 col-sm-2">
-              <h5>For individuals</h5>
-              <ul class="footer-links">
-                <li><a href="">Signup</a></li>
-                <li><a href="">login</a></li>
-                <li><a href="">Explore</a></li>
-                <li><a href="">Finder app</a></li>
-                <li><a href="">Features</a></li>
-                <li><a href="">Language settings</a></li>
-              </ul>
-            </div>
-            <div class="col-md-2 col-sm-2">
-              <h5>For businesses</h5>
-              <ul class="footer-links">
-                <li><a href="">Business signup</a></li>
-                <li><a href="">Business login</a></li>
-                <li><a href="">Benefits</a></li>
-                <li><a href="">Resources</a></li>
-                <li><a href="">Advertise</a></li>
-                <li><a href="">Setup</a></li>
-              </ul>
-            </div>
-            <div class="col-md-2 col-sm-2">
-              <h5>About</h5>
-              <ul class="footer-links">
-                <li><a href="">About us</a></li>
-                <li><a href="">Contact us</a></li>
-                <li><a href="">Privacy Policy</a></li>
-                <li><a href="">Terms</a></li>
-                <li><a href="">Help</a></li>
-              </ul>
-            </div>
-            <div class="col-md-3 col-sm-3">
-              <h5>Contact Us</h5>
-              <ul class="contact">
-                <li><i class="icon ion-ios-telephone-outline"></i>+1 (234) 222 0754</li>
-                <li><i class="icon ion-ios-email-outline"></i>info@thunder-team.com</li>
-                <li><i class="icon ion-ios-location-outline"></i>228 Park Ave S NY, USA</li>
-              </ul>
-            </div>
-          </div>
-      	</div>
-      </div>
-      <div class="copyright">
-        <p>Thunder Team © 2016. All rights reserved</p>
-      </div>
-		</footer>
-      
+    @include('partials.footer')
+  
     <!--preloader-->
     <div id="spinner-wrapper">
       <div class="spinner"></div>
     </div>
-    
-    <!--Buy button-->
-    <a href="https://themeforest.net/cart/add_items?item_ids=18711273&ref=thunder-team" target="_blank" class="btn btn-buy"><span class="italy">Buy with:</span><img src="images/envato_logo.png" alt=""><span class="price">Only $20!</span></a>
-
     <!-- Scripts
     ================================================= -->
     <script src="js/jquery-3.1.1.min.js"></script>
@@ -405,8 +337,16 @@
     <script src="js/jquery.sticky-kit.min.js"></script>
     <script src="js/jquery.scrollbar.min.js"></script>
     <script src="js/script.js"></script>
+    <script src="{{asset('js/lightbox.min.js')}}"></script>
     <script src="http://unpkg.com/ionicons@4.4.2/dist/ionicons.js"></script>
     <script>
+    $(document).ready(function(e){
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+      });
+ 
     $(document).ready(function(){
       $("#edu_form_container").hide();
       $("#edu_toggle_btn").click(function(){
@@ -418,12 +358,21 @@
         $("#work_form_container").toggle(200);
 
       });
-
+        $("#showcpbtncontainer").click(function(){
+          var url = ($(".timeline-cover").css('background-image'));
+          var start_quot = url.indexOf("\"") + 1;
+          var end_quot = url.lastIndexOf("\"");
+          url=(url.substring(start_quot,end_quot));
+          $('#modal_image_container').attr("src",url);
+          $('#cpmodal').modal();
+          //location.reload();
+        });
+      
     }); 
+  }); 
     </script>
 
     
     
   </body>
-<!-- Copied from http://mythemestore.com/friend-finder/edit-profile-work-edu.html by Cyotek WebCopy 1.7.0.600, Thursday, September 5, 2019, 12:34:06 AM -->
 </html>

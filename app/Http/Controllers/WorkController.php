@@ -7,6 +7,7 @@ use App\Work;
 use Illuminate\Http\Request;
 use Illuminate\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
+use Validator;
 class WorkController extends Controller
 {
     /**
@@ -42,6 +43,19 @@ class WorkController extends Controller
      */
     public function store(Request $request)
     {
+        $rules = [
+            'company'   => 'required',
+            'designation'       => 'required',
+            'date'        => 'required',
+            'description' => 'required',
+            'city' => 'required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return back()->with(['errors' => $validator->errors()]);
+        }
         $work_basic = new Work();
         $work_basic->company = $request->company;
         $work_basic->designation = $request->designation;
@@ -54,7 +68,7 @@ class WorkController extends Controller
         //$work_basic->user_id = Auth::id();
         //dd($work_basic->graduate);
    //$work_basic->save(); 
-   User::find(Auth::id())->Work()->save($work_basic);
+   User::find(Auth::id())->works()->save($work_basic);
    if($work_basic->id){
        return back()->with('success','work Updated');
    }
@@ -105,8 +119,11 @@ class WorkController extends Controller
      * @param  \App\works  $works
      * @return \Illuminate\Http\Response
      */
-    public function destroy(works $works)
+    public function deleteWork($id)
     {
-        //
-    }
+        Work::Where('id',$id)->delete();
+
+            return back()->with('success','Work info deleted');
+        
+        }
 }

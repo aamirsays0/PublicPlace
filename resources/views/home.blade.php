@@ -12,18 +12,20 @@
      }
 @endpush
 
-
 @section('sidebar-left')
-        <div class="profile-card" style="background-image: url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ');">
+<div id="sticky-sidebar">
+        <div class="profile-card static" style="background-image: url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ');">
         <div class="form-group w-50" >
-                    @if (file_exists(asset('storage/profile/'.Auth::id().'_profile.jpg')))
+                    @if (file_exists(asset('storage/profile/'.Auth::id().'_profile.jpg')) )
                     <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="profile-photo-md " />
                     @else
                        <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
                     @endif
-             	<h5><a href="{{url('profiles/'.Auth::id())}}" class="text-white">{{Auth::user()->name}}</a></h5>
-            	<a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()-1}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()-1}} Friends</a>
-            </div>              </div>
+             	  <h5><a href="{{url('profiles/'.Auth::id())}}" class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
+            	   <a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()-1}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()-1}} Friends</a>
+            </div>  
+          </div>
+          </div>
 <!--profile card ends-->
         <ul class="nav-news-feed">
 
@@ -31,16 +33,16 @@
               <li><i class="icon ion-ios-people"></i><div><a href="newsfeed-people-nearby.html">People Nearby</a></div></li>
               <li><i class="icon ion-ios-people-outline"></i><div><a href="{{url('friends/'.Auth::id())}}">Friends</a></div></li>
               <li><i class="icon ion-chatboxes"></i><div><a href="{{url('chat')}}">Messages</a></div></li>
-              <li><i class="icon ion-images"></i><div><a href="{{url('image/'.Auth::id())}}">Images</a></div></li>
+              <li><i class="icon ion-images"></i><div><a href="{{url('images/'.Auth::id())}}">Images</a></div></li>
               <li><i class="icon ion-ios-videocam"></i><div><a href="newsfeed-videos.html">Videos</a></div></li>
             </ul><!--news-feed links ends-->
         <div id="friends-block">
-              <div class="ftitle"><a href="{{url('friends/'.Auth::id())}}">Friends</a></div>
+        <a href="{{url('friends/'.Auth::id())}}"><button type="button" class="ftitle">Friends</button></a>
               <hr>
               <ul class="online-users list-inline list-unstyled">
               @forelse($friends as $friend)
                 @if($friend->id != Auth::id())
-                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->id)}}" title="{{$friend->name}}"><img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
+                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->id)}}" title="{{$friend->name}}"><img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="user" class="img-responsive profile-photo" /></a></li>
                  @endif
                  @empty
               <h3>no friends yet, search for new friends</h3>
@@ -49,7 +51,7 @@
               
             </div><!--Friends block ends-->
             <div id="chat-block">
-              <div class="title">Chat online</div>
+            <button class="ctitle">Chat online</button>
               <ul class="online-users list-inline list-unstyled">
                 <li class="list-inline-item"><a href="newsfeed-messages.html" title="Linda Lohan"><img src="images/users/user-2.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
                 <li class="list-inline-item"><a href="newsfeed-messages.html" title="Sophia Lee"><img src="images/users/user-3.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
@@ -66,7 +68,7 @@
 
 @section('content')
      
-         <!-- Post Create Box
+        <!-- Post Create Box
             ================================================= -->
         <div class="row" id="showErrors">
 
@@ -106,12 +108,10 @@
 
                                </li>
                         <li class="list-inline-item"><label for="post-videos" title="Upload videos"><i class="ion-ios-videocam ion-icons-colors"></i></label><input type="file" id="post-videos" class="d-none" name="videos[]" accept="video/MOV, video/mp4" multiple/></li>
-                        <li class="list-inline-item"><a href="#"><i class="ion-map ion-icons-colors"></i></a></li>
                         <li class="list-inline-item">
                           <select id="privacy" class="form-control privacy1">
                             <option value="public">public</option>
                             <option value="friends">friends</option>
-                            <option value="me">Only me</option>
                           </select>
                         </li>
                     </ul>
@@ -152,7 +152,7 @@
                   <div class="user-info">
                     <h5>
 
-                    <a href="{{url('profiles/'.$post->user->id)}}" class="profile-link">{{$post->user->name}}</a> 
+                    <a href="{{url('profiles/'.$post->user->id)}}" class="profile-link">{{$post->user->profiles?$post->user->profiles->f_name.' '.$post->user->profiles->l_name:$post->user->name}}</a> 
                     <span>
                     @if($post->privacy == 'public')
                     <i class ="ion-ios-world"></i>
@@ -161,13 +161,15 @@
                     @endif
                     </span>
                    
-                    @if(in_array($post->user->id,$req))
-                    <span class="pull">Friends</span>
+                    @if(in_array($post->user->id,$req) )
+                      @if (Auth::user()->id !== $post->user->id)
+                        <span class="pull">Friends</span>
+                      @endif
                     @else
-                      @if($friends->where('friend_id', $post->user->id)->where('approved', 0)->first())
+                      @if($friends->where('friend_id', $post->user->id)->where('approved', 0)->where('blocked', 0)->first())
                       <button class="btn pull pending" disabled>Pending</button>
                       @else 
-                      <button class="btn btn-primary pull-right addFrndBtn" data-uid="{{$post->user->id}}">Add Friend</button>
+                      <button class="btn pull addFrndBtn" data-uid="{{$post->user->id}}">Add Friend</button>
                       @endif
                     @endif</h5>
                     <p class="text-muted">Published about {{\Carbon\Carbon::parse($post->created_at)->diffForHumans()}}</p>
@@ -202,17 +204,26 @@
                   }
                   @endphp
                   <div class="reaction">
-                   <a data-postid="{{$post->id}}" data-reaction="l" class="btn text-{{($reactCount ['type']==="l")?"primary":"secondary"}} reactionBtn"><i class="icon ion-thumbsup"></i>{{$reactCount['l']}}</a>
+                    <a data-postid="{{$post->id}}" data-reaction="l" class="btn text-{{($reactCount ['type']==="l")?"primary":"secondary"}} reactionBtn"><i class="icon ion-thumbsup"></i>
+                      <span class="like" >{{$reactCount['l']}}<span>
+                    </a>
                       <!--<a data-postid="{{$post->id}}" data-reaction="l" class="btn text-success reactionBtn"><i class="icon ion-thumbsup"></i>0</a> -->
-                   <a data-postid="{{$post->id}}" data-reaction="d" class="btn text-{{($reactCount ['type']==="d")?"danger":"secondary"}} reactionBtn"><i class="fa fa-thumbs-down"></i>{{$reactCount['d']}}</a>
+                    <a  data-postid="{{$post->id}}" data-reaction="d" class="btn text-{{($reactCount ['type']==="d")?"danger":"secondary"}} reactionBtn"><i class="fa fa-thumbs-down"></i>
+                      <span class="dislike" >{{$reactCount['d']}}<span>
+                    </a>
                       <!--<a data-postid="{{$post->id}}" data-reaction="d" class="btn text-danger reactionBtn"><i class="fa fa-thumbs-down"></i> 0</a> -->
-                   <a data-postid="{{$post->id}}" data-reaction="h" class="btn text-{{($reactCount ['type']==="h")?"success":"secondary"}} reactionBtn"><ion-icon name="heart"></ion-icon>{{$reactCount['h']}}</a>
+                    <a data-postid="{{$post->id}}" data-reaction="h" class="btn text-{{($reactCount ['type']==="h")?"success":"secondary"}} reactionBtn"><ion-icon name="heart"></ion-icon>
+                      <span class="heart" >{{$reactCount['h']}}</span>
+                    </a>
                       <!--<a data-postid="{{$post->id}}" data-reaction="h" class="btn text-success reactionBtn"><ion-icon name="heart"></ion-icon>0</a> -->
-                   <a data-postid="{{$post->id}}" data-reaction="s" class="btn text-{{($reactCount ['type']==="s")?"success":"secondary"}} reactionBtn"><ion-icon name="happy"></ion-icon> {{$reactCount['s']}}</a>
+                    <a  data-postid="{{$post->id}}" data-reaction="s" class="btn text-{{($reactCount ['type']==="s")?"success":"secondary"}} reactionBtn"><ion-icon name="happy"></ion-icon> 
+                      <span class="smiled">{{$reactCount['s']}}</span>
+                    </a>
                        <!--<a data-postid="{{$post->id}}" data-reaction="s" class="btn text-success reactionBtn"><ion-icon name="happy"></ion-icon> 0</a> -->
+                    <a href="{{ route('posts.show', $post->id) }}" class="btn btn-info fa fa-eye"></a>
+
                     @if($post->user_id == Auth::id())
                     {!! Form::open(['url' => 'posts/'.$post->id,'method' => 'delete','class' => 'btn d-inline']) !!}
-                    <a href="{{ route('posts.show', $post->id) }}" class="btn btn-info fa fa-eye"></a>
                     <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this post?')"></button>
 
                     {!! Form::close() !!}                   
@@ -251,18 +262,24 @@
                     
                   </div>
                   <div class="line-divider"></div>
-                  <div class="viewpost"><a href="javascript:void(0)" class="commentToggleBtn">{{$post->comments->count()}} <span><i class="fa fa-comment" style="font-size: 18px;"></i></span></a>
+                  <div class="viewpost"><a href="javascript:void(0)" class="commentToggleBtn">{{$post->comments->count()}} 
+                    <span><i class="fa fa-comment" style="font-size: 18px;"></i></span>
+                  </a>
                   <div class="commentContainer" style="display: none;">
                   @forelse($post->comments as $usercomment)
                     <div class="post-comment">
                     <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
-                    <p><a href="{{url('profiles/'.$usercomment->user->id)}}" class="profile-link">{{$usercomment->user->name}}</a>
+                    <p><a href="{{url('profiles/'.$usercomment->user->id)}}" class="profile-link">{{$usercomment->user->profiles?$usercomment->user->profiles->f_name.' '.$usercomment->user->profiles->l_name:$usercomment->user->name}}</a>
                     <i class="em em-laughing"></i>{{$usercomment->comment}}</p>
-                    @if($usercomment->user_id == Auth::id())
-                    {!! Form::open(['url' => 'posts.delete'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline']) !!}
+                    @if (Auth::check())
+                    @if(count((array) $post->comments) > 0)
+                    @if($usercomment->user->id == Auth::user()->id)
+                    {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
                     <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this comment?')"></button>
                     {!! Form::close() !!}
                     @endif
+                    @endif
+                   @endif
 
                   </div>
                   @empty
@@ -271,6 +288,16 @@
                   </div>
                   <a href="javascript:void(0)" class="postcommentToggleBtn"><span><i class="ion-compose ion-icons-colors" style="font-size: 18px; position:absolute; right:65%; "></i></span></a>
                   <div class="postcommentContainer" style="display: none;">
+                   @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                   @endif
+
                   <div class="post-comment">
                     <img src="{{asset('storage/profile/'.Auth::id().'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
                     {!! Form::open([
@@ -298,13 +325,13 @@
           <div class="suggestions" id="sticky-sidebar">
               <h4 class="grey" style="font-weight: 600;">Friend Requests</h4>
               <hr>
-              @forelse($requests as $request)
+              @forelse($requests as $req)
                <div class="follow-user">
-                <img src="{{asset('storage/profile/'.$request->user_id.'_profile.jpg')}}" alt="" class="profile-photo-sm pull-left" />
+                <img src="{{asset('storage/profile/'.$req->user_id.'_profile.jpg')}}" alt="" class="profile-photo-sm pull-left" />
                 <div>
-                  <h6><a href="timeline.html">{{$request->user->name}}</a></h6>
-                  <a class="confirmBtn text-green" data-uid="{{$request->user_id}}" href="javascript:void(0)">Confirm</a>
-                  <a class="deleteBtn text-danger" href="javascript:void(0)">Delete</a>
+                  <h6><a href="{{url('profiles/'.$req->user->id)}}">{{isset($req->user->profiles->f_name, $req->user->profiles->l_name)? $req->user->profiles->f_name.' '. $req->user->profiles->l_name: $req->user->name}}</a></h6>
+                  <a class="confirmBtn text-green" data-uid="{{$req->user_id}}" href="javascript:void(0)">Confirm</a>
+                  <a class="deleteBtn text-danger" data-uid="{{$req->id}}"  href="javascript:void(0)">Delete</a>
                 </div>
                </div>
               @empty
@@ -332,12 +359,12 @@
    //alert(data.message);
    if (data.type == "post"){
   var template = '<a href="{{url('posts/')}}/'+data.pid+'" class="dropdown-item preview-item"><div class="preview-thumbnail"><div class="preview-icon bg-success"><i class="mdi mdi-alert-circle-outline mx-0"></i>\n' +
-            '</div></div><div class="preview-item-content"><h6 class="preview-subject font-weight-medium text-dark">'+ data.message +'</h6><p class="small-text text-success">\n' +
+            '</div></div><div class="preview-item-content"><h5 class="preview-subject font-weight-medium text-dark">'+ data.message +'</h5><p class="small-text text-success">\n' +
                'Just Now</p></div></a><div class="dropdown-divider"></div>';
               }
   else if(data.type == "reaction"){
     var template = '<a href="{{url('posts/')}}/'+data.pid+'" class="dropdown-item preview-item"><div class="preview-thumbnail"><div class="preview-icon bg-success"><i class="mdi mdi-alert-circle-outline mx-0"></i>\n' +
-            '</div></div><div class="preview-item-content"><h6 class="preview-subject font-weight-medium text-dark">'+ data.message +'</h6><p class="small-text text-success">\n' +
+            '</div></div><div class="preview-item-content"><h5 class="preview-subject font-weight-medium text-dark">'+ data.message +'</h5><p class="small-text text-success">\n' +
                'Just Now</p></div></a><div class="dropdown-divider"></div>';
   }
          
@@ -347,6 +374,7 @@
   $("#noteItemContainer").prepend(template);
  });
 </script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 <script>
     var form_data = new FormData();
  
@@ -458,52 +486,6 @@ $(".post-detail").on("click",".addFrndBtn",function(){
     }
     );
 
-    // $("#postform").validate({
-    //     // Specify validation rules
-    //     rules: {
-    //         contentpost: "required",
-            
-    //     },
-    //     // Specify validation error messages
-    //     messages: {
-    //       contentpost: "Please write something here",
-    //     },
-    //     // Make sure the form is submitted to the destination defined
-    //     // in the "action" attribute of the form when valid
-    //     submitHandler: function(form) {
-    //       // post from here;
-    //       console.log("Validated, or invalid")
-    //       var url = '{{URL::to('/')}}' +"/posts";
-    //         form_data.append("content", $("#contentpost").val());
-    //         form_data.append("privacy", $("#privacy").val());
-
-    //         //alert(url);
-    //         $.ajax({
-    //           method: "POST",
-    //           url:url,
-    //           cache: false,
-    //           contentType: false,
-    //           processData: false,
-    //           data:form_data
-    //         }).done(function(data){
-    //           if(data.success){
-    //             form_data = new FormData();
-    //             storedFiles=[];
-    //             alert(data.message);
-    //             location.reload();
-                
-    //         //RESET FORM AFTER POST
-    //             $('postform').trigger("reset");
-    //             $(".preview").html("");
-    //           }
-    //           //console.log(data);
-    //         }).fail(function(data){
-    //           alert(data.message);
-    //         });
-    //     }
-    // });
-
-
       $("#publishpost").click(function(){
         var url = '{{URL::to('/')}}' +"/posts";
         form_data.append("content", $("#contentpost").val());
@@ -522,7 +504,7 @@ $(".post-detail").on("click",".addFrndBtn",function(){
             form_data = new FormData();
             storedFiles=[];
             location.reload();
-            
+     
         //RESET FORM AFTER POST
             $('postform').trigger("reset");
             $(".preview").html("");
@@ -556,35 +538,64 @@ $(".post-detail").on("click",".addFrndBtn",function(){
              var f= $(this).data('uid');
              var url = '{{URL::to('/')}}' +"/confirmfriend/"+f;
              $.ajax({
-          method: "POST",
-          url:url,
-          cache: false,
-          contentType: false,
-          processData: false,
-          data:{r:Math.random()}
-        }).done(function(data){
-         // console.log(data);
-         // return;
-          if(data.success){
-            alert(data.message);
-            t.parent().parent().remove();
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    alert(data.message);
+                    t.parent().parent().remove();
 
-           // location.reload();
-            
-        //RESET FORM AFTER POST
-            //$('postform').trigger("reset");
-            //$(".preview").html("");
-          }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
-        });
+                  // location.reload();
+                    
+                //RESET FORM AFTER POST
+                    //$('postform').trigger("reset");
+                    //$(".preview").html("");
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
            });
 
 //DELETE FRIEND REQUEST
+          $(".deleteBtn").click(function(e){
+             var t = $(this);
+             e.preventDefault();
+             var f= $(this).data('uid');
+             var url = '{{URL::to('/')}}' +"/deletefriend/"+f;
+             $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    alert(data.message);
+                    t.parent().parent().remove();
 
+                  // location.reload();
+                    
+                //RESET FORM AFTER POST
+                    //$('postform').trigger("reset");
+                    //$(".preview").html("");
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+           });
 //reaction start
-     $("#contentpostContainer").on("click",".reactionBtn", function(){
+$(".reaction").on("click",".reactionBtn", function(){
       var url = '{{URL::to('/')}}' +"/react";
       //alert(url);
        //$postid = $(this).data('postid');
@@ -600,14 +611,55 @@ $.ajax({
           data:{
             'postid': $(this).data('postid'),
             'react': $(this).data('reaction'),
-            r:Math.random()}
-        }).done(function(data){
-         console.log(data);
+            r:Math.random()},
+        success: (data) =>  {
+          console.log($(this).data('postid'), "INSIDE AJHAX")
+        }
+        }
+        ).done((data) => {
+        //  console.log(data);
          // return;
           if(data.success){
             //alert(data.message);
+            $(this).parent().find('.like').html(data.liked);
+            $(this).parent().find('.smiled').html(data.smiled) ;
+            $(this).parent().find('.heart').html(data.loved);
+            $(this).parent().find('.dislike').html(data.disliked)
+            if (data.liked <= 0) {
+              $(this).parent().find('.like').parent().removeClass('text-primary')
+              // $('#like').parent().removeClass('text-primary')
+              $(this).parent().find('.like').parent().addClass('text-secondary')
+            }else {
+              $(this).parent().find('.like').parent().removeClass('text-secondary')
+              $(this).parent().find('.like').parent().addClass('text-primary')
+            }
+            //
+            if (data.smiled <= 0) {
+              $(this).parent().find('.smiled').parent().removeClass('text-primary')
+              $(this).parent().find('.smiled').parent().addClass('text-secondary')
+            }else {
+              $(this).parent().find('.smiled').parent().removeClass('text-secondary')
+              $(this).parent().find('.smiled').parent().addClass('text-primary')
+            }
+            //
+            if (data.loved <= 0) {
+              $(this).parent().find('.heart').parent().removeClass('text-primary')
+              $(this).parent().find('.heart').parent().addClass('text-secondary')
+            }else {
+              $(this).parent().find('.heart').parent().removeClass('text-secondary')
+              $(this).parent().find('.heart').parent().addClass('text-primary')
+            }
+            //
+            if (data.disliked <= 0) {
+              $(this).parent().find('.dislike').parent().removeClass('text-primary')
+              $(this).parent().find('.dislike').parent().addClass('text-secondary')
+            }else {
+              $(this).parent().find('.dislike').parent().removeClass('text-secondary')
+              $(this).parent().find('.dislike').parent().addClass('text-primary')
+            }
 
-            location.reload();
+
+            // location.reload();
             
         //RESET FORM AFTER POST
             //$('postform').trigger("reset");
@@ -621,6 +673,7 @@ $.ajax({
 
      });  
 //reaction ends
+
 //comment container show hide start
           $("#contentpostContainer").on("click",".commentToggleBtn", function(){
             $(this).next(".commentContainer").toggle(250);

@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container1">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
+            <div class="card2" style=" background-color: #044c59; color: #fff;width: 450px;">
                 <div class="card-header">{{ __('Verify Your Email Address') }}</div>
 
                 <div class="card-body">
@@ -15,7 +15,7 @@
                     @endif
 
                     {{ __('Before proceeding, please check your email for a verification link.') }}
-                    {{ __('If you did not receive the email') }}, <a href="{{ route('verification.resend') }}">{{ __('click here to request another') }}</a>.
+                    {{ __('If you did not receive the email') }}, <a href="{{ route('verification.resend') }}" style="color: aqua;">{{ __('click here to request another') }}</a>.
                 </div>
             </div>
         </div>

@@ -66,7 +66,6 @@
                 </div>
             		<div class="col-md-5 col-sm-5">
                   <div class="tools">
-                  
 					 <ul class="publishing-tools list-inline list-unstyled">
                         <li class="list-inline-item"><a href="#"><i class="ion-compose"></i></a></li>
                         <li class="list-inline-item">
@@ -113,6 +112,7 @@
        <div class="scroll">
                    <!-- Media
             ================================================= -->
+
             <div class="media">
             	<div class="row js-masonry" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": ".grid-sizer", "percentPosition": true }'>
                 <div class="grid-sizer col-md-6 col-sm-6"></div>
@@ -127,17 +127,19 @@
                         <a class="btn text-red"><i class="fa fa-thumbs-down"></i> 12</a>
                       </div>
                       <div class="user-info">
-                      @forelse($userimage->pictures as $pic)
+                      @forelse($posts->imgname as $pic)
                     <?php
                     $imageinfo = pathinfo(url('/storage/postimages/'.$pic->imgname));
                     //print_r($imageinfo);
-                    ?>                      <a href="{{url('/storage/postimages/'.$pic->imgname)}}" data-lightbox="imageset-{{$post->id}}">
-                      <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" width="120px">
+                    ?>   @if (Auth::check())
+                       <a href="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" data-lightbox="imageset-{{$post->id}}">
+                      <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" width="120px">
                         <div class="user">
                           <h6><a href="#" class="profile-link">Richard Bell</a></h6>
                           <a class="text-green" href="#">Friend</a>
                         </div>
                       </div>
+                      @endif 
                     </div>
 
                     <!--Popup-->

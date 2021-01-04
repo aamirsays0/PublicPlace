@@ -7,7 +7,7 @@
 @section('sidebar-left')
 <div class="profile-card" style="background-image: url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ');">
           <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="user" class="profile-photo" />
-            	<h5><a href="{{url('profiles/'.Auth::id())}}" class="text-white">{{Auth::user()->name}}</a></h5>
+            	<h5><a href="{{url('profiles/'.Auth::id())}}" class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
             	<a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()-1}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()-1}} Friends</a>
             </div><!--profile card ends-->
         <ul class="nav-news-feed">
@@ -20,7 +20,7 @@
             </ul><!--news-feed links ends-->
             <!--  --><!--Friends block ends-->
             <div id="chat-block">
-              <div class="title">Chat online</div>
+            <button class="ctitle">Chat online</button>
               <ul class="online-users list-inline list-unstyled">
                 <li class="list-inline-item"><a href="newsfeed-messages.html" title="Linda Lohan"><img src="images/users/user-2.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
                 <li class="list-inline-item"><a href="newsfeed-messages.html" title="Sophia Lee"><img src="images/users/user-3.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
@@ -37,53 +37,6 @@
 
 @section('content')
      
-         <!-- Post Create Box
-            ================================================= -->
-        <div class="create-post">
-            <form action="" id="postform">
-            	<div class="row">
-            		<div class="col-md-7 col-sm-7">
-                  <div class="form-group">
-                    <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="profile-photo-md" />
-                    <textarea name="texts" id="contentpost" cols="30" rows="1" class="form-control" placeholder="Write what you wish"></textarea>
-                  </div>
-                 <!-- <div class="form-group">
-                  <label for="post-images" title="Upload Images">
-                  <img src="{{asset('images/envato.png')}}"/>
-                  </label>
-                <input type="file" id="post-images" class="d-none" name="photos[]" accept="image/gif, image/jpeg, image/png" multiple/>
-                  <div class="preview"></div>
-                  </div>-->
-                </div>
-            		<div class="col-md-5 col-sm-5">
-                  <div class="tools">
-                  
-					 <ul class="publishing-tools list-inline list-unstyled">
-                        <li class="list-inline-item"><a href="#"><i class="ion-compose"></i></a></li>
-                        <li class="list-inline-item">
-                        <label for="post-images" title="Upload Images">
-                        <i class="ion-images fa-lg"></i>
-                          </label>
-                           <input type="file" id="post-images" class="d-none" name="photos[]" accept="image/gif, image/jpeg, image/png" multiple/>
-
-                               </li>
-                        <li class="list-inline-item"><a href="#"><i class="ion-ios-videocam"></i></a></li>
-                        <li class="list-inline-item"><a href="#"><i class="ion-map"></i></a></li>
-                        <li class="list-inline-item">
-                        <select id="privacy">
-                        <option value="public">public</option>
-                        <option value="friends">friends</option>
-                        <option value="me">Only me</option>
-
-                        </select>
-                        </li>
-
-                      </ul>
-                    <button type="button" id="publishpost" class="btn btn-primary pull-right">Publish</button>
-                  </div>
-                </div>
-              </div>
-
               <!-- Friend List
               ================================================= -->
 
@@ -92,13 +45,16 @@
                 @forelse($friends as $friend)
                   <div class="col-md-6 col-sm-6">
                     <div class="friend-card">
+                      @if($friend->id !== Auth::id())
                       <img src="{{asset('storage/profile/'.$friend->id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
-                      <div class="card-info">
+                      <div class="card-info" style="position: absolute;">
                         <img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="user" class="profile-photo-lg" />
-                        <div class="friend-info">
+                      <div class="friend-info">
                           <a href="#" class="pull-right text-green">My Friend</a>
-                          <h5><a href="{{url('profiles/'.$friend->id)}}" class="profile-link">{{$friend->profiles?$friend->profiles->f_name.' '.$friend->profiles->l_name : $friend->name}}</a></h5>
+                          <h5><a href="{{url('profiles/'.$friend->id)}}" class="profile-link">
+                          {{$friend->profiles?$friend->profiles->f_name.' '.$friend->profiles->l_name : $friend->name}}</a></h5>
                           <p>{{$friend->email}}</p>
+                          @endif
                         </div>
                       </div>
                     </div>

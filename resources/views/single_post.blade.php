@@ -20,33 +20,22 @@
 <li><i class="icon ion-images"></i><div><a href="{{url('image/'.Auth::id())}}">Images</a></div></li>
 <li><i class="icon ion-ios-videocam"></i><div><a href="newsfeed-videos.html">Videos</a></div></li>
 </ul><!--news-feed links ends-->
-        <div id="friends-block">
-        <div class="ftitle"><a href="{{url('friends/'.Auth::id())}}">Friends</a></div>
+<div id="friends-block">
+        <a href="{{url('friends/'.Auth::id())}}"><button type="button" class="ftitle">Friends</button></a>
               <hr>
-              {{-- <ul class="online-users list-inline list-unstyled">
-              </ul> --}}
-              {{-- <ul>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Sophia Lee"><img src="images/users/user-3.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="John Doe"><img src="images/users/user-4.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Alexis Clark"><img src="images/users/user-5.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="James Carter"><img src="images/users/user-6.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Robert Cook"><img src="images/users/user-7.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Richard Bell"><img src="images/users/user-8.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Anna Young"><img src="images/users/user-9.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Julia Cox"><img src="images/users/user-10.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-              </ul> --}}
               <ul class="online-users list-inline list-unstyled">
-                @forelse($friends as $friend)
-                  @if($friend->id != Auth::id())
-                  <li class="list-inline-item"><a href="{{url('profiles/'.$friend->id)}}" title="{{$friend->name}}"><img src="{{asset('storage/profile/'.$friend->id.'_icon.jpg')}}" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                   @endif
-                   @empty
-                <h3>no friends yet, search for new friends</h3>
-                @endforelse 
-                </ul>
+              @forelse($friends as $friend)
+                @if($friend->id != Auth::id())
+                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->id)}}" title="{{$friend->name}}"><img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="user" class="img-responsive profile-photo" /></a></li>
+                 @endif
+                 @empty
+              <h3>no friends yet, search for new friends</h3>
+              @endforelse 
+              </ul>
+              
             </div><!--Friends block ends-->
             <div id="chat-block">
-              <div class="title">Chat online</div>
+            <button class="ctitle">Chat online</button>
               <ul class="online-users list-inline list-unstyled">
                 <li class="list-inline-item"><a href="newsfeed-messages.html" title="Linda Lohan"><img src="images/users/user-2.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
                 <li class="list-inline-item"><a href="newsfeed-messages.html" title="Sophia Lee"><img src="images/users/user-3.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
@@ -62,7 +51,15 @@
 @endsection
 
 @section('content')
-     
+                  @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
             <!-- Post Content
             ================================================= -->
             <div class="post-content  postid-{{$userpost->id}}">            
@@ -71,7 +68,7 @@
                 <div class="post-detail">
                   <div class="user-info">
                     <h5>
-                    <a href="{{url('profiles/'.Auth::id())}}" class="profile-link">{{$userpost->user->name}}</a> 
+                    <a href="{{url('profiles/'.$userpost->user->id)}}" class="profile-link">{{$userpost->user->profiles?$userpost->user->profiles->f_name.' '.$userpost->user->profiles->l_name :$userpost->user->name}}</a> 
                     <span>
                     @if($userpost->privacy == 'public')
                     <i class ="ion-ios-world"></i>
@@ -119,11 +116,19 @@
                   echo "<span>".$my_reaction.$totalReactions." people reacted</span>";
                   }
                   @endphp
-                  <div class="reaction">
-                   <a data-postid="{{$userpost->id}}" data-reaction="l" class="btn text-{{($reactCount ['type']==="l")?"primary":"secondary"}} reactionBtn"><i class="icon ion-thumbsup"></i>{{$reactCount['l']}}</a>
-                   <a data-postid="{{$userpost->id}}" data-reaction="d" class="btn text-{{($reactCount ['type']==="d")?"danger":"secondary"}} reactionBtn"><i class="fa fa-thumbs-down"></i>{{$reactCount['d']}}</a>
-                   <a data-postid="{{$userpost->id}}" data-reaction="h" class="btn text-{{($reactCount ['type']==="h")?"success":"secondary"}} reactionBtn"><ion-icon name="heart"></ion-icon>{{$reactCount['h']}}</a>
-                   <a data-postid="{{$userpost->id}}" data-reaction="s" class="btn text-{{($reactCount ['type']==="s")?"success":"secondary"}} reactionBtn"><ion-icon name="happy"></ion-icon> {{$reactCount['s']}}</a>
+                  <div class="reaction" id='contentpostContainer'>
+                  <a data-postid="{{$userpost->id}}" data-reaction="l" class="btn text-{{($reactCount ['type']==="l")?"primary":"secondary"}} reactionBtn"><i class="icon ion-thumbsup"></i>
+                      <span class="like" >{{$reactCount['l']}}<span>
+                    </a>
+                    <a  data-postid="{{$userpost->id}}" data-reaction="d" class="btn text-{{($reactCount ['type']==="d")?"danger":"secondary"}} reactionBtn"><i class="fa fa-thumbs-down"></i>
+                      <span class="dislike" >{{$reactCount['d']}}<span>
+                    </a>
+                    <a data-postid="{{$userpost->id}}" data-reaction="h" class="btn text-{{($reactCount ['type']==="h")?"success":"secondary"}} reactionBtn"><ion-icon name="heart"></ion-icon>
+                      <span class="heart" >{{$reactCount['h']}}</span>
+                    </a>
+                    <a  data-postid="{{$userpost->id}}" data-reaction="s" class="btn text-{{($reactCount ['type']==="s")?"success":"secondary"}} reactionBtn"><ion-icon name="happy"></ion-icon> 
+                      <span class="smiled">{{$reactCount['s']}}</span>
+                    </a>
                     @if($userpost->user_id == Auth::id())
                     {!! Form::open(['url' => 'post/'.$userpost->id,'method' => 'delete','class' => 'btn d-inline']) !!}
                     <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this post?')"></button>
@@ -157,12 +162,15 @@
                     <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
                     <p><a href="{{url('profiles/'.$usercomment->user->id)}}" class="profile-link">{{$usercomment->user->name}}</a>
                     <i class="em em-laughing"></i>{{$usercomment->comment}}</p>
-                    @if($usercomment->user_id == Auth::id())
-                    {!! Form::open(['url' => 'posts/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline']) !!}
-                    <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this post?')"></button>
-                    {!! Form::close() !!}
-                    @endif
-
+                    @if (Auth::check())
+                      @if(count((array) $userpost->comments) > 0)
+                       @if($usercomment->user->id == Auth::user()->id)
+                        {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
+                         <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this comment?')"></button>
+                        {!! Form::close() !!}
+                       @endif
+                      @endif
+                     @endif
                   </div>
                   @empty
                   <h5>No comments added yet</hf>
@@ -191,9 +199,22 @@
 @endsection
 
 @section('sidebar-right')
-          <div class="suggestions" id="sticky-sidebar">
-              <h3 class="grey">Friend Requests</h3>
+<div class="suggestions" id="sticky-sidebar">
+              <h4 class="grey" style="font-weight: 600;">Friend Requests</h4>
               <hr>
+              @forelse($requests as $request)
+               <div class="follow-user">
+                <img src="{{asset('storage/profile/'.$request->user_id.'_profile.jpg')}}" alt="" class="profile-photo-sm pull-left" />
+                <div>
+                  <h6><a href="timeline.html">{{$request->user->name}}</a></h6>
+                  <a class="confirmBtn text-green" data-uid="{{$request->user_id}}" href="javascript:void(0)">Confirm</a>
+                  <a class="deleteBtn text-danger" href="javascript:void(0)">Delete</a>
+                </div>
+               </div>
+              @empty
+              <h5>No Friend Requests</h5>
+              @endforelse
+             
              </div>
 @endsection
 
@@ -369,7 +390,7 @@ $(".post-detail").on("click",".addFrndBtn",function(){
 //DELETE FRIEND REQUEST
 
 //reaction start
-     $("#contentpostContainer").on("click",".reactionBtn", function(){
+     $(".reaction").on("click",".reactionBtn", function(){
       var url = '{{URL::to('/')}}' +"/react";
       //alert(url);
        //$postid = $(this).data('postid');
@@ -385,14 +406,55 @@ $.ajax({
           data:{
             'postid': $(this).data('postid'),
             'react': $(this).data('reaction'),
-            r:Math.random()}
-        }).done(function(data){
-         console.log(data);
+            r:Math.random()},
+        success: (data) =>  {
+          console.log($(this).data('postid'), "INSIDE AJHAX")
+        }
+        }
+        ).done((data) => {
+        //  console.log(data);
          // return;
           if(data.success){
             //alert(data.message);
+            $(this).parent().find('.like').html(data.liked);
+            $(this).parent().find('.smiled').html(data.smiled) ;
+            $(this).parent().find('.heart').html(data.loved);
+            $(this).parent().find('.dislike').html(data.disliked)
+            if (data.liked <= 0) {
+              $(this).parent().find('.like').parent().removeClass('text-primary')
+              // $('#like').parent().removeClass('text-primary')
+              $(this).parent().find('.like').parent().addClass('text-secondary')
+            }else {
+              $(this).parent().find('.like').parent().removeClass('text-secondary')
+              $(this).parent().find('.like').parent().addClass('text-primary')
+            }
+            //
+            if (data.smiled <= 0) {
+              $(this).parent().find('.smiled').parent().removeClass('text-primary')
+              $(this).parent().find('.smiled').parent().addClass('text-secondary')
+            }else {
+              $(this).parent().find('.smiled').parent().removeClass('text-secondary')
+              $(this).parent().find('.smiled').parent().addClass('text-primary')
+            }
+            //
+            if (data.loved <= 0) {
+              $(this).parent().find('.heart').parent().removeClass('text-primary')
+              $(this).parent().find('.heart').parent().addClass('text-secondary')
+            }else {
+              $(this).parent().find('.heart').parent().removeClass('text-secondary')
+              $(this).parent().find('.heart').parent().addClass('text-primary')
+            }
+            //
+            if (data.disliked <= 0) {
+              $(this).parent().find('.dislike').parent().removeClass('text-primary')
+              $(this).parent().find('.dislike').parent().addClass('text-secondary')
+            }else {
+              $(this).parent().find('.dislike').parent().removeClass('text-secondary')
+              $(this).parent().find('.dislike').parent().addClass('text-primary')
+            }
 
-            location.reload();
+
+            // location.reload();
             
         //RESET FORM AFTER POST
             //$('postform').trigger("reset");
@@ -403,7 +465,6 @@ $.ajax({
           alert(data.message);
         });
  //ajax end
-
      });  
 //reaction ends
 //comment container show hide start

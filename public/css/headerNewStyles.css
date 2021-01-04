@@ -30,18 +30,64 @@ input[type=file]{
   text-align: center;
 }
 .ftitle{
-  background: #8dc63f;
+  background: #044c59;
   padding: 5px 20px;
   width: 70%;
   height: 30px;
   border-radius: 15px;
   position: relative;
-  margin: 0 auto 20px;
-  color: #fff;
   font-size: 14px;
   font-weight: 600;
-}
+  
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-top-width: 0px;
+  border-bottom-width: 0px;
 
+}
+a .ftitle{
+  color: #fff;
+}
+.ftitle:hover {background-color: #0d95ad;}
+a .ftitle:hover{
+
+  color: #fff;
+}
+.ftitle:active {
+  background-color: #0d95ad;
+  box-shadow: 0 1px #666;
+  transform: translateY(0.5px);
+}
+/* CHAT BLOCK START */
+.ctitle{
+  background: #044c59;
+  padding: 5px 20px;
+  width: 70%;
+  height: 30px;
+  border-radius: 15px;
+  position: relative;
+  font-size: 14px;
+  font-weight: 600;
+  
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-top-width: 0px;
+  border-bottom-width: 0px;
+
+}
+.ctitle{
+  color: #fff;
+}
+.ctitle:hover {background-color: #0d95ad;}
+.ctitle:hover{
+
+  color: #fff;
+}
+.ctitle:active {
+  background-color: #0d95ad;
+  box-shadow: 0 1px #666;
+  transform: translateY(0.5px);
+}
 
 .card{
   position: relative;
@@ -67,13 +113,8 @@ input[type=file]{
     flex: 1 1 auto;
     padding: 1.25rem;
 }
-.drop {
-  left: -90px;
-  width: 250px;
-  background: #044c59;
-  
-}
-.drop a p{
+
+div.dropdown-menu a p{
   color: #ffffff;
   
 }

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Custom\Activity as AC;
 use Carbon\Carbon;
 use App\User;
+use App\Friend;
 use App\Custom\FriendsList;
 class ActivityController extends Controller
 {
@@ -20,6 +21,13 @@ class ActivityController extends Controller
      */
     public function index()
     {
+        $id = Auth::id();
+        $friendreq = Friend::with('user')
+                ->where("friend_id",$id)
+                 ->where('approved','0')
+                 ->where('blocked', '0')
+                 ->get();
+    
         $allFriends = FriendsList::Friends(Auth::id());
 
         $friends = User::with('profiles')
@@ -27,7 +35,7 @@ class ActivityController extends Controller
          ->get();
         $allActivity = Activity::with('post.user')->where('user_id',Auth::id())->orderBy('created_at','desc')->simplePaginate(15);
     //    dd($allActivity);
-       return view ('activity')->with('allActivity',$allActivity)->with ('friends', $friends) ;
+       return view ('activity')->with('allActivity',$allActivity)->with ('friends', $friends)->with ('requests', $friendreq) ;
     }
 
     /**

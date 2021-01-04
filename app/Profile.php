@@ -9,7 +9,7 @@ class Profile extends Model
     protected $fillable = [
         'f_name','l_name', 'u_mail','dob', 'sex', 'city', 'country', 'user_id', 'pp', 'cp'
     ];
-    public function profiles(){
+    public function user(){
         return $this->belongsTo('App\User');
     }
 }

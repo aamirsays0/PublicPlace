@@ -49,29 +49,15 @@
                 <a href="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" data-lightbox="pp">
                 <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt="" class="img-fluid profile-photo"/>
                  </a>
-                  <h3>{{Auth::user()->name}}</h3>
-                  <p class="text-muted">Creative Director</p>
+                  <h4>{{isset($user->profiles->f_name , $user->profiles->l_name) ? $user->profiles->f_name.' '.$user->profiles->l_name : $user->name}}</h4>
                 </div>
               </div>
               <div class="col-md-9">
                 <ul class="list-inline profile-menu">
-                  <li><a href="timeline.html" class="active">Timeline</a></li>
+                  <li><a href="{{url('profiles/'.$user->id)}}" class="active">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
                   <li><a href="timeline-album.html">Album</a></li>
-                  <li><a href="timeline-friends.html">Friends</a></li>
-                </ul>
-]                <ul class="follow-me list-inline">
-                  <li title="{{$friends->count()-1}} Friends">{{$friends->count()-1}} Friends</li>
-                  <li><div class="col-md-3 col-sm-3">
-                    @if($user->id && $req)
-                    @else
-                    <button class="btn btn-primary pull-right addFrndBtn" data-uid="{{$user->id}}">Add Friend</button>
-
-                    @endif
-
-                  </div>
-
-</li>
+                  <li><a href="{{url('friends/'.$user->id)}}">Friends</a></li>
                 </ul>
                 
               </div>
@@ -126,25 +112,19 @@
               <h3>{{$message}}</h3>
               </div>
               @endif
+            
 <!-- tabs start-->
-<h2>{{Auth::user()->name}} Timeline</h2>
+<h3>{{isset($user->profiles->f_name , $user->profiles->l_name) ? $user->profiles->f_name.' '.$user->profiles->l_name : $user->name}} Timeline</h3>
   <br>
-  <!-- Nav tabs -->
-  <ul class="nav nav-tabs" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link active" data-toggle="tab" href="#home">Posts</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#menu1">menu1</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#menu2">Menu 2</a>
-    </li>
-  </ul>
-
-  <!-- Tab panes -->
-  <div class="tab-content">
-    <div id="posts" class="tab-content tab-pane active"><br>
+                  @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
     <div class="scroll">
 
        @forelse($user->posts as $userpost)
@@ -160,7 +140,7 @@
                 <div class="post-detail">
                   <div class="user-info">
                     <h5>
-                    <a href="{{$userpost->user->id}}" class="profile-link">{{$user->profile?$user->profile->f_name.' '.$user->profile->l_name:$user->name}}</a> 
+                    <a href="{{$userpost->user->id}}" class="profile-link">{{$user->profiles?$user->profiles->f_name.' '.$user->profiles->l_name:$user->name}}</a> 
                     <span>
                     @if($userpost->privacy == 'public')
                     <i class ="ion-ios-world"></i>
@@ -201,17 +181,22 @@
                   }
                   @endphp
                   <div class="reaction" id='contentpostContainer'>
-                   <a data-postid="{{$userpost->id}}" data-reaction="l" class="btn text-{{($reactCount ['type']==="l")?"primary":"secondary"}} reactionBtn"><i class="icon ion-thumbsup"></i>{{$reactCount['l']}}</a>
-                      <!--<a data-postid="{{$userpost->id}}" data-reaction="l" class="btn text-success reactionBtn"><i class="icon ion-thumbsup"></i>0</a> -->
-                   <a data-postid="{{$userpost->id}}" data-reaction="d" class="btn text-{{($reactCount ['type']==="d")?"danger":"secondary"}} reactionBtn"><i class="fa fa-thumbs-down"></i>{{$reactCount['d']}}</a>
-                      <!--<a data-postid="{{$userpost->id}}" data-reaction="d" class="btn text-danger reactionBtn"><i class="fa fa-thumbs-down"></i> 0</a> -->
-                   <a data-postid="{{$userpost->id}}" data-reaction="h" class="btn text-{{($reactCount ['type']==="h")?"success":"secondary"}} reactionBtn"><ion-icon name="heart"></ion-icon>{{$reactCount['h']}}</a>
-                      <!--<a data-postid="{{$userpost->id}}" data-reaction="h" class="btn text-success reactionBtn"><ion-icon name="heart"></ion-icon>0</a> -->
-                   <a data-postid="{{$userpost->id}}" data-reaction="s" class="btn text-{{($reactCount ['type']==="s")?"success":"secondary"}} reactionBtn"><ion-icon name="happy"></ion-icon> {{$reactCount['s']}}</a>
-                       <!--<a data-postid="{{$userpost->id}}" data-reaction="s" class="btn text-success reactionBtn"><ion-icon name="happy"></ion-icon> 0</a> -->
+                  <a data-postid="{{$userpost->id}}" data-reaction="l" class="btn text-{{($reactCount ['type']==="l")?"primary":"secondary"}} reactionBtn"><i class="icon ion-thumbsup"></i>
+                      <span class="like" >{{$reactCount['l']}}<span>
+                    </a>
+                    <a  data-postid="{{$userpost->id}}" data-reaction="d" class="btn text-{{($reactCount ['type']==="d")?"danger":"secondary"}} reactionBtn"><i class="fa fa-thumbs-down"></i>
+                      <span class="dislike" >{{$reactCount['d']}}<span>
+                    </a>
+                    <a data-postid="{{$userpost->id}}" data-reaction="h" class="btn text-{{($reactCount ['type']==="h")?"success":"secondary"}} reactionBtn"><ion-icon name="heart"></ion-icon>
+                      <span class="heart" >{{$reactCount['h']}}</span>
+                    </a>
+                    <a  data-postid="{{$userpost->id}}" data-reaction="s" class="btn text-{{($reactCount ['type']==="s")?"success":"secondary"}} reactionBtn"><ion-icon name="happy"></ion-icon> 
+                      <span class="smiled">{{$reactCount['s']}}</span>
+                    </a>
+                    <a href="{{ route('posts.show', $userpost->id) }}" class="btn btn-info fa fa-eye"></a>
+
                     @if($userpost->user_id == Auth::id())
                     {!! Form::open(['url' => 'posts/'.$userpost->id,'method' => 'delete','class' => 'btn d-inline']) !!}
-                    <a href="{{ route('posts.show', $userpost->id) }}" class="btn btn-info fa fa-eye"></a>
                     <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this post?')"></button>
                     {!! Form::close() !!}                   
                     <!-- DELETE ICON -->
@@ -240,11 +225,29 @@
                   <div class="line-divider"></div>
                   <div class="viewpost"><a href="javascript:void(0)" class="commentToggleBtn">{{$userpost->comments->count()}} <span><i class="fa fa-comment" style="font-size: 18px;"></i></span></a>
                   <div class="commentContainer" style="display: none;">
-                  @forelse($userpost->comments as $usercomment)
+                   @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
+                   @forelse($userpost->comments as $usercomment)
                     <div class="post-comment">
                     <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
                     <p><a href="{{url('profiles/'.$usercomment->user->id)}}" class="profile-link">{{$usercomment->user->name}}</a>
                     <i class="em em-laughing"></i>{{$usercomment->comment}}</p>
+                    @if (Auth::check())
+                      @if(count((array) $userpost->comments) > 0)
+                       @if($usercomment->user->id == Auth::user()->id)
+                        {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
+                         <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this comment?')"></button>
+                        {!! Form::close() !!}
+                       @endif
+                      @endif
+                     @endif
                   </div>
                   @empty
                   <h3>No comments added yet</h3>
@@ -269,130 +272,64 @@
               </div>
             </div>
        @empty
-       <h1>No posts avaliable. create new one</h1>
+       <h3>No posts avaliable</h3>
         @endforelse
 
                     </div>
       </div>
-  <div id="menu1" class="tab-content tab-pane"><br>
-      <h3>Menu 1</h3>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-    <div id="menu2" class="tab-content tab-pane"><br>
-      <h3>Menu 2</h3>
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-    </div>     
-  </div>
-<!-- tabs end -->
-                    </div>
-                    <div class="col-md-2 staticactivity" style="width: 224px;">
+      
+        <div class="col-md-2 static">
+          <div id="sticky-sidebar">
+            <h4 class="grey">Your activities</h4>
+            @foreach ($allActivity as $activity)
+              <div class="feed-item">
+                <div class="live-activity">
+                  <p>
+                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link">You {{ $activity->type }}ed on a Post</a>
+                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ $activity->post->user->name }}</a>
+                  </p>
+                  <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
+                </div>
+              </div>
+            @endforeach          
+          </div>
+        </div>
+</div>
+                
 
-<div id="sticky-sidebar">
-<h4 class="grey">Your Activity</h4>
- <div class="feed-item"> 
- <div class="live-activity">
-  <?php
-   $olddate = "";
-   $newdate = "";
-   $first = true;
-   $content = "";
-   foreach($allActivity as $singleActivity){
-     $newdate = $singleActivity->created_at->format('Y-m-d');
-     if($first){
-         $olddate = $singleActivity->created_at->format('Y-m-d');
-     }
-     if($olddate === $newdate){
-         if($first == true){
-             $first = false;
-             $content .="<p class='text-muted'>".$newdate."</p>";
-         }
-         $content .= \App\Custom\Activity::getview($singleActivity);
-     }
-     else{
-         $content .="";
-         $content .="<p class='text-muted'>".$newdate."</p>";
-         $content .= \App\Custom\Activity::getview($singleActivity);
-     }
-     $olddate = $newdate;
-   }
-   echo $content."</div>";
-   ?>
-   </div>
-   {{$allActivity->links()}}
-   </div>
-   </div></div>
-   </div>
 
+<?php
+// $olddate = "";
+// $newdate = "";
+// $first = true;
+// $content = "";
+// foreach($allActivity as $singleActivity){
+//   $newdate = $singleActivity->created_at->format('Y-m-d');
+//   if($first){
+//       $olddate = $singleActivity->created_at->format('Y-m-d');
+//   }
+//   if($olddate === $newdate){
+//       if($first == true){
+//           $first = false;
+//           $content .="<p class='text-muted'>".$newdate."</p>";
+//       }
+//       $content .= \App\Custom\Activity::getview($singleActivity);
+//   }
+//   else{
+//       $content .="";
+//       $content .="<p class='text-muted'>".$newdate."</p>";
+//       $content .= \App\Custom\Activity::getview($singleActivity);
+//   }
+//   $olddate = $newdate;
+// }
+// echo $content;
+?>
 
     <!-- Footer
     ================================================= -->
-    <footer id="footer">
-      <div class="container">
-      	<div class="row">
-          <div class="footer-wrapper">
-            <div class="col-md-3 col-sm-3">
-              <a href=""><img src="images/logo-black.png" alt="" class="footer-logo"></a>
-              <ul class="list-inline social-icons">
-              	<li><a href="#"><i class="icon ion-social-facebook"></i></a></li>
-              	<li><a href="#"><i class="icon ion-social-twitter"></i></a></li>
-              	<li><a href="#"><i class="icon ion-social-googleplus"></i></a></li>
-              	<li><a href="#"><i class="icon ion-social-pinterest"></i></a></li>
-              	<li><a href="#"><i class="icon ion-social-linkedin"></i></a></li>
-              </ul>
-            </div>
-            <div class="col-md-2 col-sm-2">
-              <h5>For individuals</h5>
-              <ul class="footer-links">
-                <li><a href="">Signup</a></li>
-                <li><a href="">login</a></li>
-                <li><a href="">Explore</a></li>
-                <li><a href="">Finder app</a></li>
-                <li><a href="">Features</a></li>
-                <li><a href="">Language settings</a></li>
-              </ul>
-            </div>
-            <div class="col-md-2 col-sm-2">
-              <h5>For businesses</h5>
-              <ul class="footer-links">
-                <li><a href="">Business signup</a></li>
-                <li><a href="">Business login</a></li>
-                <li><a href="">Benefits</a></li>
-                <li><a href="">Resources</a></li>
-                <li><a href="">Advertise</a></li>
-                <li><a href="">Setup</a></li>
-              </ul>
-            </div>
-            <div class="col-md-2 col-sm-2">
-              <h5>About</h5>
-              <ul class="footer-links">
-                <li><a href="">About us</a></li>
-                <li><a href="">Contact us</a></li>
-                <li><a href="">Privacy Policy</a></li>
-                <li><a href="">Terms</a></li>
-                <li><a href="">Help</a></li>
-              </ul>
-            </div>
-            <div class="col-md-3 col-sm-3">
-              <h5>Contact Us</h5>
-              <ul class="contact">
-                <li><i class="icon ion-ios-telephone-outline"></i>+1 (234) 222 0754</li>
-                <li><i class="icon ion-ios-email-outline"></i>info@thunder-team.com</li>
-                <li><i class="icon ion-ios-location-outline"></i>228 Park Ave S NY, USA</li>
-              </ul>
-            </div>
-          </div>
-      	</div>
-      </div>
-      <div class="copyright">
-        <p>Public Place © 2020. All rights reserved</p>
-      </div>
-		</footer>
-    
+    @include('partials.footer')
     <!--preloader-->
    
-    <!--Buy button-->
-    <a href="https://themeforest.net/cart/add_items?item_ids=18711273&ref=thunder-team" target="_blank" class="btn btn-buy"><span class="italy">Buy with:</span><img src="images/envato_logo.png" alt=""><span class="price">Only $20!</span></a>
-    @section("script")
 
     <!-- Scripts
     ================================================= -->
@@ -536,8 +473,7 @@ $.ajaxSetup({
       });
 
 //reaction start
-$("#contentpostContainer").on("click",".reactionBtn", function(){
-  console.log("hello")
+$(".reaction").on("click",".reactionBtn", function(){
       var url = '{{URL::to('/')}}' +"/react";
       //alert(url);
        //$postid = $(this).data('postid');
@@ -553,14 +489,55 @@ $.ajax({
           data:{
             'postid': $(this).data('postid'),
             'react': $(this).data('reaction'),
-            r:Math.random()}
-        }).done(function(data){
-         console.log(data);
+            r:Math.random()},
+        success: (data) =>  {
+          console.log($(this).data('postid'), "INSIDE AJHAX")
+        }
+        }
+        ).done((data) => {
+        //  console.log(data);
          // return;
           if(data.success){
             //alert(data.message);
+            $(this).parent().find('.like').html(data.liked);
+            $(this).parent().find('.smiled').html(data.smiled) ;
+            $(this).parent().find('.heart').html(data.loved);
+            $(this).parent().find('.dislike').html(data.disliked)
+            if (data.liked <= 0) {
+              $(this).parent().find('.like').parent().removeClass('text-primary')
+              // $('#like').parent().removeClass('text-primary')
+              $(this).parent().find('.like').parent().addClass('text-secondary')
+            }else {
+              $(this).parent().find('.like').parent().removeClass('text-secondary')
+              $(this).parent().find('.like').parent().addClass('text-primary')
+            }
+            //
+            if (data.smiled <= 0) {
+              $(this).parent().find('.smiled').parent().removeClass('text-primary')
+              $(this).parent().find('.smiled').parent().addClass('text-secondary')
+            }else {
+              $(this).parent().find('.smiled').parent().removeClass('text-secondary')
+              $(this).parent().find('.smiled').parent().addClass('text-primary')
+            }
+            //
+            if (data.loved <= 0) {
+              $(this).parent().find('.heart').parent().removeClass('text-primary')
+              $(this).parent().find('.heart').parent().addClass('text-secondary')
+            }else {
+              $(this).parent().find('.heart').parent().removeClass('text-secondary')
+              $(this).parent().find('.heart').parent().addClass('text-primary')
+            }
+            //
+            if (data.disliked <= 0) {
+              $(this).parent().find('.dislike').parent().removeClass('text-primary')
+              $(this).parent().find('.dislike').parent().addClass('text-secondary')
+            }else {
+              $(this).parent().find('.dislike').parent().removeClass('text-secondary')
+              $(this).parent().find('.dislike').parent().addClass('text-primary')
+            }
 
-            location.reload();
+
+            // location.reload();
             
         //RESET FORM AFTER POST
             //$('postform').trigger("reset");
@@ -592,5 +569,4 @@ $(".viewpost").on("click",".postcommentToggleBtn", function(){
 
 
   </body>
-<!-- Copied from http://mythemestore.com/friend-finder/edit-profile-basic.html by Cyotek WebCopy 1.7.0.600, Thursday, September 5, 2019, 12:34:06 AM -->
 </html>

@@ -19,7 +19,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth']);
     }
 
     /**
@@ -35,7 +35,9 @@ class HomeController extends Controller
         $id = Auth::id();
         $friendreq = Friend::with('user')
                 ->where("friend_id",$id)
-                 ->where('approved','0')->get();
+                 ->where('approved','0')
+                 ->where('blocked', '0')
+                 ->get();
     
                 //dd($friends);
                 
@@ -44,7 +46,7 @@ class HomeController extends Controller
                ->where('blocked','0')
                ->where("friend_id",$id)
                ->orWhere("user_id",$id)
-               ->get();
+            ->get();
               $friendsList =array($id);
                foreach($friends as $friend){
                    if($friend->user_id == $id){
@@ -64,10 +66,15 @@ class HomeController extends Controller
                ->whereIn('id',$allFriends)
                 ->get();
                 //dd($friends->count());
-           $allpost = Post::with(['user','pictures','comments.user', 'reactions'])
-           ->whereIn('user_id',$allFriends)
-           ->whereIn('privacy', ['public', 'friends'])
+           $allpost = Post::
+           with('pictures')
+           ->with('comments')
+           ->with('reactions')->whereIn('privacy', ['public', 'friends'])
            ->orderBy('created_at', 'desc')
+        //    Post::with(['user','pictures','comments.user', 'reactions'])
+        //    ->whereIn('user_id',$allFriends)
+        //    ->whereIn('privacy', ['public', 'friends'])
+        //    ->orderBy('created_at', 'desc')
  //          ->skip(0)
    //        ->take(10)
      //      ->get();

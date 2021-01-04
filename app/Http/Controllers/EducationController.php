@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Custom\FriendsList;
 use App\Activity;
+use Validator;
+
 class EducationController extends Controller
 {
     /**
@@ -32,7 +34,7 @@ class EducationController extends Controller
         
        // dd(Route::current());
        $userinfo= User::with(['education','works'])->find(Auth::id());
-       $allActivity = Activity::with('post.user')->where('user_id',Auth::id())->orderBy('created_at','desc')->paginate(4);
+       $allActivity = Activity::with('post.user')->where('user_id',Auth::id())->orderBy('created_at','desc')->limit(4)->get();
       //dd($userinfo);
       /*   $userid = Auth::id();
         $data['education']= Education::where('user_id', $userid)->orderBy('created_at', 'desc')->get();
@@ -59,6 +61,20 @@ class EducationController extends Controller
      */
     public function store(Request $request)
     {
+
+        $rules = [
+            'institute'   => 'required',
+            'level'       => 'required',
+            'sess'        => 'required',
+            'description' => 'required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return back()->with(['errors' => $validator->errors()]);
+        }
+
         $education_basic = new Education();
         $education_basic->institute = $request->institute;
         $education_basic->sess = $request->sess;
@@ -119,8 +135,11 @@ class EducationController extends Controller
      * @param  \App\education  $education
      * @return \Illuminate\Http\Response
      */
-    public function destroy(education $education)
+    public function deleteEducation($id)
     {
-        //
-    }
+        Education::Where('id',$id)->delete();
+
+            return back()->with('success','Education info deleted');
+        
+        }
 }

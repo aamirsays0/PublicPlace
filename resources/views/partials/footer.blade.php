@@ -5,7 +5,7 @@
       	<div class="row">
           <div class="footer-wrapper">
             <div class="col-md-3 col-sm-3">
-              <a href=""><img src="images/pp-icon.png" alt="" class="footer-logo" width="100" hight="100"/></a>
+              <a href=""><img src="{{asset('images/footerlogo.png')}}" alt="" class="footer-logo" width="100" hight="100"/></a>
               <ul class="list-inline social-icons">
               	<li><a href="#"><i class="icon ion-social-facebook"></i></a></li>
               	<li><a href="#"><i class="icon ion-social-twitter"></i></a></li>
@@ -20,20 +20,7 @@
                 <li><a href="">Signup</a></li>
                 <li><a href="">login</a></li>
                 <li><a href="">Explore</a></li>
-                <li><a href="">Finder app</a></li>
                 <li><a href="">Features</a></li>
-                <li><a href="">Language settings</a></li>
-              </ul>
-            </div>
-            <div class="col-md-2 col-sm-2">
-              <h6>For businesses</h6>
-              <ul class="footer-links">
-                <li><a href="">Business signup</a></li>
-                <li><a href="">Business login</a></li>
-                <li><a href="">Benefits</a></li>
-                <li><a href="">Resources</a></li>
-                <li><a href="">Advertise</a></li>
-                <li><a href="">Setup</a></li>
               </ul>
             </div>
             <div class="col-md-2 col-sm-2">
@@ -43,7 +30,6 @@
                 <li><a href="">Contact us</a></li>
                 <li><a href="">Privacy Policy</a></li>
                 <li><a href="">Terms</a></li>
-                <li><a href="">Help</a></li>
               </ul>
             </div>
             <div class="col-md-3 col-sm-3">

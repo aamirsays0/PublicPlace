@@ -192,6 +192,10 @@ class PostController extends Controller
         ->whereIn('id',$allFriends)
          ->get();
          $sentRequest = FriendsList::Friends(Auth::id());
+         $id = Auth::id();
+        $friendreq = Friend::with('user')
+                ->where("friend_id",$id)
+                 ->where('approved','0')->get();
         /* 
 
         $friends = Friend::with(['user','friendinfo'])
@@ -204,7 +208,7 @@ class PostController extends Controller
        if(Friend::where('friend_id',Auth::id())->where('user_id',$userpost->user_id)->get()->count() || Friend::where('friend_id',$userpost->user_id)->where('user_id',Auth::id())->get()->count()){
         
         $friendsList = FriendsList::Friends($id);
-        return view('single_post')->with('userpost', $userpost)->with ('friends', $friends)->with('req', $sentRequest) ;
+        return view('single_post')->with('userpost', $userpost)->with('friends', $friends)->with('requests', $friendreq)->with('req', $sentRequest) ;
                }
         else{
                 return view('single_post_404')->with ('friends', $friends);
@@ -213,7 +217,7 @@ class PostController extends Controller
 
         }
         else{
-            return view('single_post', compact('friends'))->with('userpost', $userpost)->with('req', $sentRequest);
+            return view('single_post', compact('friends'))->with('userpost', $userpost)->with('requests', $friendreq)->with('req', $sentRequest);
 
         }
         
@@ -284,17 +288,12 @@ class PostController extends Controller
 
         }
     }
-    public function delete(Comment $postcomment)
+    public function deleteComment(comment $comment)
     {
-        if($postcomment->user_id == Auth::id()){
-            if(Comment::destroy($postcomment->id)){
-                return redirect('home')->with('success', 'Comment Deleted!!');
-            }
-            else{
-                return redirect()->route('home')
-                ->with('success', 'Problem Deleting post!');
-            }
+        if (auth()->user()->is($comment->user)) {
+            $comment->delete();
         }
+        return redirect()->back()->with('success', 'Comment Deleted!!');
     }
 
     public function react(Request $request){
@@ -323,17 +322,26 @@ class PostController extends Controller
 
         $post = Post::find($request->postid);
         $postuser = $post->user->name;
-
         $this->reaction($post->id, 'react');
 
 
         if($post->reactions()->save($reaction)){
-            $data['message'] = Auth::user()->name.''.$reactType. ' a Post from' . $postuser;
+            $reactionsCounter = Reaction::where('post_id', $request->postid)->get();
+            $liked = $reactionsCounter->where('type', 'l')->count();
+            $disliked = $reactionsCounter->where('type', 'd')->count();
+            $loved = $reactionsCounter->where('type', 'h')->count();
+            $smiled = $reactionsCounter->where('type', 's')->count();
+
+            $data['message'] = Auth::user()->name.' '.$reactType. ' a Post from ' . $postuser;
             $data['type'] = 'reaction';
             $this->p->trigger('user-'.$post->user_id, 'new-post', $data);
             return response()->json([
                 'success' => true,
-                'message' => 'Reacted'
+                'message' => 'Reacted',
+                'liked' => $liked,
+                'disliked' => $disliked,
+                'loved' => $loved,
+                'smiled' => $smiled
             ]);
         }
         else{
@@ -347,11 +355,10 @@ class PostController extends Controller
     }
     public function images($id)
     {
-        $userimage = User::with('profiles')
-             ->with('id')
-             ->get();
+        $userimage = Post::with('pictures')->where('user_id',Auth::user())
+      ->find($id);
 
-             return view('imageuploaded')->with('userimage', $userimage);
+             return view('imageuploaded')->with('posts', $userimage);
     }
 
     public function reaction($id, $type){
@@ -361,6 +368,5 @@ class PostController extends Controller
         $activity->post_id=$id;
         $activity->type=$type;
         $activity->save();
-    }
-
+    }    
 }

@@ -7,16 +7,43 @@ class Activity
     public static function getview($singleActivity){
         $html="";
         if($singleActivity->type == "post"){
-        $html .='<p style="border-bottom: 1px solid #b5d7f3;padding: 5px"><img src="'.asset('storage/profile/'.$singleActivity->user_id.'_profile_thumb.jpg').'" alt="user" class="img-fluid profile-photo profile-photo-md" /><a href="'.url('profile/'.Auth::id()).'">'.Auth::user()->name.'</a> <a>Create a new</a> <a href="'.url('posts/'.$singleActivity->post_id).'"> post</a>.</p>';
+        $html .='
+        <p style="border-bottom: 1px solid #b5d7f3;padding: 5px;font-size: 1.7rem !important;">   
+        <img src="'.asset('storage/profile/'.$singleActivity->user_id.'_profile_thumb.jpg').'" alt="user" class="img-fluid profile-photo profile-photo-md" />
+
+          <a style="font-size: 1.7rem !important;" href="'.route('profiles.show',Auth::id()).'">'."You".'</a>
+            Create a new <a style="font-size:1.7rem" href="'.url('posts/'.$singleActivity->post_id).'"> 
+            post
+          </a>.
+
+        </p>';
     }
         elseif($singleActivity->type == "comment"){
-        $html .='<p style="border-bottom: 1px solid #b5d7f3;padding: 5px"><img src="'.asset('storage/profile/'.$singleActivity->post->user->id.'_profile_thumb.jpg').'" alt="user" class="img-fluid profile-photo profile-photo-md" /><a href="'.url('profile/'.Auth::id()).'">'.Auth::user()->name.'</a> <a>Commented on a </a><a href="'.url('posts/'.$singleActivity->post_id).'"> post</a>.</p>';
+        $html .='<p style="border-bottom: 1px solid #b5d7f3;padding: 5px;font-size: 1.7rem;">
+          <img src="'.asset('storage/profile/'.$singleActivity->post->user->id.'_profile_thumb.jpg').'" alt="user" class="img-fluid profile-photo profile-photo-md" />
+          <a  style="font-size: 1.7rem !important;" href="'.route('profiles.show',Auth::id()).'">'."You".'</a>
+            Commented on a <a style="font-size:1.7rem" href="'.url('posts/'.$singleActivity->post_id).'"> 
+            post
+          </a>.
+          </p>';
         }
         elseif($singleActivity->type == "react"){
-        $html .='<p style="border-bottom: 1px solid #b5d7f3;padding: 5px"><img src="'.asset('storage/profile/'.$singleActivity->user_id.'_profile_thumb.jpg').'" alt="user" class="img-fluid profile-photo profile-photo-md" /><a href="'.url('profile/'.Auth::id()).'">'.Auth::user()->name.'</a><a> reacted on a </a><a href="'.url('posts/'.$singleActivity->post_id).'"> post</a>.</p>';
+        $html .='<p style="border-bottom: 1px solid #b5d7f3;padding: 5px;font-size: 1.7rem;">
+           <img src="'.asset('storage/profile/'.$singleActivity->user_id.'_profile_thumb.jpg').'" alt="user" class="img-fluid profile-photo profile-photo-md" />
+          <a  style="font-size: 1.7rem !important;" href="'.route('profiles.show',Auth::id()).'">'."You".'</a>
+           reacted on a <a style="font-size:1.7rem" href="'.url('posts/'.$singleActivity->post_id).'">
+            post
+         </a>.</
+         p>';
         }
         elseif($singleActivity->type == "share"){
-        $html .='<p style="border-bottom: 1px solid #b5d7f3;padding: 5px"><img src="'.asset('storage/profile/'.$singleActivity->user_id.'_profile_thumb.jpg').'" alt="user" class="img-fluid profile-photo profile-photo-md" /><a href="'.url('profile/'.Auth::id()).'">'.Auth::user()->name.'</a><a> shared on a </a><a href="'.url('posts/'.$singleActivity->post_id).'"> post</a>.</p>';
+        $html .='<p style="border-bottom: 1px solid #b5d7f3;padding: 5px;font-size: 1.7rem;">
+           <img src="'.asset('storage/profile/'.$singleActivity->user_id.'_profile_thumb.jpg').'" alt="user" class="img-fluid profile-photo profile-photo-md" />
+          <a  style="font-size: 1.7rem !important;" href="'.route('profiles.show',Auth::id()).'">'."You".'</a>
+           shared a <a style="font-size:1.7rem" href="'.url('posts/'.$singleActivity->post_id).'">
+            post
+         </a>.</
+         p>';
         }
         else{
         }

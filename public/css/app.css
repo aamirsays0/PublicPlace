@@ -212,6 +212,9 @@ figure {
 img {
   vertical-align: middle;
   border-style: none;
+  position: absolute;
+    top: 3%;
+    left: 37%;
 }
 
 svg {
@@ -4666,8 +4669,13 @@ input[type=button].btn-block {
 
   .navbar-expand-md .navbar-nav {
     flex-direction: row;
+    position: absolute;
+    right: 10%;
+    list-style-type: none;
   }
-
+  ul li {
+    list-style-type: none;
+  }
   .navbar-expand-md .navbar-nav .dropdown-menu {
     position: absolute;
   }

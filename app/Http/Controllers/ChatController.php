@@ -21,8 +21,15 @@ class ChatController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->p = Push::newPush();
-    }
+        $options = array(
+            'cluster' => 'ap2',
+            'usTLS' => true
+        );
+        $this->p = new Pusher(
+            '0e8a23a77d5e825ac0fc',
+            '31895c6c7d3ced73c6bc',
+            '1096491', $options
+        );    }
 
    
     /**
@@ -35,6 +42,15 @@ class ChatController extends Controller
         $friends = FriendsList::Friends(Auth::id());
         $users = User::with(['profiles'])->whereIn('id', $friends)->get();
         return view('chat')->with('users',$users);
+        // $friends = User::with('profiles')
+        // ->whereIn('id',$friends)
+        //  ->get();
+        // $searchResult = User::with('profiles', 'friends')
+        // ->where('name', 'like', '%'.$request->search.'%')
+        // ->orWhere('email','like', '%'.$request->search.'%')
+        // ->orderBy('name')
+        // ->get();
+        // return view('chat')->with('sResult', $searchResult)->with('friends', $friends);
     }
     public function fetchMessages(){
         return Message::with('user')->get();

@@ -10,9 +10,9 @@ use App\Activity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Pusher\Pusher;
-
 // import the Intervention Image Manager Class
 use Intervention\Image\ImageManagerStatic as Image;
+
 class ProfileController extends Controller
 {
      /**
@@ -42,7 +42,7 @@ class ProfileController extends Controller
          ->get();
         $userinfo = User::with('profiles')->find(Auth::id());
          $countryList = config('country.list');
-         $allActivity = Activity::with('post.user')->where('user_id',Auth::id())->orderBy('created_at','desc')->paginate(4); 
+         $allActivity = Activity::with('post.user')->where('user_id',Auth::id())->orderBy('created_at','desc')->limit(10)->get(); 
          return view('profiles')
          ->with('user',$userinfo)
          ->with('country',$countryList)->with('allActivity',$allActivity)->with ('friends', $friends) ;
@@ -58,7 +58,6 @@ class ProfileController extends Controller
      */
     public function create()
     {
-        return view('profiles');
 
     }
 
@@ -97,7 +96,7 @@ class ProfileController extends Controller
                 $constraint->aspectRatio();
             });
             $resizedImage->save(public_path().'/storage/profile/'.$name, 70);
-            $resizedImage_thumb->save(public_path().'/storage/profile/'.$name_thumb, 0);
+            $resizedImage_thumb->save(public_path().'/storage/profile/'.$name_thumb, 70);
             $resizedImage_icon->save(public_path().'/storage/profile/'.$icon_thumb, 70);
 
 
@@ -106,7 +105,6 @@ class ProfileController extends Controller
             $name=Auth::id()."_cover.".$request->file('cpic')->getClientOriginalExtension();
 
             $name_thumb=Auth::id()."_cover_thumb.".$request->file('cpic')->getClientOriginalExtension();
-            $icon_thumb=Auth::id()."_icon.".$request->file('cpic')->getClientOriginalExtension();
             //dd($name);
             $request->file('cpic')->move(public_path().'/storage/profile/',$name);
             $resizedImage = Image::make(public_path().'/storage/profile/' .$name)->resize(1030, null, function ($constraint) {
@@ -116,13 +114,9 @@ class ProfileController extends Controller
             $resizedImage_thumb = Image::make(public_path().'/storage/profile/' .$name)->resize(300, null, function ($constraint) {
                 $constraint->aspectRatio();
             });
-/*             $resizedImage_icon = Image::make(public_path().'/storage/profile/' .$name)->resize(48, null, function ($constraint) {
-                $constraint->aspectRatio();
-            });
- */            $resizedImage->save(public_path().'/storage/profile/'.$name, 70);
+            $resizedImage->save(public_path().'/storage/profile/'.$name, 70);
             $resizedImage_thumb->save(public_path().'/storage/profile/'.$name_thumb, 70);
-/*             $resizedImage_icon->save(public_path().'/storage/profile/'.$icon_thumb, 70);
- */          
+           
 $data[] = $name;            
 //INSERT INTO PICTURE TABLE
             //  $pic = new Picture();
@@ -130,12 +124,6 @@ $data[] = $name;
             //  $editPro_basic->pictures()->save($pic);
          }
      
-     //activity
-    //  $a = new Activity();
-    //  $a->post_id = $$editPro_basic->id;
-    //  $a->type= 'post';
-    //  $a->user_id = Auth::id();
-    //  $a->save();
      //pusher
      
      $data['message'] = 'New Post From: '.Auth::user()->name;
@@ -150,7 +138,6 @@ $data[] = $name;
      foreach($friendsList as $fl){
          $this->p->trigger('user-'.$fl, 'new-post', $data);
      }}
-        exit();
 
         $editPro_basic->save();
         if($editPro_basic->id){
@@ -176,6 +163,7 @@ $data[] = $name;
      */
     public function show($id)
     {
+        
         $allFriends = FriendsList::Friends(Auth::id());
 
         $friends = User::with('profiles')
@@ -192,7 +180,7 @@ $data[] = $name;
             //  ->with('works')
             //  ->with('interests')->paginate(10)
              ->find($id);
-             $allActivity = Activity::with('post.user')->where('user_id',Auth::id())->orderBy('created_at','desc')->paginate(4);
+             $allActivity = Activity::with('post.user')->where('user_id',Auth::id())->orderBy('created_at','desc')->limit(10)->get();
              return view('showprofile')->with('user', $userinfo)->with('req', $userinfo)->with('allActivity',$allActivity)->with('friends', $friends) ;
     }
     

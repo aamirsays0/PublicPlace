@@ -1,57 +1,29 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-	<head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="This is social network html5 template available in themeforest......" />
-		<meta name="keywords" content="Social Network, Social Media, Make Friends, Newsfeed, Profile Page" />
-    <meta name="robots" content="index, follow" />
-
-		<!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}-Search Results</title>
-
-    <!-- Stylesheets
-    ================================================= -->
-		<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}" />
-		<link rel="stylesheet" href="{{asset('css/style.css')}}" />
-    <link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}" />
-    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}" />
-    <link rel="stylesheet" href="{{asset('css/lightbox.min.css')}}" />
-    <link href="{{asset('css/emoji.css')}}" rel="stylesheet">
-    <link rel="stylesheet" href="{{asset('css/headerNewStyles.css')}}"/>
-    <link rel="stylesheet" href="{{asset('css/bootstrap.css')}}" />
+@extends("layouts.yellow")
+@push('style')
+     .mycss{ background-color: green;}
+     .singleImage{
+       position:relative;
+     }
+     .singleImage span{
+       position:absolute;
+       top:-10px;
+       right:-10px;
+       border-radius:50%;
+     }
+@endpush
 
 
-    <!--Google Webfont-->
-		<link href='https://fonts.googleapis.com/css?family=Raleway:400,100,100italic,200,200italic,300,300italic,400italic,500,500italic,600,600italic,700' rel='stylesheet' type='text/css'>
-    <!--Favicon-->
-    <link rel="shortcut icon" type="image/png" href="{{asset('images/fav.png')}}"/>
-	</head>
-  <body>
-
-
-@include('partials.headermenu')
-
-    <div id="page-contents" class="mt-5">
-    	<div class="container">
-    		<div class="row">
-
-          <!-- Newsfeed Common Side Bar Left
-          ================================================= -->
-    			<div class="col-md-3 static">
+@section('sidebar-left')
           <div class="profile-card" style="background-image: url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ');">
             	<img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="user" class="profile-photo" />
-            	<h5><a href="{{url('profiles/'.Auth::id())}}" class="text-white">{{Auth::user()->name}}</a></h5>
+            	<h5><a href="{{url('profiles/'.Auth::id())}}" title="{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}" class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
             	<a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()-1}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()-1}} Friends</a>
             </div><!--profile card ends-->
             <ul class="nav-news-feed">
               <li><i class="icon ion-ios-paper"></i><div><a href="newsfeed.html">My Newsfeed</a></div></li>
-              <li><i class="icon ion-ios-people"></i><div><a href="newsfeed-people-nearby.html">People Nearby</a></div></li>
               <li><i class="icon ion-ios-people-outline"></i><div><a href="{{url('friends/'.Auth::id())}}">Friends</a></div></li>
-              <li><i class="icon ion-chatboxes"></i><div><a href="newsfeed-messages.html">Messages</a></div></li>
-              <li><i class="icon ion-images"></i><div><a href="newsfeed-images.html">Images</a></div></li>
+              <li><i class="icon ion-chatboxes"></i><div><a href="{{url('chat')}}">Messages</a></div></li>
+              <li><i class="icon ion-images"></i><div><a href="{{url('image/'.Auth::id())}}">Images</a></div></li>
               <li><i class="icon ion-ios-videocam"></i><div><a href="newsfeed-videos.html">Videos</a></div></li>
             </ul><!--news-feed links ends-->
             <div id="friends-block">
@@ -69,7 +41,7 @@
               
             </div><!--Friends block ends-->
             <div id="chat-block">
-              <div class="title">Chat online</div>
+            <button class="ctitle">Chat online</button>
               <ul class="online-users list-inline list-unstyled">
                 <li class="list-inline-item"><a href="newsfeed-messages.html" title="Linda Lohan"><img src="images/users/user-2.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
                 <li class="list-inline-item"><a href="newsfeed-messages.html" title="Sophia Lee"><img src="images/users/user-3.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
@@ -82,16 +54,14 @@
                 <li class="list-inline-item"><a href="newsfeed-messages.html" title="Julia Cox"><img src="images/users/user-10.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
               </ul>
             </div><!--chat block ends-->
-          </div>
-    			<div class="col-md-7">
+ @endsection
+ @section('content')
                 @if ($message = Session::get('success'))
               <div class="alert alert-success" id="errorcontainer">
               <h3>{{$message}}</h3>
               </div>
               @endif
 <!-- tabs start-->
-<h2>Toggleable Tabs</h2>
-  <br>
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
@@ -99,9 +69,6 @@
     </li>
     <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#menu1">Posts</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#menu2">Menu 2</a>
     </li>
   </ul>
 
@@ -117,11 +84,8 @@
                     <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt="user" class="profile-photo-lg" />
                   </div>
                   <div class="col-md-7 col-sm-7">
-<!-- for searching only first name<h5><a href="#" class="profile-link">{{$user->profile?$user->profile->f_name:$user->name}}</a></h5> -->
 
                     <h5><a href="{{url('profiles/'.$user->id)}}" class="profile-link">{{$user->profiles?$user->profiles->f_name.' '.$user->profiles->l_name:$user->name}}</a></h5>
-                    <p>Software Engineer</p>
-                    <p class="text-muted">500m away</p>
                   </div>
                   <div class="col-md-3 col-sm-3">
                     @if(in_array($user->id,$req))
@@ -146,79 +110,203 @@
     
   </div>
   <div id="menu1" class="tab-content tab-pane"><br>
-      <h3>Menu 1</h3>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-    <div id="menu2" class="tab-content tab-pane"><br>
-      <h3>Menu 2</h3>
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+  <div class="scroll">
+       @forelse($posts as $post)
+
+            
+
+            
+            <div class="post-content  postid-{{$post->id}}">
+            
+              <div class="post-container">
+                <img src="{{asset('storage/profile/'.$post->user_id.'_profile.jpg')}}" alt="user" class=" img-responsive profile-photo-md pull-left" />
+                <div class="post-detail">
+                  <div class="user-info">
+                    <h5>
+
+                    <a href="{{url('profiles/'.$post->user->id)}}" class="profile-link">{{$post->user->profiles?$post->user->profiles->f_name.' '.$post->user->profiles->l_name:$post->user->name}}</a> 
+                    <span>
+                    @if($post->privacy == 'public')
+                    <i class ="ion-ios-world"></i>
+                    @elseif($post->privacy == 'friends')
+                    <i class ="fa fa-users"></i>
+                    @endif
+                    </span>
+                   
+                    @if(in_array($post->user->id,$req) )
+                      @if (Auth::user()->id !== $post->user->id)
+                        <span class="pull">Friends</span>
+                      @endif
+                    @else
+                      @if($friends->where('friend_id', $post->user->id)->where('approved', 0)->first())
+                      <button class="btn pull pending" disabled>Pending</button>
+                      @else 
+                      <button class="btn btn-primary pull-right addFrndBtn1" data-uid="{{$post->user->id}}">Add Friend</button>
+                      @endif
+                    @endif</h5>
+                    <p class="text-muted">Published about {{\Carbon\Carbon::parse($post->created_at)->diffForHumans()}}</p>
+                  </div>
+                  @php
+                  $reactCount = [
+                   'l'=>0,
+                   'd'=>0,
+                   'h'=>0,
+                   's'=>0,
+                   'reacted'=>false,
+                   'type'=>"0"
+
+                  ];
+                  $totalReactions = $post->reactions->count();
+                  foreach($post->reactions as $reaction){
+                    if($reaction->user_id == Auth::id()){
+                      $reactCount ['type'] = $reaction->type;
+                      $reactCount ['reacted'] = true;
+
+                    }
+                    $reactCount [$reaction->type]++;
+                  }
+                  $my_reaction = ($reactCount['reacted'])?"You and ":"";
+                  if($reactCount['reacted'] && $totalReactions == 1){
+                    echo "<span>Only you reacted</span>";
+
+                  }
+                  else{
+                    if($reactCount['reacted']){$totalReactions--;}
+                  echo "<span>".$my_reaction.$totalReactions." people reacted</span>";
+                  }
+                  @endphp
+                  <div class="reaction">
+                    <a data-postid="{{$post->id}}" data-reaction="l" class="btn text-{{($reactCount ['type']==="l")?"primary":"secondary"}} reactionBtn"><i class="icon ion-thumbsup"></i>
+                      <span class="like" >{{$reactCount['l']}}<span>
+                    </a>
+                      <!--<a data-postid="{{$post->id}}" data-reaction="l" class="btn text-success reactionBtn"><i class="icon ion-thumbsup"></i>0</a> -->
+                    <a  data-postid="{{$post->id}}" data-reaction="d" class="btn text-{{($reactCount ['type']==="d")?"danger":"secondary"}} reactionBtn"><i class="fa fa-thumbs-down"></i>
+                      <span class="dislike" >{{$reactCount['d']}}<span>
+                    </a>
+                      <!--<a data-postid="{{$post->id}}" data-reaction="d" class="btn text-danger reactionBtn"><i class="fa fa-thumbs-down"></i> 0</a> -->
+                    <a data-postid="{{$post->id}}" data-reaction="h" class="btn text-{{($reactCount ['type']==="h")?"success":"secondary"}} reactionBtn"><ion-icon name="heart"></ion-icon>
+                      <span class="heart" >{{$reactCount['h']}}</span>
+                    </a>
+                      <!--<a data-postid="{{$post->id}}" data-reaction="h" class="btn text-success reactionBtn"><ion-icon name="heart"></ion-icon>0</a> -->
+                    <a  data-postid="{{$post->id}}" data-reaction="s" class="btn text-{{($reactCount ['type']==="s")?"success":"secondary"}} reactionBtn"><ion-icon name="happy"></ion-icon> 
+                      <span class="smiled">{{$reactCount['s']}}</span>
+                    </a>
+                       <!--<a data-postid="{{$post->id}}" data-reaction="s" class="btn text-success reactionBtn"><ion-icon name="happy"></ion-icon> 0</a> -->
+                    <a href="{{ route('posts.show', $post->id) }}" class="btn btn-info fa fa-eye"></a>
+
+                    @if($post->user_id == Auth::id())
+                    {!! Form::open(['url' => 'posts/'.$post->id,'method' => 'delete','class' => 'btn d-inline']) !!}
+                    <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this post?')"></button>
+
+                    {!! Form::close() !!}                   
+                    @endif
+
+                    
+                  </div>
+                  <div class="line-divider"></div>
+                  <div class="post-text">
+                    <p>{{$post->content}}</p>
+                    <hr>
+                    @forelse($post->pictures as $pic)
+                    <?php
+                    $imageinfo = pathinfo(url('/storage/postimages/'.$pic->imgname));
+                    //print_r($imageinfo);
+                    ?>
+                    <a href="{{url('/storage/postimages/'.$pic->imgname)}}" data-lightbox="imageset-{{$post->id}}">
+                    <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" width="120px">
+                    </a>
+                    @empty
+
+                    @endforelse
+                    @forelse($post->videos as $vid)
+                    <?php
+                    $vidinfo = pathinfo(url('/storage/postimages/'.$vid->vidname));
+                    //print_r($imageinfo);
+                    ?>
+                    <a href="{{url('/storage/postimages/'.$vid->vidname)}}" data-lightbox="imageset-{{$post->id}}">
+                    <img src=" {{url('/storage/postimages/'.$vidinfo['filename'].".".$vidinfo['extension'])}}" alt="" width="120px">
+                    </a>
+                    @empty
+
+                    @endforelse
+                    
+                  </div>
+                  <div class="line-divider"></div>
+                  <div class="viewpost"><a href="javascript:void(0)" class="commentToggleBtn">{{$post->comments->count()}} 
+                    <span><i class="fa fa-comment" style="font-size: 18px;"></i></span>
+                  </a>
+                  <div class="commentContainer" style="display: none;">
+                   @forelse($post->comments as $usercomment)
+                    <div class="post-comment">
+                    <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
+                    <p><a href="{{url('profiles/'.$usercomment->user->id)}}" class="profile-link">{{$usercomment->user->profiles?$usercomment->user->profiles->f_name.' '.$usercomment->user->profiles->l_name:$usercomment->user->name}}</a>
+                    <i class="em em-laughing"></i>{{$usercomment->comment}}</p>
+                    @if (Auth::check())
+                    @if(count((array) $post->comments) > 0)
+                    @if($usercomment->user->id == Auth::user()->id)
+                    {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
+                    <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this comment?')"></button>
+                    {!! Form::close() !!}
+                    @endif
+                    @endif
+                    @endif
+
+                  </div>
+                  @empty
+                  <h5>No comments added yet</hf>
+                  @endforelse
+                  </div>
+                  <a href="javascript:void(0)" class="postcommentToggleBtn"><span><i class="ion-compose ion-icons-colors" style="font-size: 18px; position:absolute; right:65%; "></i></span></a>
+                  <div class="postcommentContainer" style="display: none;">
+                  <div class="post-comment">
+                    <img src="{{asset('storage/profile/'.Auth::id().'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
+                    {!! Form::open([
+                    'route'=> ['posts.comment',$post->id],
+                      'class'=>'form']) !!}
+                    <div class="form-group">
+                    <input type="text" name="postcomment" class="form-control" placeholder="Post a comment">
+                    <button class="btn btn-light form-control" style="  border: 1px solid grey;" type="submit" name="commentBtn">Comment</button>
+                    </div>
+                    {!! Form::close() !!}
+                   </div>
+                   </div>
+                </div>
+                    </div>
+              </div>
+            </div>
+       @empty
+       <h3>No posts avaliable</h3>
+        @endforelse
+        </div> 
     </div>
   </div>
 <!-- tabs end -->
-</div>
+@endsection
 
           <!-- Newsfeed Common Side Bar Right
           ================================================= -->
-    			<div class="col-md-2 static">
-            <div class="suggestions" id="sticky-sidebar">
-              <h4 class="grey">Who to Follow</h4>
-              <div class="follow-user">
-                <img src="images/users/user-11.jpg" alt="" class="profile-photo-sm pull-left" />
+  @section('sidebar-right')
+          <div class="suggestions" id="sticky-sidebar">
+              <h4 class="grey" style="font-weight: 600;">Friend Requests</h4>
+              <hr>
+              @forelse($requests as $req)
+               <div class="follow-user">
+                <img src="{{asset('storage/profile/'.$req->user_id.'_profile.jpg')}}" alt="" class="profile-photo-sm pull-left" />
                 <div>
-                  <h5><a href="timeline.html">Diana Amber</a></h5>
-                  <a href="#" class="text-green">Add friend</a>
+                  <h6><a href="{{url('profiles/'.$req->user->id)}}">{{isset($req->user->profiles->f_name, $req->user->profiles->l_name)? $req->user->profiles->f_name.' '. $req->user->profiles->l_name: $req->user->name}}</a></h6>
+                  <a class="confirmBtn text-green" data-uid="{{$req->user_id}}" href="javascript:void(0)">Confirm</a>
+                  <a class="deleteBtn text-danger" data-uid="{{$req->id}}"  href="javascript:void(0)">Delete</a>
                 </div>
-              </div>
-              <div class="follow-user">
-                <img src="images/users/user-12.jpg" alt="" class="profile-photo-sm pull-left" />
-                <div>
-                  <h5><a href="timeline.html">Cris Haris</a></h5>
-                  <a href="#" class="text-green">Add friend</a>
-                </div>
-              </div>
-              <div class="follow-user">
-                <img src="images/users/user-13.jpg" alt="" class="profile-photo-sm pull-left" />
-                <div>
-                  <h5><a href="timeline.html">Brian Walton</a></h5>
-                  <a href="#" class="text-green">Add friend</a>
-                </div>
-              </div>
-              <div class="follow-user">
-                <img src="images/users/user-14.jpg" alt="" class="profile-photo-sm pull-left" />
-                <div>
-                  <h5><a href="timeline.html">Olivia Steward</a></h5>
-                  <a href="#" class="text-green">Add friend</a>
-                </div>
-              </div>
-              <div class="follow-user">
-                <img src="images/users/user-15.jpg" alt="" class="profile-photo-sm pull-left" />
-                <div>
-                  <h5><a href="timeline.html">Sophia Page</a></h5>
-                  <a href="#" class="text-green">Add friend</a>
-                </div>
-              </div>
-            </div>
-          </div>
-    		</div>
-    	</div>
-    </div>
+               </div>
+              @empty
+              <h5>No Friend Requests</h5>
+              @endforelse
+             
+             </div>
+@endsection
 
-    @include('partials.footer')
-  
-    <!--preloader-->
-    <div id="spinner-wrapper">
-      <div class="spinner"></div>
-    </div>
-    
-    <!-- Scripts
-    ================================================= -->
-    <script src="{{asset('js/jquery-3.1.1.min.js')}}"></script>
-    <script src="{{asset('js/bootstrap.min.js')}}"></script>
-    <script src="{{asset('js/jquery.sticky-kit.min.js')}}"></script>
-    <script src="{{asset('js/jquery.scrollbar.min.js')}}"></script>
-    <script src="{{asset('js/script.js')}}"></script>
-    <script src="{{asset('js/lightbox.min.js')}}"></script>
-    <script src="http://unpkg.com/ionicons@4.4.2/dist/ionicons.js"></script>
+@section("script")
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 
     <script>
      $(document).ready(function(e){
@@ -230,7 +318,6 @@
  
  $("#home").on("click",".addFrndBtn",function(){
    var url = '{{URL::to('/')}}' +"/addfriend/" +$(this).data('uid');
-    alert(url);
    $.ajax({
           method: "POST",
           url:url,
@@ -254,7 +341,102 @@
 
 
  });
+ 
+//reaction start
+$(".reaction").on("click",".reactionBtn", function(){
+      var url = '{{URL::to('/')}}' +"/react";
+      //alert(url);
+       //$postid = $(this).data('postid');
+      // $reactionid = $(this).data('reaction');
+      // alert($postid + ":" + $reactionid);
+//ajax start
+$.ajax({
+          method: "POST",
+          url:url,
+          /* cache: false,
+          contentType: false,
+          processData: false, */
+          data:{
+            'postid': $(this).data('postid'),
+            'react': $(this).data('reaction'),
+            r:Math.random()},
+        success: (data) =>  {
+          console.log($(this).data('postid'), "INSIDE AJHAX")
+        }
+        }
+        ).done((data) => {
+        //  console.log(data);
+         // return;
+          if(data.success){
+            //alert(data.message);
+            $(this).parent().find('.like').html(data.liked);
+            $(this).parent().find('.smiled').html(data.smiled) ;
+            $(this).parent().find('.heart').html(data.loved);
+            $(this).parent().find('.dislike').html(data.disliked)
+            if (data.liked <= 0) {
+              $(this).parent().find('.like').parent().removeClass('text-primary')
+              // $('#like').parent().removeClass('text-primary')
+              $(this).parent().find('.like').parent().addClass('text-secondary')
+            }else {
+              $(this).parent().find('.like').parent().removeClass('text-secondary')
+              $(this).parent().find('.like').parent().addClass('text-primary')
+            }
+            //
+            if (data.smiled <= 0) {
+              $(this).parent().find('.smiled').parent().removeClass('text-primary')
+              $(this).parent().find('.smiled').parent().addClass('text-secondary')
+            }else {
+              $(this).parent().find('.smiled').parent().removeClass('text-secondary')
+              $(this).parent().find('.smiled').parent().addClass('text-primary')
+            }
+            //
+            if (data.loved <= 0) {
+              $(this).parent().find('.heart').parent().removeClass('text-primary')
+              $(this).parent().find('.heart').parent().addClass('text-secondary')
+            }else {
+              $(this).parent().find('.heart').parent().removeClass('text-secondary')
+              $(this).parent().find('.heart').parent().addClass('text-primary')
+            }
+            //
+            if (data.disliked <= 0) {
+              $(this).parent().find('.dislike').parent().removeClass('text-primary')
+              $(this).parent().find('.dislike').parent().addClass('text-secondary')
+            }else {
+              $(this).parent().find('.dislike').parent().removeClass('text-secondary')
+              $(this).parent().find('.dislike').parent().addClass('text-primary')
+            }
+
+
+            // location.reload();
+            
+        //RESET FORM AFTER POST
+            //$('postform').trigger("reset");
+            //$(".preview").html("");
+          }
+          //console.log(data);
+        }).fail(function(data){
+          alert(data.message);
+        });
+ //ajax end
+
+     });  
+//reaction ends
+//comment container show hide start
+          $(".viewpost").on("click",".commentToggleBtn", function(){
+            $(this).next(".commentContainer").toggle(250);
+
+          });
+//comment container show hide end
+//post comment container show hide start
+$(".viewpost").on("click",".postcommentToggleBtn", function(){
+            $(this).next(".postcommentContainer").toggle(250);
+
+          });
+//post comment container show hide end
+
+
    });
     </script>
+    @endsection
   </body>
 </html>

@@ -13,7 +13,7 @@
 use App\Events\Myevent;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 Auth::routes();
 
@@ -35,8 +35,11 @@ Route::post('posts/comment/{id}',
 Route::post('react','PostController@react');
  Route::get('search',
  ['as' => 'search', 'uses' => 'Searchcontroller@index']);
+//  Route::get('chat',
+//  ['as' => 'chat', 'uses' => 'ChatController@index']);
  Route::post('addfriend/{id}', 'FriendController@add');
  Route::post('confirmfriend/{id}', 'FriendController@confirm'); 
+ Route::post('deletefriend/{id}', 'FriendController@deleteFriend'); 
 
  Route::get('chat', 'ChatController@index');
  Route::post('sendchat', 'ChatController@sendMessage');
@@ -44,6 +47,9 @@ Route::post('react','PostController@react');
  Route::get('friends/{id}', 'FriendController@showFriends'); 
  Route::get('/activity', 'ActivityController@index')->name('activity');
  Route::resource('notification', 'NotificationController')->middleware('auth');
- Route::post('image/{id}', 'PostController@images'); 
+ Route::get('images/{id}', 'PostController@images'); 
  Route::get('change-password', 'ChangePasswordController@index');
  Route::post('change-password', 'ChangePasswordController@store')->name('change.password');
+ Route::delete('deleteComment/{comment}', 'PostController@deleteComment')->name('delete.comment');
+ Route::delete('deleteEducation/{id}', 'EducationController@deleteEducation')->name('delete.education');
+ Route::delete('deleteWork/{id}', 'WorkController@deleteWork')->name('delete.work');

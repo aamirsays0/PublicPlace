@@ -55,6 +55,21 @@ class FriendController extends Controller
           
 
     } 
+
+    public function deleteFriend($id){
+        $f = Friend::findOrFail($id)
+            ->where('friend_id',Auth::id())
+            ->where('approved', '0')
+            ->where('blocked', '0')
+            ->update(['blocked'=>'1']);
+         if($f){
+            return response()->json(['success'=>'true','message'=>'Request cancelled successfully. ']);
+        }
+        else{
+            return response()->json(['success'=>'false','message'=>'Problem !! ']);    
+        }
+    } 
+    
     public function showFriends($id)
     {
         $allFriends = FriendsList::Friends($id);

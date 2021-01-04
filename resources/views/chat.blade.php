@@ -14,6 +14,9 @@
               <span class="input-group-addon">
                 <input type="text" class="search-bar"  placeholder="Search" >
                 <button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>
+                <!-- {!! Form::open(['url' => 'chat','method' => 'get','class' => 'form-inline my-2 my-lg-0', 'style' => 'padding-left: 0px;']) !!}
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" aria-label="Search">
+                    {!! Form::close() !!} -->
                 </span> 
              </div>
             </div>
@@ -22,9 +25,9 @@
            @forelse($users as $user)
             <div class="chat_list" data-userid ="{{$user->id}}">
               <div class="chat_people">
-                <div class="chat_img"> <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt="sunil"> </div>
+                <div class="chat_img"> <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt=""> </div>
                 <div class="chat_ib">
-                  <h5>{{$user->name}}<span class="chat_date">Dec 25</span></h5>
+                  <h5>{{isset($user->profiles->f_name, $user->profiles->l_name)? $user->profiles->f_name.' '. $user->profiles->l_name: $user->name}}<span class="chat_date">Dec 25</span></h5>
                   <!-- <p>Test, which is a new approach to have all solutions 
                     astrology under one roof.</p> -->
                 </div>
@@ -51,11 +54,11 @@
                   solutions</p>
                 <span class="time_date"> 11:01 AM    |    June 9</span> </div>
             </div> -->
-          </div> -->
+          </div>
           <div class="type_msg">
             <div class="input_msg_write">
               <input type="text" fid="0" id="write_msg" placeholder="Type a message" />
-              <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+              <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
             </div>
           </div>
         </div>
@@ -121,11 +124,16 @@ if(data.type == "message" || data.user_id == '{{Auth::id()}}'){
         //ajax setup
   //select user
         $(".inbox_chat").on("click",".chat_list",function(){
+          
+            $.ajaxSetup({
+                headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                   }
+              });
             $s = $(this);
             if($('.chat_list').hasClass('active_chat')){
                 $('.chat_list').removeClass('active_chat');
             }
-            
             $s.addClass('active_chat');
             $s.find('p').html('');
             $withUser= $s.data("userid");
@@ -134,6 +142,8 @@ if(data.type == "message" || data.user_id == '{{Auth::id()}}'){
              var url = '{{URL::to('/')}}' +"/chathistory";
                 $.ajax({
           method: "POST",
+          url:url,
+
           /* url:url,
            cache: false,
           contentType: false,
@@ -167,9 +177,6 @@ if(data.type == "message" || data.user_id == '{{Auth::id()}}'){
           $.ajax({
           method: "POST",
           url:url,
-         /*  cache: false,
-          contentType: false,
-          processData: false, */
           data:{
             fid:$(this).attr('fid'),
             m:$(this).val()

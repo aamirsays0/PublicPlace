@@ -18,12 +18,8 @@
 		<link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/headerNewStyles.css')}}"/>
-    <link href="{{asset('css/my_css.css')}}" rel="stylesheet"/>
     <link rel="stylesheet" href="{{asset('css/lightbox.min.css')}}" />
 
-    
-    <!--Google Font-->
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700,700i" rel="stylesheet">
     
     <!--Favicon-->
     <link rel="shortcut icon" type="image/png" href="{{asset('images/fav.png')}}">
@@ -50,20 +46,15 @@
                 <a href="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" data-lightbox="pp">
                 <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="img-fluid profile-photo"/>
                  </a>
-                  <h3>{{Auth::user()->name}}</h3>
-                  <p class="text-muted">Creative Director</p>
+                 <h4>{{isset($user->profiles->f_name , $user->profiles->l_name) ? $user->profiles->f_name.' '.$user->profiles->l_name : $user->name}}</h4>
                 </div>
               </div>
               <div class="col-md-9">
                 <ul class="list-inline profile-menu">
-                  <li><a href="timeline.html">Timeline</a></li>
-                  <li><a href="{{url('profiles/about')}}" class="active">About</a></li>
+                  <li><a href="{{url('profiles/'.$user->id)}}">Timeline</a></li>
+                  <li><a href="{{url('profiles/about')}}">About</a></li>
                   <li><a href="timeline-album.html">Album</a></li>
-                  <li><a href="timeline-friends.html">Friends</a></li>
-                </ul>
-                <ul class="follow-me list-inline">
-                  <li>1,299 people following her</li>
-                  <li><button class="btn-primary">Add Friend</button></li>
+                  <li><a href="{{url('friends/'.$user->id)}}">Friends</a></li>
                 </ul>
               </div>
             </div>
@@ -116,9 +107,7 @@
               ================================================= -->
               <div class="edit-profile-container">
                 <div class="block-title">
-                  <h4 class="grey"><i class="icon ion-android-checkmark-circle"></i>Edit basic information</h4>
-                  <div class="line"></div>
-                  <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate</p>
+                  <h4 class="grey"><i class="icon ion-android-checkmark-circle"></i> Edit basic information</h4>
                   <div class="line"></div>
                 </div>
                 <div class="edit-block">
@@ -293,8 +282,6 @@
                       <div class="form-group col-xs-12">
                         <label for="my-info">About me</label>
                         <textarea id="my-info" name="information" class="form-control" placeholder="Some texts about me" rows="4" cols="400">
-                         @if($user->profiles)
-                          @endif
                         </textarea>
                       </div>
                     </div>
@@ -315,109 +302,29 @@
                 </div>
               </div>
             </div>
-  <div class="col-md-2 staticactivity" style="width: 224px;">
-
-   <div id="sticky-sidebar">
-   <h4 class="grey">Your Activity</h4>
-    <div class="feed-item"> 
-    <div class="live-activity">
-     <?php
-      $olddate = "";
-      $newdate = "";
-      $first = true;
-      $content = "";
-      foreach($allActivity as $singleActivity){
-        $newdate = $singleActivity->created_at->format('Y-m-d');
-        if($first){
-            $olddate = $singleActivity->created_at->format('Y-m-d');
-        }
-        if($olddate === $newdate){
-            if($first == true){
-                $first = false;
-                $content .="<p class='text-muted'>".$newdate."</p>";
-            }
-            $content .= \App\Custom\Activity::getview($singleActivity);
-        }
-        else{
-            $content .="</div>";
-            $content .="<p class='text-muted'>".$newdate."</p>";
-            $content .= \App\Custom\Activity::getview($singleActivity);
-        }
-        $olddate = $newdate;
-      }
-      echo $content."</div>";
-      ?>
-      </div>
-      {{$allActivity->links()}}
-      </div>
-      </div></div>
+            <div class="col-md-2 static">
+          <div id="sticky-sidebar">
+            <h4 class="grey">Your activities</h4>
+            @foreach ($allActivity as $activity)
+              <div class="feed-item">
+                <div class="live-activity">
+                  <p>
+                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link">You {{ $activity->type }}ed on a Post</a>
+                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ $activity->post->user->name }}</a>
+                  </p>
+                  <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
+                </div>
+              </div>
+            @endforeach          
+          </div>
+        </div>
       </div>
    
 
     <!-- Footer
     ================================================= -->
-    <footer id="footer">
-      <div class="container">
-      	<div class="row">
-          <div class="footer-wrapper">
-            <div class="col-md-3 col-sm-3">
-              <a href=""><img src="images/logo-black.png" alt="" class="footer-logo"></a>
-              <ul class="list-inline social-icons">
-              	<li><a href="#"><i class="icon ion-social-facebook"></i></a></li>
-              	<li><a href="#"><i class="icon ion-social-twitter"></i></a></li>
-              	<li><a href="#"><i class="icon ion-social-googleplus"></i></a></li>
-              	<li><a href="#"><i class="icon ion-social-pinterest"></i></a></li>
-              	<li><a href="#"><i class="icon ion-social-linkedin"></i></a></li>
-              </ul>
-            </div>
-            <div class="col-md-2 col-sm-2">
-              <h5>For individuals</h5>
-              <ul class="footer-links">
-                <li><a href="">Signup</a></li>
-                <li><a href="">login</a></li>
-                <li><a href="">Explore</a></li>
-                <li><a href="">Finder app</a></li>
-                <li><a href="">Features</a></li>
-                <li><a href="">Language settings</a></li>
-              </ul>
-            </div>
-            <div class="col-md-2 col-sm-2">
-              <h5>For businesses</h5>
-              <ul class="footer-links">
-                <li><a href="">Business signup</a></li>
-                <li><a href="">Business login</a></li>
-                <li><a href="">Benefits</a></li>
-                <li><a href="">Resources</a></li>
-                <li><a href="">Advertise</a></li>
-                <li><a href="">Setup</a></li>
-              </ul>
-            </div>
-            <div class="col-md-2 col-sm-2">
-              <h5>About</h5>
-              <ul class="footer-links">
-                <li><a href="">About us</a></li>
-                <li><a href="">Contact us</a></li>
-                <li><a href="">Privacy Policy</a></li>
-                <li><a href="">Terms</a></li>
-                <li><a href="">Help</a></li>
-              </ul>
-            </div>
-            <div class="col-md-3 col-sm-3">
-              <h5>Contact Us</h5>
-              <ul class="contact">
-                <li><i class="icon ion-ios-telephone-outline"></i>+1 (234) 222 0754</li>
-                <li><i class="icon ion-ios-email-outline"></i>info@thunder-team.com</li>
-                <li><i class="icon ion-ios-location-outline"></i>228 Park Ave S NY, USA</li>
-              </ul>
-            </div>
-          </div>
-      	</div>
-      </div>
-      <div class="copyright">
-        <p>Thunder Team © 2016. All rights reserved</p>
-      </div>
-		</footer>
-    
+    @include('partials.footer')
+
     <!--preloader-->
     <div id="spinner-wrapper">
       <div class="spinner"></div>
@@ -444,43 +351,6 @@
           $('#cpmodal').modal();
           //location.reload();
         });
-        $("#contentpostContainer").on("click",".reactionBtn", function(){
-      var url = '{{URL::to('/')}}' +"/react";
-      //alert(url);
-       //$postid = $(this).data('postid');
-      // $reactionid = $(this).data('reaction');
-      // alert($postid + ":" + $reactionid);
-//ajax start
-$.ajax({
-          method: "POST",
-          url:url,
-          /* cache: false,
-          contentType: false,
-          processData: false, */
-          data:{
-            'postid': $(this).data('postid'),
-            'react': $(this).data('reaction'),
-            r:Math.random()}
-        }).done(function(data){
-         console.log(data);
-         // return;
-          if(data.success){
-            //alert(data.message);
-
-            location.reload();
-            
-        //RESET FORM AFTER POST
-            //$('postform').trigger("reset");
-            //$(".preview").html("");
-          }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
-        });
- //ajax end
-
-     });  
-//reaction ends
       })
       
     </script>
