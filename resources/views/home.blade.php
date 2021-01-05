@@ -16,7 +16,7 @@
 <div id="sticky-sidebar">
         <div class="profile-card static" style="background-image: url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ');">
         <div class="form-group w-50" >
-                    @if (file_exists(asset('storage/profile/'.Auth::id().'_profile.jpg')) )
+                    @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
                     <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="profile-photo-md " />
                     @else
                        <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
@@ -138,6 +138,7 @@
               </div>
               @endif
        <div class="scroll">
+      
        @forelse($posts as $post)
 
             
@@ -174,6 +175,10 @@
                     @endif</h5>
                     <p class="text-muted">Published about {{\Carbon\Carbon::parse($post->created_at)->diffForHumans()}}</p>
                   </div>
+                  {{-- <video width="320" height="240" controls>
+                    <source src="{{ asset('storage/postimages/vid.mp4') }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video> --}}
                   @php
                   $reactCount = [
                    'l'=>0,

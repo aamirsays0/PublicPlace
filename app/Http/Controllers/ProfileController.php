@@ -273,5 +273,23 @@ $data[] = $name;
  
         
     }
+
+    public function viewFriendsProfile($id) {
+        if ($id) {
+            $friends = User::with('profiles')
+            ->where('id',$id)
+            ->get();
+            $userinfo = User::with('profiles')->find($id);
+            $countryList = config('country.list');
+            $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(10)->get(); 
+            return view('showfriendsprofile')
+            ->with('user',$userinfo)
+            ->with('country',$countryList)->with('allActivity',$allActivity)->with ('friends', $friends) ;;
+
+            if(!empty($user)) {
+                return view();
+            }
+        }
+    }
    
 }

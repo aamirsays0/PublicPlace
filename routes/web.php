@@ -28,6 +28,9 @@ Route::resource('education', 'EducationController')->middleware('auth');
 Route::resource('interest', 'InterestController')->middleware('auth');
 Route::resource('work', 'WorkController')->middleware('auth');
 
+// friends profile
+Route::get('/viewprofile/{id}', 'ProfileController@viewFriendsProfile')->name('view.friends.profile');
+
 //comment in post
 Route::post('posts/comment/{id}',
  ['as' => 'posts.comment', 'uses' => 'PostController@postcomment']);

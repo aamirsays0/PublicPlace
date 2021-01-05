@@ -71,8 +71,6 @@ class PostController extends Controller
         $rules = [
             'content' => 'required',
             'image.*' => 'image|mimes:jpeg,png,jpg,gif|max:8000',
-            'videos.*' => 'video|mimes:mp4,MOV|max:30000'
-
         ];
         $validator = Validator::make($request->all(), $rules);
 
@@ -117,13 +115,13 @@ class PostController extends Controller
                     //MOVE IMAGE INTO POSTIMAGES FOLDER             
         $vidage->move(public_path().'/storage/postimages/',$name);
         // and you are ready to go ...
-        $resizedVidage = Image::make(public_path().'/storage/postimages/' .$name)->resize(800, null, function ($constraint) {
-    $constraint->aspectRatio();
-});
+//         $resizedVidage = Image::make(public_path().'/storage/postimages/' .$name)->resize(800, null, function ($constraint) {
+//     $constraint->aspectRatio();
+// });
 
 
 //save the file as jpg with medium quality
-       $resizedVidage->save(public_path().'/storage/postimages/'.$name, 60);
+    //    $resizedVidage->save(public_path().'/storage/postimages/'.$name, 60);
        $data[] = $name;            
        //INSERT INTO PICTURE TABLE
                     $vid = new Video();
@@ -355,10 +353,8 @@ class PostController extends Controller
     }
     public function images($id)
     {
-        $userimage = Post::with('pictures')->where('user_id',Auth::user())
-      ->find($id);
-
-             return view('imageuploaded')->with('posts', $userimage);
+        $posts = Post::with('pictures')->get();
+             return view('imageuploaded', compact('posts'));
     }
 
     public function reaction($id, $type){

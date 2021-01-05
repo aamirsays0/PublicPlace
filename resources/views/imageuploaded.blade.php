@@ -127,9 +127,9 @@
                         <a class="btn text-red"><i class="fa fa-thumbs-down"></i> 12</a>
                       </div>
                       <div class="user-info">
-                      @forelse($posts->imgname as $pic)
+                      @forelse($posts as $post)
                     <?php
-                    $imageinfo = pathinfo(url('/storage/postimages/'.$pic->imgname));
+                    $imageinfo = pathinfo(url('/storage/postimages/'.$post->imgname));
                     //print_r($imageinfo);
                     ?>   @if (Auth::check())
                        <a href="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" data-lightbox="imageset-{{$post->id}}">
