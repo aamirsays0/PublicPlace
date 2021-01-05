@@ -99,7 +99,34 @@
             <div class="col-md-3">
               
       
-      @include('partials.profilemenu')
+  <ul class="edit-menu " style="margin-top: 80px">
+    <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+      <i class="icon ion-ios-information-outline"></i>
+      @if ( isset($user) && $user->id === Auth::id())
+      <a href="{{url('profiles')}}">  Edit Basic Information</a>
+      @else
+      <a href="{{ route('view.friends.profile', $user->id) }}">  Basic Information</a>
+      @endif
+    </li>
+    <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+    @if ( isset($user) && $user->id === Auth::id())
+      <i class="icon ion-ios-information-outline"></i>
+      <a href="{{ route('view.friends.profile', $user->id) }}">Basic Information</a>
+       @endif
+    </li>
+      <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i>
+      @if ( isset($user) && $user->id === Auth::id())
+      <a href="{{url('education')}}">  Education & Work</a>
+      @else
+      <a href="{{ route('view.friends.education', $user->id) }}">  Education & Work</a>
+      @endif        </li>
+      <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
+      @if ( isset($user) && $user->id === Auth::id())
+      <i class="icon ion-ios-locked-outline"></i>
+      <a href="{{url('change-password')}}">  Change Password</a>
+      @endif</li>
+
+  </ul>            
             </div>
    <div class="col-md-7" style="padding-right: 30px;">
 
@@ -309,8 +336,8 @@
               <div class="feed-item">
                 <div class="live-activity">
                   <p>
-                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link">You {{ $activity->type }}ed on a Post</a>
-                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ $activity->post->user->name }}</a>
+                  <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize">You {{ $activity->type }}ed on a Post</a>
+                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }}</a>
                   </p>
                   <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
                 </div>

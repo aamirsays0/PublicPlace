@@ -164,6 +164,7 @@ section .wrapper{
 #page-contents{
   padding: 30px 0 50px;
   background-color: #e2e5e5c7;
+  min-height: 1500px;
 }
 
 .btn-primary{
@@ -272,7 +273,7 @@ ul{
 }
 
 ul li{
-  list-style-image: url("../images/bullet.png");
+  list-style: none;
 }
 ul i.ion-ios-information-outline{
   color: #93c74b;

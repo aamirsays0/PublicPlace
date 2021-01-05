@@ -92,7 +92,24 @@
       <a href="{{ route('view.friends.profile', $user->id) }}">  Basic Information</a>
       @endif
     </li>
-      <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i><a href="{{url('education')}}">  Education and Work</a></li>
+    <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+      @if ( isset($user) && $user->id === Auth::id())
+      <i class="icon ion-ios-information-outline"></i>
+      <a href="{{ route('view.friends.profile', $user->id) }}"> Edit Basic Information</a>
+       @endif
+    </li>
+      <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i>
+      @if ( isset($user) && $user->id === Auth::id())
+      <a href="{{url('education')}}">  Education & Work</a>
+      @else
+      <a href="{{ route('view.friends.education', $user->id) }}">  Education & Work</a>
+      @endif        </li>
+      <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
+      @if ( isset($user) && $user->id === Auth::id())
+      <i class="icon ion-ios-locked-outline"></i>
+      <a href="{{url('change-password')}}">  Change Password</a>
+      @endif</li>
+
   </ul>            </div>
    <div class="col-md-7" style="padding-right: 30px;">
 
@@ -101,6 +118,7 @@
               <div class="edit-profile-container">
                 <div class="edit-block">
                    <div class="row">
+                   @if($user->profiles)
                         <div class="col-md-6 col-sm-12">
                             <h5>Email: <span style="color: #7f8c8d">{{ $user->email }}</span> </h5>
                         </div>
@@ -120,7 +138,9 @@
                             <h5>Bio</h5>
                             <h5 style="color: #7f8c8d">{{ $user->profiles->description }}</h5>
                         </div>
-
+                    @else
+                    <h4>This user has no profile information</h4>
+                    @endif
                    </div>
                 </div>
               </div>

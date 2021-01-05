@@ -46,9 +46,13 @@
             <div class="row">
               <div class="col-md-3">
                 <div class="profile-info">
-                <a href="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" data-lightbox="pp">
-                <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt="" class="img-fluid profile-photo"/>
-                 </a>
+                @if (file_exists(public_path('storage/profile/'.$user->id.'_profile.jpg')) )
+                    <a href="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" data-lightbox="pp">
+                    <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt="" class="img-fluid profile-photo"/>
+                    @else
+                    <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo" id="uploadImage" alt="">
+                   @endif
+                   </a>
                   <h4>{{isset($user->profiles->f_name , $user->profiles->l_name) ? $user->profiles->f_name.' '.$user->profiles->l_name : $user->name}}</h4>
                 </div>
               </div>
@@ -104,8 +108,37 @@
               
       
         <!--Edit Profile Menu-->
-        @include('partials.profilemenu')
-            </div>
+        <ul class="edit-menu " style="margin-top: 80px">
+    <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+      <i class="icon ion-ios-information-outline"></i>
+      @if ( isset($user) && $user->id === Auth::id())
+      <a href="{{url('profiles')}}">Edit Basic Information</a>
+      @else
+      <a href="{{ route('view.friends.profile', $user->id) }}">  Basic Information</a>
+      @endif
+    </li>
+    <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+      @if ( isset($user) && $user->id === Auth::id())
+      <i class="icon ion-ios-information-outline"></i>
+      <a href="{{ route('view.friends.profile', $user->id) }}">Basic Information</a>
+       @endif
+    </li>
+      <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i>
+      @if ( isset($user) && $user->id === Auth::id())
+      <a href="{{url('education')}}"> Education & Work</a>
+      @else
+      <a href="{{ route('view.friends.education', $user->id) }}">  Education & Work</a>
+      @endif  
+            </li>
+
+      <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
+      @if ( isset($user) && $user->id === Auth::id())
+      <i class="icon ion-ios-locked-outline"></i>
+        <a href="{{url('change-password')}}">  Change Password</a>
+        @endif
+        </li>
+
+  </ul>            </div>
             <div class="col-md-7" style="padding-right: 30px;">
             @if ($message = Session::get('success'))
               <div class="alert alert-success" id="errorcontainer">
@@ -114,7 +147,6 @@
               @endif
             
 <!-- tabs start-->
-<h3>{{isset($user->profiles->f_name , $user->profiles->l_name) ? $user->profiles->f_name.' '.$user->profiles->l_name : $user->name}} Timeline</h3>
   <br>
                   @if ($errors->any())
                     <div class="alert alert-danger">
@@ -285,7 +317,7 @@
               <div class="feed-item">
                 <div class="live-activity">
                   <p>
-                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link">You {{ $activity->type }}ed on a Post</a>
+                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }} {{ $activity->type }}ed on a Post</a>
                     <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->user->profiles->f_name) ? $activity->user->profiles->f_name : $activity->user->name }}</a>
                   </p>
                   <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>

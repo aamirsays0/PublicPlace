@@ -30,7 +30,7 @@
         <ul class="nav-news-feed">
 
               <li><i class="icon ion-ios-paper"></i><div><a href="newsfeed.html">My Newsfeed</a></div></li>
-              <li><i class="icon ion-ios-people"></i><div><a href="newsfeed-people-nearby.html">People Nearby</a></div></li>
+              <li><i class="icon ion-ios-people"></i><div><a href="{{ route('people.nearby')}}">People Nearby</a></div></li>
               <li><i class="icon ion-ios-people-outline"></i><div><a href="{{url('friends/'.Auth::id())}}">Friends</a></div></li>
               <li><i class="icon ion-chatboxes"></i><div><a href="{{url('chat')}}">Messages</a></div></li>
               <li><i class="icon ion-images"></i><div><a href="{{url('images/'.Auth::id())}}">Images</a></div></li>
@@ -42,7 +42,12 @@
               <ul class="online-users list-inline list-unstyled">
               @forelse($friends as $friend)
                 @if($friend->id != Auth::id())
-                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->id)}}" title="{{$friend->name}}"><img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="user" class="img-responsive profile-photo" /></a></li>
+                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->id)}}" title="{{$friend->name}}">
+                @if (file_exists(public_path('storage/profile/'.$friend->id.'_profile.jpg')) )
+                    <img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="" class="profile-photo-md " />
+                    @else
+                    <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
+                   @endif
                  @endif
                  @empty
               <h3>no friends yet, search for new friends</h3>

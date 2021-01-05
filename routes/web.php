@@ -30,6 +30,8 @@ Route::resource('work', 'WorkController')->middleware('auth');
 
 // friends profile
 Route::get('/viewprofile/{id}', 'ProfileController@viewFriendsProfile')->name('view.friends.profile');
+//frirend or user education
+Route::get('/vieweducation/{id}', 'EducationController@vieweducation')->name('view.friends.education');
 
 //comment in post
 Route::post('posts/comment/{id}',
@@ -56,3 +58,5 @@ Route::post('react','PostController@react');
  Route::delete('deleteComment/{comment}', 'PostController@deleteComment')->name('delete.comment');
  Route::delete('deleteEducation/{id}', 'EducationController@deleteEducation')->name('delete.education');
  Route::delete('deleteWork/{id}', 'WorkController@deleteWork')->name('delete.work');
+ Route::get('/nearby', 'HomeController@nearby')->name('people.nearby');
+

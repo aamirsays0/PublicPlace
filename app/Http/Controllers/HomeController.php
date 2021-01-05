@@ -88,4 +88,26 @@ class HomeController extends Controller
         ->with('friends', $friends)->with('req', $sentRequest);
 
     }
+    public function nearby()
+     {
+        
+        $id = Auth::id();
+        $friendreq = Friend::with('user')
+                ->where("friend_id",$id)
+                 ->where('approved','0')
+                 ->where('blocked', '0')
+                 ->get();
+                 $allFriends = FriendsList::Friends($id);
+        //dd($allFriends);
+        $friends = User::with('profiles')
+         ->whereIn('id',$allFriends)
+          ->get();
+        $sentRequest = FriendsList::Friends(Auth::id());
+        $userinfo = User::with('profiles')->whereIn('city', ['islamabad']);
+         return view('peoplenearby')
+         ->with('users',$userinfo)->with('requests', $friendreq)
+         ->with('friends', $friends)->with('req', $sentRequest);
+ 
+
+    }
 }

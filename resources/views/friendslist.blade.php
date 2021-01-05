@@ -6,31 +6,35 @@
 
 @section('sidebar-left')
 <div class="profile-card" style="background-image: url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ');">
-          <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="user" class="profile-photo" />
-            	<h5><a href="{{url('profiles/'.Auth::id())}}" class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
+                 @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
+                    <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="profile-photo-md " />
+                    @else
+                    <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
+                   @endif
+                	<h5><a href="{{url('profiles/'.Auth::id())}}" class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
             	<a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()-1}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()-1}} Friends</a>
             </div><!--profile card ends-->
         <ul class="nav-news-feed">
-              <li><i class="icon ion-ios-paper"></i><div><a href="newsfeed.html">My Newsfeed</a></div></li>
+        <li><i class="icon ion-ios-paper"></i><div><a href="newsfeed.html">My Newsfeed</a></div></li>
               <li><i class="icon ion-ios-people"></i><div><a href="newsfeed-people-nearby.html">People Nearby</a></div></li>
               <li><i class="icon ion-ios-people-outline"></i><div><a href="{{url('friends/'.Auth::id())}}">Friends</a></div></li>
-              <li><i class="icon ion-chatboxes"></i><div><a href="newsfeed-messages.html">Messages</a></div></li>
-              <li><i class="icon ion-images"></i><div><a href="newsfeed-images.html">Images</a></div></li>
+              <li><i class="icon ion-chatboxes"></i><div><a href="{{url('chat')}}">Messages</a></div></li>
+              <li><i class="icon ion-images"></i><div><a href="{{url('images/'.Auth::id())}}">Images</a></div></li>
               <li><i class="icon ion-ios-videocam"></i><div><a href="newsfeed-videos.html">Videos</a></div></li>
-            </ul><!--news-feed links ends-->
-            <!--  --><!--Friends block ends-->
+               </ul><!--news-feed links ends-->
+            <!--  -->
+            <!--Friends block ends-->
             <div id="chat-block">
             <button class="ctitle">Chat online</button>
               <ul class="online-users list-inline list-unstyled">
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Linda Lohan"><img src="images/users/user-2.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Sophia Lee"><img src="images/users/user-3.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="John Doe"><img src="images/users/user-4.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Alexis Clark"><img src="images/users/user-5.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="James Carter"><img src="images/users/user-6.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Robert Cook"><img src="images/users/user-7.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Richard Bell"><img src="images/users/user-8.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Anna Young"><img src="images/users/user-9.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Julia Cox"><img src="images/users/user-10.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
+                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Linda Lohan"><img src="{{asset('images/users/user-2.jpg')}}" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
+                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Sophia Lee"><img src="{{asset('images/users/user-3.jpg')}}" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
+                <li class="list-inline-item"><a href="newsfeed-messages.html" title="John Doe"><img src="{{asset('images/users/user-4.jpg')}}" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
+                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Alexis Clark"><img src="{{asset('images/users/user-5.jpg')}}" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
+                <li class="list-inline-item"><a href="newsfeed-messages.html" title="James Carter"><img src="{{asset('images/users/user-6.jpg')}}" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
+                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Robert Cook"><img src="{{asset('images/users/user-7.jpg')}}" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
+                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Richard Bell"><img src="{{asset('images/users/user-8.jpg')}}" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
+                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Anna Young"><img src="{{asset('images/users/user-9.jpg')}}" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
               </ul>
             </div><!--chat block ends-->
 @endsection
@@ -46,9 +50,17 @@
                   <div class="col-md-6 col-sm-6">
                     <div class="friend-card">
                       @if($friend->id !== Auth::id())
-                      <img src="{{asset('storage/profile/'.$friend->id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
-                      <div class="card-info" style="position: absolute;">
-                        <img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="user" class="profile-photo-lg" />
+                        @if (file_exists(public_path('storage/profile/'.$friend->id.'_cover.jpg')) )
+                         <img src="{{asset('storage/profile/'.$friend->id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
+                         @else
+                         <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover" id="uploadImage" alt="">
+                         @endif
+                        <div class="card-info" style="position: absolute;">
+                        @if (file_exists(public_path('storage/profile/'.$friend->id.'_profile.jpg')) )
+                        <img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="user" class="profile-photo-lg" style="position: absolute;bottom: 118%;left: 10%;"/>
+                        @else
+                       <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
+                        @endif
                       <div class="friend-info">
                           <a href="#" class="pull-right text-green">My Friend</a>
                           <h5><a href="{{url('profiles/'.$friend->id)}}" class="profile-link">

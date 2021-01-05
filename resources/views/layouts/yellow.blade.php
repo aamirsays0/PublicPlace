@@ -19,12 +19,12 @@
 		<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}" />
 		<link rel="stylesheet" href="{{asset('css/style.css')}}" />
     <link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}" />
+    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}" />
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/duotone.css" integrity="sha384-R3QzTxyukP03CMqKFe0ssp5wUvBPEyy9ZspCB+Y01fEjhMwcXixTyeot+S40+AjZ" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/fontawesome.css" integrity="sha384-eHoocPgXsiuZh+Yy6+7DsKAerLXyJmu2Hadh4QYyt+8v86geixVYwFqUvMU8X90l" crossorigin="anonymous"/>   
     <link rel="stylesheet" href="{{asset('css/lightbox.min.css')}}" />
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="{{asset('css/emoji.css')}}" rel="stylesheet">
-    <link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}" />
     <link rel="stylesheet" href="{{asset('css/headerNewStyles.css')}}"/>
 
     <!--Favicon-->
@@ -88,6 +88,7 @@
     <script src="{{asset('js/bootstrap.min.js')}}"></script>
     <script src="{{asset('js/jquery.sticky-kit.min.js')}}"></script>
     <script src="{{asset('js/jquery.scrollbar.min.js')}}"></script>
+    <script src="{{asset('js/masonry.pkgd.min.js')}}"></script>
     <script src="{{asset('js/script.js')}}"></script>
     <script src="{{asset('js/lightbox.min.js')}}"></script>
     <script src="{{asset('js/jquery.jscroll.min.js')}}"></script>

@@ -42,6 +42,25 @@ class EducationController extends Controller
         dd($data); */
         return view('education')->with('userinfo',$userinfo)->with('allActivity',$allActivity)->with('friends', $friends) ;
     }
+    
+    public function vieweducation($id)
+    {
+        $allFriends = FriendsList::Friends(Auth::id());
+
+        $friends = User::with('profiles')
+        ->whereIn('id',$allFriends)
+         ->get();
+        
+       // dd(Route::current());
+       $userinfo= User::with(['education','works'])->find($id);
+       $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(4)->get();
+      //dd($userinfo);
+      /*   $userid = Auth::id();
+        $data['education']= Education::where('user_id', $userid)->orderBy('created_at', 'desc')->get();
+        $data['work']= Work::where('user_id', $userid)->orderBy('created_at', 'desc')->get();
+        dd($data); */
+        return view('showusereducation')->with('user',$userinfo)->with('allActivity',$allActivity)->with('friends', $friends) ;
+    }
 
     /**
      * Show the form for creating a new resource.
