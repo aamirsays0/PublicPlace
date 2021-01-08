@@ -6,7 +6,7 @@
 @section('sidebar-left')
         <div class="profile-card" style="background-image: url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ');">
         <div class="form-group w-50" >
-                    @if (file_exists(asset('storage/profile/'.Auth::id().'_profile.jpg')))
+               @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
                     <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="profile-photo-md " />
                     @else
                        <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
@@ -30,7 +30,13 @@
               <ul class="online-users list-inline list-unstyled">
               @forelse($friends as $friend)
                 @if($friend->id != Auth::id())
-                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->id)}}" title="{{$friend->name}}"><img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="user" class="img-responsive profile-photo" /></a></li>
+                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->id)}}" title="{{$friend->name}}">
+                @if (file_exists(public_path('storage/profile/'.$friend->id.'_profile.jpg')) )
+                    <img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="" class="profile-photo-md " />
+                    @else
+                    <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
+                   @endif
+                   </a></li>
                  @endif
                  @empty
               <h3>no friends yet, search for new friends</h3>

@@ -25,6 +25,7 @@ class Searchcontroller extends Controller
         dd($request); */
     // $sentRequest = Friend::where('user_id',Auth::id())->pluck('friend_id')->toArray();
        // dd($sentRequest);
+       $his_friends = Friend::where('user_id', $id)->get();
        $allFriends = FriendsList::Friends(Auth::id());
        $posts = Post::with(['user','pictures','comments.user', 'reactions'])
            ->whereIn('user_id',$allFriends)
@@ -51,7 +52,7 @@ class Searchcontroller extends Controller
         ->get();
 
 
-        return view("search", compact('friends'))
+        return view("search", compact('his_friends'))
         ->with('users', $searchResult)->with('profileposts', $profileposts)
         ->with('req', $sentRequest)->with('friends', $friends)->with('requests', $friendreq)->with('posts', $posts);
     }

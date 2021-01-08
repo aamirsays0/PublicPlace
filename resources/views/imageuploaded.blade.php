@@ -133,7 +133,7 @@
                     //print_r($imageinfo);
                     ?>   @if (Auth::check())
                        <a href="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" data-lightbox="imageset-{{$post->id}}">
-                      <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" width="120px">
+                      <img src="{{asset('storage/profile/'.$post_id.'_profile.jpg')}}" alt="" width="120px">
                         <div class="user">
                           <h6><a href="#" class="profile-link">Richard Bell</a></h6>
                           <a class="text-green" href="#">Friend</a>

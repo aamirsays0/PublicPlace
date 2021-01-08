@@ -15,21 +15,19 @@
 @section('sidebar-left')
 <div id="sticky-sidebar">
         <div class="profile-card static" style="background-image: url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ');">
-        <div class="form-group w-50" >
                     @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
                     <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="profile-photo-md " />
                     @else
                        <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
                     @endif
-             	  <h5><a href="{{url('profiles/'.Auth::id())}}" class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
+             	  <h5><a class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
             	   <a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()-1}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()-1}} Friends</a>
-            </div>  
           </div>
           </div>
 <!--profile card ends-->
         <ul class="nav-news-feed">
 
-              <li><i class="icon ion-ios-paper"></i><div><a href="newsfeed.html">My Newsfeed</a></div></li>
+              <li><i class="icon ion-ios-paper"></i><div><a href="{{url('profiles/'.Auth::id())}}">My Timeline</a></div></li>
               <li><i class="icon ion-ios-people"></i><div><a href="{{ route('people.nearby')}}">People Nearby</a></div></li>
               <li><i class="icon ion-ios-people-outline"></i><div><a href="{{url('friends/'.Auth::id())}}">Friends</a></div></li>
               <li><i class="icon ion-chatboxes"></i><div><a href="{{url('chat')}}">Messages</a></div></li>
@@ -48,6 +46,7 @@
                     @else
                     <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
                    @endif
+                   </a></li>
                  @endif
                  @empty
               <h3>no friends yet, search for new friends</h3>
@@ -85,8 +84,8 @@
             	<div class="row">
             		<div class="col-12">
                   <div class="form-group w-100" >
-                    @if (file_exists(asset('storage/profile/'.Auth::id().'_profile.jpg')))
-                    <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="profile-photo-md " />
+                    @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
+                    <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="homepage-profile-avatar" />
                     @else
                        <img src="{{ asset('images/noimage.jpg') }}" class="homepage-profile-avatar" id="uploadImage" alt="">
                     @endif
@@ -180,10 +179,10 @@
                     @endif</h5>
                     <p class="text-muted">Published about {{\Carbon\Carbon::parse($post->created_at)->diffForHumans()}}</p>
                   </div>
-                  {{-- <video width="320" height="240" controls>
+                  <video width="320" height="240" controls>
                     <source src="{{ asset('storage/postimages/vid.mp4') }}" type="video/mp4">
                     Your browser does not support the video tag.
-                  </video> --}}
+                  </video>
                   @php
                   $reactCount = [
                    'l'=>0,

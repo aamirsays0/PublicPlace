@@ -15,8 +15,13 @@
 
 @section('sidebar-left')
           <div class="profile-card" style="background-image: url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ');">
-            	<img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="user" class="profile-photo" />
-            	<h5><a href="{{url('profiles/'.Auth::id())}}" title="{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}" class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
+            	
+          @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
+                    <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="profile-photo-md " />
+                    @else
+                       <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
+                    @endif
+          	<h5><a href="{{url('profiles/'.Auth::id())}}" title="{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}" class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
             	<a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()-1}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()-1}} Friends</a>
             </div><!--profile card ends-->
             <ul class="nav-news-feed">
@@ -27,12 +32,19 @@
               <li><i class="icon ion-ios-videocam"></i><div><a href="newsfeed-videos.html">Videos</a></div></li>
             </ul><!--news-feed links ends-->
             <div id="friends-block">
-              <div class="ftitle"><a href="{{url('friends/'.Auth::id())}}">Friends</a></div>
+            <a href="{{url('friends/'.Auth::id())}}"><button type="button" class="ftitle">Friends</button></a>
               <hr>
               <ul class="online-users list-inline list-unstyled">
               @forelse($friends as $friend)
                 @if($friend->id != Auth::id())
-                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->id)}}" title="{{$friend->name}}"><img src="{{asset('storage/profile/'.$friend->id.'_icon.jpg')}}" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
+                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->id)}}" title="{{$friend->name}}">
+                @if (file_exists(public_path('storage/profile/'.$friend->id.'_profile.jpg')) )
+                    <img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="" class="profile-photo-md " />
+                    @else
+                    <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
+                   @endif
+                   </a></li>
+                 
                  @endif
                  @empty
               <h3>no friends yet, search for new friends</h3>
@@ -81,27 +93,34 @@
        <div class="nearby-user">
                 <div class="row">
                   <div class="col-md-2 col-sm-2">
-                    <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt="user" class="profile-photo-lg" />
+                  @if (file_exists(public_path('storage/profile/'.$user->id.'_profile.jpg')) )
+                    <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}"  alt="user" class="profile-photo-lg" />
+                    @else
+                    <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-lg" id="uploadImage" alt="">
+                   @endif
                   </div>
+
                   <div class="col-md-7 col-sm-7">
 
                     <h5><a href="{{url('profiles/'.$user->id)}}" class="profile-link">{{$user->profiles?$user->profiles->f_name.' '.$user->profiles->l_name:$user->name}}</a></h5>
+                    <p style="font-size: 1.7rem;">{{$user->email}}</p>
                   </div>
                   <div class="col-md-3 col-sm-3">
                     @if(in_array($user->id,$req))
-                    <span class="pull-right">Friends</span>
+                    @if (Auth::user()->id !== $user->id)
+                        <span class="pull">Friends</span>
+                      @endif
                     @else
-                      @if($friends->where('friend_id', $user->id)->where('approved', 0)->first())
-                      <button class="btn btn-info pull-right" disabled>Pending</button>
+                      @if($his_friends->where('friend_id', $user->id)->where('approved', 0)->where('blocked', 0)->first())
+                      <button class="btn pull pending" disabled>Pending</button>
                       @else 
-                      <button class="btn btn-primary pull-right addFrndBtn" data-uid="{{$user->id}}">Add Friend</button>
+                      <button class="btn pull addFrndBtn" data-uid="{{$user->id}}">Add Friend</button>
                       @endif
                     @endif
-
                   </div>
+
                 </div>
          </div>
-
           @empty
           @endforelse
       
@@ -316,7 +335,7 @@
     }
       });
  
- $("#home").on("click",".addFrndBtn",function(){
+ $(".nearby-user").on("click",".addFrndBtn",function(){
    var url = '{{URL::to('/')}}' +"/addfriend/" +$(this).data('uid');
    $.ajax({
           method: "POST",
