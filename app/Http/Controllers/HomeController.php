@@ -62,9 +62,11 @@ class HomeController extends Controller
               */
               $allFriends = FriendsList::Friends($id);
               //dd($allFriends);
-              $friends = User::with('profiles')
+              $friends = User::with('profiles', 'friends')
                ->whereIn('id',$allFriends)
                 ->get();
+
+              $his_friends = Friend::where('user_id', $id)->get();
                 //dd($friends->count());
            $allpost = Post::
            with('pictures')
@@ -82,7 +84,7 @@ class HomeController extends Controller
            $sentRequest = FriendsList::Friends(Auth::id());
            //dd($allpost); 
         //return view('home', compact('allpost'));
-        return view('home')
+        return view('home', compact('his_friends'))
         ->with('posts', $allpost)
         ->with('requests', $friendreq)
         ->with('friends', $friends)->with('req', $sentRequest);
