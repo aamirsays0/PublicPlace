@@ -237,7 +237,6 @@
 
                     
                   </div>
-                  <div class="line-divider"></div>
                   <div class="post-text">
                     <p>{{$userpost->content}}</p>
                     <hr>
@@ -254,7 +253,6 @@
                     @endforelse
                    
                   </div>
-                  <div class="line-divider"></div>
                   <div class="viewpost"><a href="javascript:void(0)" class="commentToggleBtn">{{$userpost->comments->count()}} <span><i class="fa fa-comment" style="font-size: 18px;"></i></span></a>
                   <div class="commentContainer" style="display: none;">
                    @if ($errors->any())

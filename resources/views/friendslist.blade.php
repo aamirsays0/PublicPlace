@@ -59,10 +59,10 @@
                         @if (file_exists(public_path('storage/profile/'.$friend->id.'_profile.jpg')) )
                         <img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="user" class="profile-photo-lg" style="position: absolute;bottom: 118%;left: 10%;"/>
                         @else
-                       <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
+                       <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-lg" id="uploadImage" alt="">
                         @endif
                       <div class="friend-info">
-                          <a href="#" class="pull-right text-green">My Friend</a>
+                          <a href="#" class="pull-right text-green">Friend</a>
                           <h5><a href="{{url('profiles/'.$friend->id)}}" class="profile-link">
                           {{$friend->profiles?$friend->profiles->f_name.' '.$friend->profiles->l_name : $friend->name}}</a></h5>
                           <p>{{$friend->email}}</p>

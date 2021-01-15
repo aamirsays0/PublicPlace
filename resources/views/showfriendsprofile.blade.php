@@ -87,15 +87,15 @@
     <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
       <i class="icon ion-ios-information-outline"></i>
       @if ( isset($user) && $user->id === Auth::id())
-      <a href="{{url('profiles')}}">  Basic Information</a>
+      <a href="{{url('profiles')}}"> Edit Basic Information</a>
       @else
-      <a href="{{ route('view.friends.profile', $user->id) }}">  Basic Information</a>
+      <a href="{{ route('view.friends.profile', $user->id) }}"> Basic Information</a>
       @endif
     </li>
     <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
       @if ( isset($user) && $user->id === Auth::id())
       <i class="icon ion-ios-information-outline"></i>
-      <a href="{{ route('view.friends.profile', $user->id) }}"> Edit Basic Information</a>
+      <a href="{{ route('view.friends.profile', $user->id) }}">Basic Information</a>
        @endif
     </li>
       <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i>

@@ -179,10 +179,10 @@
                     @endif</h5>
                     <p class="text-muted">Published about {{\Carbon\Carbon::parse($post->created_at)->diffForHumans()}}</p>
                   </div>
-                  <video width="320" height="240" controls>
+                  <!-- <video width="320" height="240" controls>
                     <source src="{{ asset('storage/postimages/vid.mp4') }}" type="video/mp4">
                     Your browser does not support the video tag.
-                  </video>
+                  </video> -->
                   @php
                   $reactCount = [
                    'l'=>0,
@@ -242,7 +242,6 @@
 
                     
                   </div>
-                  <div class="line-divider"></div>
                   <div class="post-text">
                     <p>{{$post->content}}</p>
                     <hr>
@@ -270,7 +269,6 @@
                     @endforelse
                     
                   </div>
-                  <div class="line-divider"></div>
                   <div class="viewpost"><a href="javascript:void(0)" class="commentToggleBtn">{{$post->comments->count()}} 
                     <span><i class="fa fa-comment" style="font-size: 18px;"></i></span>
                   </a>

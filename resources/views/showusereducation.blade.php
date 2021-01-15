@@ -90,8 +90,8 @@
       @endif
     </li>
     <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
-      <i class="icon ion-ios-information-outline"></i>
       @if ( isset($user) && $user->id === Auth::id())
+      <i class="icon ion-ios-information-outline"></i>
       <a href="{{ route('view.friends.profile', $user->id) }}"> Edit Basic Information</a>
        @endif
     </li>
@@ -133,7 +133,7 @@
                 @endif
 
                 <div class="block-title">
-                  <h4 class="grey d-inline"><i class="icon ion-ios-book-outline"></i> My education</h4>
+                  <h4 class="grey d-inline"><i class="icon ion-ios-book-outline"></i> Education</h4>
                   <div class="line"></div></div>
                      <div id="edu_form_container">
                                    </div>
@@ -169,7 +169,7 @@
       </tr>
 
      @empty
-      <tr><td><h5>No info found. Add some education info</h5></td></tr>
+      <h5>No Education info found.</h5>
       
      @endforelse
      </table>
@@ -222,7 +222,7 @@
       </tr>
 
      @empty
-      <h5>No info found. Add some work info</h5>
+      <h5>No Work info found.</h5>
      @endforelse
      </table>@endif
          </div>
@@ -236,8 +236,8 @@
               <div class="feed-item">
                 <div class="live-activity">
                   <p>
-                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link">You {{ $activity->type }}ed on a Post</a>
-                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ $activity->post->user->name }}</a>
+                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link"> {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }} {{ $activity->type }}ed on a Post</a>
+                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }}</a>
                   </p>
                   <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
                 </div>

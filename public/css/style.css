@@ -282,6 +282,12 @@ ul li i{
   font-size: 18px;
     
 }
+ul.edit-menu li{
+  list-style: none;
+  padding: 8px 0;
+}
+ul.edit-menu{
+padding-left: 20px;}
 .line-divider{
   background: none;
   height: 1px;
@@ -1535,13 +1541,13 @@ ul.album-photos li img{
   position: relative;
 }
 
-#footer::before{
+/* #footer::before{
   content: "";
   background: linear-gradient(to right, #ffffff 0%,#53cbf1 50%,#ffffff 100%);
   height: 5px;
   width: 100%;
   position: absolute;
-}
+} */
 
 .footer-wrapper{
   padding: 50px 0;
@@ -1937,11 +1943,14 @@ img#modal_image_container {
   width: 870px;
   height: 500px;
 }
-#showcpbtncontainer span i.text-dark{
+#showcpbtncontainer{
   position: absolute;
     left: 99.8%;
     top: 10%;
-}
+    border: 2px solid #73AD21;
+    width: 20px;
+    height: 20px;
+  }
 /* NOTIFICATION DROPDOWN*/
 a p.font-weight-normal{
   font-size: 1.5rem;
