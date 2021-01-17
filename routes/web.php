@@ -60,4 +60,5 @@ Route::post('react','PostController@react');
  Route::delete('deleteEducation/{id}', 'EducationController@deleteEducation')->name('delete.education');
  Route::delete('deleteWork/{id}', 'WorkController@deleteWork')->name('delete.work');
  Route::get('/nearby', 'HomeController@nearby')->name('people.nearby');
+ Route::get('/myvideos', 'VideoController@index')->name('my.videos');
 

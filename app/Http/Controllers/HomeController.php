@@ -62,9 +62,10 @@ class HomeController extends Controller
               */
               $allFriends = FriendsList::Friends($id);
               //dd($allFriends);
-              $friends = User::with('profiles', 'friends')
-               ->whereIn('id',$allFriends)
-                ->get();
+              $friends = Friend::with('friendInfo')
+        ->where('user_id', Auth::id())
+        ->where(['approved' => 1, 'blocked' => 0])
+        ->get();
 
               $his_friends = Friend::where('user_id', $id)->get();
                 //dd($friends->count());
@@ -106,13 +107,14 @@ class HomeController extends Controller
          ->whereIn('id',$allFriends)
           ->get();
         $sentRequest = FriendsList::Friends(Auth::id());
+        $his_friends = Friend::where('user_id', $id)->get();
         $userinfo = User::whereHas('profiles', function($query) {
             $query->where('city', 'islamabad');
         } )->with(['profiles' => function($query) {
             $query->where('city', 'islamabad');
         }])->get();
 
-         return view('peoplenearby')
+         return view('peoplenearby', compact('his_friends'))
          ->with('users',$userinfo)->with('requests', $friendreq)
          ->with('friends', $friends)->with('req', $sentRequest);
  

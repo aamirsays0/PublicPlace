@@ -810,6 +810,8 @@ ul.online-users li span.online-dot{
 
 .follow-user{
   margin-bottom: 20px;
+  position: relative;
+    left: 10%;
 }
 
 .follow-user div{
@@ -1157,7 +1159,7 @@ ul.online-users li span.online-dot{
 }
 
 .media .media-grid img.post-image, video{
-  width: 100%;
+  width: 80%;
   cursor: pointer;
 }
 

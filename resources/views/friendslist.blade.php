@@ -12,7 +12,7 @@
                     <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
                    @endif
                 	<h5><a href="{{url('profiles/'.Auth::id())}}" class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
-            	<a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()-1}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()-1}} Friends</a>
+            	<a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()}} Friends</a>
             </div><!--profile card ends-->
         <ul class="nav-news-feed">
         <li><i class="icon ion-ios-paper"></i><div><a href="newsfeed.html">My Newsfeed</a></div></li>
@@ -124,14 +124,12 @@
 <script>
     var form_data = new FormData();
  
-
     $(document).ready(function(e){
 $.ajaxSetup({
     headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
       });
-
 //JSCROLL
              $("ul.pagination").hide();
              $('.scroll').jscroll({
@@ -141,10 +139,8 @@ $.ajaxSetup({
                callback: function(){
                  $('ul.pagination:visible:first').hide();
                }
-
              });
 //SCROLL ends
-
       /* WHEN YOU UPLOAD ONE OR MULTIPLE FILES*/
     $(document).on('change', '#post-images',function(){
       $('.preview').html("");
@@ -154,27 +150,18 @@ $.ajaxSetup({
         var file_data = $("#post-images").prop("files")[i];
         form_data.append("photos[]", file_data);
         construc += '<div class="col-3"><span class="btn btn-sm btn-danger imageremove">&times;</span><img width="120px" height="120px" src="' + window.URL.createObjectURL(file_data) + '"alt="' + file_data.name + '"/></div>';
-
       }
       construc += "</div>";
       $('.preview').append(construc);
-
-
     });
     $(".preview").on('click','span.imageremove',function(){
       console.log($(this).next("img"));
-
     }
     )
-
-
-
       $("#publishpost").click(function(){
         var url = '{{URL::to('/')}}' +"/post";
         form_data.append("content", $("#contentpost").val());
         form_data.append("privacy", $("#privacy").val());
-
-
         //alert(url);
         $.ajax({
           method: "POST",
@@ -216,7 +203,6 @@ $.ajaxSetup({
           if(data.success){
             alert(data.message);
             t.parent().parent().remove();
-
            // location.reload();
             
         //RESET FORM AFTER POST
@@ -228,9 +214,7 @@ $.ajaxSetup({
           alert(data.message);
         });
            });
-
 //DELETE FRIEND REQUEST
-
 //reaction start
      $("#contentpostContainer").on("click",".reactionBtn", function(){
       var url = '{{URL::to('/')}}' +"/react";
@@ -254,7 +238,6 @@ $.ajax({
          // return;
           if(data.success){
             //alert(data.message);
-
             location.reload();
             
         //RESET FORM AFTER POST
@@ -266,10 +249,8 @@ $.ajax({
           alert(data.message);
         });
  //ajax end
-
      });  
 //reaction ends
-
     $('.unfriend_it').on('click', function(e) {
         let friend_id = $(this).data('friend_id');
         
@@ -278,7 +259,6 @@ $.ajax({
                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
               }
         });
-
         $.ajax({
           method: "DELETE",
           url   : `/friend/unfriend_it/${friend_id}`,
@@ -290,9 +270,7 @@ $.ajax({
             console.error(response)
           }
         })
-
      })
-
     });
     </script>
 

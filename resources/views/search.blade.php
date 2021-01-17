@@ -22,7 +22,7 @@
                        <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
                     @endif
           	<h5><a href="{{url('profiles/'.Auth::id())}}" title="{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}" class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
-            	<a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()-1}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()-1}} Friends</a>
+            	<a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()}} Friends</a>
             </div><!--profile card ends-->
             <ul class="nav-news-feed">
               <li><i class="icon ion-ios-paper"></i><div><a href="newsfeed.html">My Newsfeed</a></div></li>
@@ -36,10 +36,10 @@
               <hr>
               <ul class="online-users list-inline list-unstyled">
               @forelse($friends as $friend)
-                @if($friend->id != Auth::id())
-                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->id)}}" title="{{$friend->name}}">
-                @if (file_exists(public_path('storage/profile/'.$friend->id.'_profile.jpg')) )
-                    <img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="" class="profile-photo-md " />
+                @if($friend->friendInfo->id != Auth::id())
+                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->friendInfo->id)}}" title="{{$friend->friendInfo->name}}">
+                @if (file_exists(public_path('storage/profile/'.$friend->friendInfo->id.'_profile.jpg')) )
+                    <img src="{{asset('storage/profile/'.$friend->friendInfo->id.'_profile.jpg')}}" alt="" class="profile-photo-md " />
                     @else
                     <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
                    @endif

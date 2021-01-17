@@ -113,7 +113,7 @@ class PostController extends Controller
                     $name=time()."_".Auth::id()."_".$vidage->getClientOriginalName();
  
                     //MOVE IMAGE INTO POSTIMAGES FOLDER             
-        $vidage->move(public_path().'/storage/postimages/',$name);
+        $vidage->move(public_path().'/storage/postvideos/',$name);
         // and you are ready to go ...
 //         $resizedVidage = Image::make(public_path().'/storage/postimages/' .$name)->resize(800, null, function ($constraint) {
 //     $constraint->aspectRatio();

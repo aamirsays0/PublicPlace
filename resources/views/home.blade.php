@@ -21,7 +21,7 @@
                        <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
                     @endif
              	  <h5><a class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
-            	   <a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()-1}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()-1}} Friends</a>
+            	   <a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()}} Friends</a>
           </div>
           </div>
 <!--profile card ends-->
@@ -39,10 +39,10 @@
               <hr>
               <ul class="online-users list-inline list-unstyled">
               @forelse($friends as $friend)
-                @if($friend->id != Auth::id())
-                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->id)}}" title="{{$friend->name}}">
-                @if (file_exists(public_path('storage/profile/'.$friend->id.'_profile.jpg')) )
-                    <img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="" class="profile-photo-md " />
+                @if($friend->friendInfo->id != Auth::id())
+                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->friendInfo->id)}}" title="{{$friend->friendInfo->name}}">
+                @if (file_exists(public_path('storage/profile/'.$friend->friendInfo->id.'_profile.jpg')) )
+                    <img src="{{asset('storage/profile/'.$friend->friendInfo->id.'_profile.jpg')}}" alt="" class="profile-photo-md " />
                     @else
                     <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
                    @endif
@@ -123,7 +123,7 @@
                   </div>
                 </div>
               </div>
-              <div class="row">
+              <div class="row1" style="display: flex;">
                 <div class="col-md-12 col-sm-12">
                   <div class="form-group">
                     <div class="preview"></div>
@@ -179,12 +179,7 @@
                     @endif</h5>
                     <p class="text-muted">Published about {{\Carbon\Carbon::parse($post->created_at)->diffForHumans()}}</p>
                   </div>
-                  @if (isset($post->videos[0]))
-                   <video width="320" height="240" controls>
-                    <source src="{{ asset('storage/postimages/'.$post->videos[0]->vidname) }}" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video> 
-                  @endif
+
                   @php
                   $reactCount = [
                    'l'=>0,
@@ -258,17 +253,12 @@
                     @empty
 
                     @endforelse
-                    @forelse($post->videos as $vid)
-                    <?php
-                    $vidinfo = pathinfo(url('/storage/postimages/'.$vid->vidname));
-                    //print_r($imageinfo);
-                    ?>
-                    <a href="{{url('/storage/postimages/'.$vid->vidname)}}" data-lightbox="imageset-{{$post->id}}">
-                    <img src=" {{url('/storage/postimages/'.$vidinfo['filename'].".".$vidinfo['extension'])}}" alt="" width="120px">
-                    </a>
-                    @empty
-
-                    @endforelse
+                    @if (isset($post->videos[0]))
+                   <video width="320" height="240" controls>
+                    <source src="{{ asset('storage/postvideos/'.$post->videos[0]->vidname) }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video> 
+                  @endif
                     
                   </div>
                   <div class="viewpost"><a href="javascript:void(0)" class="commentToggleBtn">{{$post->comments->count()}} 
@@ -332,21 +322,8 @@
 
 @section('sidebar-right')
           <div class="suggestions" id="sticky-sidebar">
-              <h4 class="grey" style="font-weight: 600;">Friend Requests</h4>
-              <hr>
-              @forelse($requests as $req)
-               <div class="follow-user">
-                <img src="{{asset('storage/profile/'.$req->user_id.'_profile.jpg')}}" alt="" class="profile-photo-sm pull-left" />
-                <div>
-                  <h6><a href="{{url('profiles/'.$req->user->id)}}">{{isset($req->user->profiles->f_name, $req->user->profiles->l_name)? $req->user->profiles->f_name.' '. $req->user->profiles->l_name: $req->user->name}}</a></h6>
-                  <a class="confirmBtn text-green" data-uid="{{$req->user_id}}" href="javascript:void(0)">Confirm</a>
-                  <a class="deleteBtn text-danger" data-uid="{{$req->id}}"  href="javascript:void(0)">Delete</a>
-                </div>
-               </div>
-              @empty
-              <h5>No Friend Requests</h5>
-              @endforelse
-             
+          @include('partials.friendrequests')
+           
              </div>
 @endsection
 

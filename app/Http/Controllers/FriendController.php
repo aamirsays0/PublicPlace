@@ -76,7 +76,6 @@ class FriendController extends Controller
         //  $friends = User::with('profiles')
         // ->whereIn('id',$allFriends)
         // ->get();
-
         $friends = Friend::with('friendInfo')
         ->where('user_id', Auth::id())
         ->where(['approved' => 1, 'blocked' => 0])

@@ -17,6 +17,7 @@
     <!-- Stylesheets
     ================================================= -->
 		<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}" />
+		<link rel="stylesheet" href="{{asset('css/bootstrap.css')}}" />
 		<link rel="stylesheet" href="{{asset('css/style.css')}}" />
     <link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}" />
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}" />
