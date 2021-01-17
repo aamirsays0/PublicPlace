@@ -70,6 +70,7 @@ class HomeController extends Controller
                 //dd($friends->count());
            $allpost = Post::
            with('pictures')
+           ->with('videos')
            ->with('comments')
            ->with('reactions')->whereIn('privacy', ['public', 'friends'])
            ->orderBy('created_at', 'desc')
@@ -94,7 +95,7 @@ class HomeController extends Controller
      {
         
         $id = Auth::id();
-        $friendreq = Friend::with('user')
+        $friendreq = Friend::with('friendInfo')
                 ->where("friend_id",$id)
                  ->where('approved','0')
                  ->where('blocked', '0')
@@ -105,7 +106,12 @@ class HomeController extends Controller
          ->whereIn('id',$allFriends)
           ->get();
         $sentRequest = FriendsList::Friends(Auth::id());
-        $userinfo = User::with('profiles')->whereIn('city', ['islamabad']);
+        $userinfo = User::whereHas('profiles', function($query) {
+            $query->where('city', 'islamabad');
+        } )->with(['profiles' => function($query) {
+            $query->where('city', 'islamabad');
+        }])->get();
+
          return view('peoplenearby')
          ->with('users',$userinfo)->with('requests', $friendreq)
          ->with('friends', $friends)->with('req', $sentRequest);

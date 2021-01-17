@@ -43,37 +43,34 @@
      
               <!-- Friend List
               ================================================= -->
-
               <div class="friend-list">
                 <div class="row">
                 @forelse($friends as $friend)
-                  <div class="col-md-6 col-sm-6">
+                  <div class="col-md-6 col-sm-6" id="{{ $friend->friendInfo->id }}">
                     <div class="friend-card">
-                      @if($friend->id !== Auth::id())
-                        @if (file_exists(public_path('storage/profile/'.$friend->id.'_cover.jpg')) )
-                         <img src="{{asset('storage/profile/'.$friend->id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
+                        <a href="#" class="unfriend_it friend--trash_icon" data-friend_id="{{ $friend->friendInfo->id }}"><i class="fa fa-trash fa-lg"></i></a>
+                        @if (file_exists(public_path('storage/profile/'.$friend->friendInfo->id.'_cover.jpg')) )
+                         <img src="{{asset('storage/profile/'.$friend->friendInfo->id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover friends--card_image" />
                          @else
-                         <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover" id="uploadImage" alt="">
+                         <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover friends--card_image" id="uploadImage" alt="">
                          @endif
                         <div class="card-info" style="position: absolute;">
-                        @if (file_exists(public_path('storage/profile/'.$friend->id.'_profile.jpg')) )
-                        <img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="user" class="profile-photo-lg" style="position: absolute;bottom: 118%;left: 10%;"/>
+                        @if (file_exists(public_path('storage/profile/'.$friend->friendInfo->id.'_profile.jpg')) )
+                        <img src="{{asset('storage/profile/'.$friend->friendInfo->id.'_profile.jpg')}}" alt="user" class="profile-photo-lg" style="position: absolute;bottom: 118%;left: 10%;"/>
                         @else
                        <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-lg" id="uploadImage" alt="">
                         @endif
                       <div class="friend-info">
-                          <a href="#" class="pull-right text-green">Friend</a>
-                          <h5><a href="{{url('profiles/'.$friend->id)}}" class="profile-link">
-                          {{$friend->profiles?$friend->profiles->f_name.' '.$friend->profiles->l_name : $friend->name}}</a></h5>
-                          <p>{{$friend->email}}</p>
-                          @endif
+                          <h5><a href="{{url('profiles/'.$friend->friendInfo->id)}}" class="profile-link">
+                          {{$friend->friendInfo->profiles?$friend->friendInfo->profiles->f_name.' '.$friend->friendInfo->profiles->l_name : $friend->friendInfo->name}}</a></h5>
+                          <p>{{$friend->friendInfo->email}}</p>
                         </div>
                       </div>
                     </div>
                   </div>
                   @empty
-                  <div class="col-md-12 col-sm-12">
-                  <h3>no friends</h3>
+                  <div class="col-md-12 col-sm-12 mt-5 text-center">
+                    <h2 class="text-info">No Friends</h2>
                   </div>
                   @endforelse
                   
@@ -272,6 +269,30 @@ $.ajax({
 
      });  
 //reaction ends
+
+    $('.unfriend_it').on('click', function(e) {
+        let friend_id = $(this).data('friend_id');
+        
+        $.ajaxSetup({
+              headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              }
+        });
+
+        $.ajax({
+          method: "DELETE",
+          url   : `/friend/unfriend_it/${friend_id}`,
+          success: (response) => {
+            console.log(response)
+            $(`#${friend_id}`).remove();
+          },
+          error:   (response) => {
+            console.error(response)
+          }
+        })
+
+     })
+
     });
     </script>
 

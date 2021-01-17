@@ -91,11 +91,11 @@ class PostController extends Controller
                     $name=time()."_".Auth::id()."_".$image->getClientOriginalName();
  
                     //MOVE IMAGE INTO POSTIMAGES FOLDER             
-        $image->move(public_path().'/storage/postimages/',$name);
-        // and you are ready to go ...
-        $resizedImage = Image::make(public_path().'/storage/postimages/' .$name)->resize(800, null, function ($constraint) {
-    $constraint->aspectRatio();
-});
+                        $image->move(public_path().'/storage/postimages/',$name);
+                        // and you are ready to go ...
+                        $resizedImage = Image::make(public_path().'/storage/postimages/' .$name)->resize(800, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
 
 
 //save the file as jpg with medium quality

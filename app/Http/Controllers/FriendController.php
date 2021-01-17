@@ -72,13 +72,27 @@ class FriendController extends Controller
     
     public function showFriends($id)
     {
-        $allFriends = FriendsList::Friends($id);
-         $friends = User::with('profiles')
-        ->whereIn('id',$allFriends)
+        // $allFriends = FriendsList::Friends($id);
+        //  $friends = User::with('profiles')
+        // ->whereIn('id',$allFriends)
+        // ->get();
+
+        $friends = Friend::with('friendInfo')
+        ->where('user_id', Auth::id())
+        ->where(['approved' => 1, 'blocked' => 0])
         ->get();
         return view('friendslist')->with('friends', $friends);
- 
-        
+    }
+
+    public function unfriend($id){
+        $friend = Friend::where(['user_id' => Auth::id(), 'friend_id' => $id])->first();
+
+        if (empty($friend)) return response()->json(['message' => 'friend not found'], 422);
+
+        $friend->delete();
+
+        return response()->json(['message' => 'Friend have been unfriendded'], 200);
+  
     }
 
 }

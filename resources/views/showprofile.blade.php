@@ -37,7 +37,7 @@
       <!-- Timeline
       ================================================= -->
        <div class="timeline">
-      <div class="timeline-cover" style="background-image: url('{{asset('storage/profile/'.$user->id.'_cover.jpg')}} ')"  data-lightbox="cp">
+      <div class="timeline-cover" style="background-image: url('{{asset('storage/profile/'.$user_information->id.'_cover.jpg')}} ')"  data-lightbox="cp">
       <div id="showcpbtncontainer">
       <span><i class ="fa fa-expand text-dark"></i></span>
      </div>
@@ -46,22 +46,22 @@
             <div class="row">
               <div class="col-md-3">
                 <div class="profile-info">
-                @if (file_exists(public_path('storage/profile/'.$user->id.'_profile.jpg')) )
-                    <a href="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" data-lightbox="pp">
-                    <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt="" class="img-fluid profile-photo"/>
+                @if (file_exists(public_path('storage/profile/'.$user_information->id.'_profile.jpg')) )
+                    <a href="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" data-lightbox="pp">
+                    <img src="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" alt="" class="img-fluid profile-photo"/>
                     @else
                     <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo" id="uploadImage" alt="">
                    @endif
                    </a>
-                  <h4>{{isset($user->profiles->f_name , $user->profiles->l_name) ? $user->profiles->f_name.' '.$user->profiles->l_name : $user->name}}</h4>
+                  <h4>{{isset($user_information->profiles->f_name , $user_information->profiles->l_name) ? $user_information->profiles->f_name.' '.$user_information->profiles->l_name : $user_information->name}}</h4>
                 </div>
               </div>
               <div class="col-md-9">
                 <ul class="list-inline profile-menu">
-                  <li><a href="{{url('profiles/'.$user->id)}}" class="active">Timeline</a></li>
+                  <li><a href="{{url('profiles/'.$user_information->id)}}" class="active">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
                   <li><a href="timeline-album.html">Album</a></li>
-                  <li><a href="{{url('friends/'.$user->id)}}">Friends</a></li>
+                  <li><a href="{{url('friends/'.$user_information->id)}}">Friends</a></li>
                 </ul>
                 
               </div>
@@ -71,7 +71,7 @@
           <!--Timeline Menu for Small Screens-->
           <!-- <div class="navbar-mobile hidden-lg hidden-md">
             <div class="profile-info">
-              <img src="images/users/user-1.jpg" alt="" class="img-responsive profile-photo">
+              <img src="images/user_informations/user_information-1.jpg" alt="" class="img-responsive profile-photo">
               <h4>Sarah Cruiz</h4>
               <p class="text-muted">Creative Director</p>
             </div>
@@ -111,28 +111,28 @@
         <ul class="edit-menu " style="margin-top: 80px">
     <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
       <i class="icon ion-ios-information-outline"></i>
-      @if ( isset($user) && $user->id === Auth::id())
+      @if ( isset($user_information) && $user_information->id === Auth::id())
       <a href="{{url('profiles')}}">Edit Basic Information</a>
       @else
-      <a href="{{ route('view.friends.profile', $user->id) }}">  Basic Information</a>
+      <a href="{{ route('view.friends.profile', $user_information->id) }}">  Basic Information</a>
       @endif
     </li>
     <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
-      @if ( isset($user) && $user->id === Auth::id())
+      @if ( isset($user_information) && $user_information->id === Auth::id())
       <i class="icon ion-ios-information-outline"></i>
-      <a href="{{ route('view.friends.profile', $user->id) }}">Basic Information</a>
+      <a href="{{ route('view.friends.profile', $user_information->id) }}">Basic Information</a>
        @endif
     </li>
       <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i>
-      @if ( isset($user) && $user->id === Auth::id())
+      @if ( isset($user_information) && $user_information->id === Auth::id())
       <a href="{{url('education')}}"> Education & Work</a>
       @else
-      <a href="{{ route('view.friends.education', $user->id) }}">  Education & Work</a>
+      <a href="{{ route('view.friends.education', $user_information->id) }}">  Education & Work</a>
       @endif  
             </li>
 
       <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
-      @if ( isset($user) && $user->id === Auth::id())
+      @if ( isset($user_information) && $user_information->id === Auth::id())
       <i class="icon ion-ios-locked-outline"></i>
         <a href="{{url('change-password')}}">  Change Password</a>
         @endif
@@ -172,7 +172,7 @@
                 <div class="post-detail">
                   <div class="user-info">
                     <h5>
-                    <a href="{{$userpost->user->id}}" class="profile-link">{{$user->profiles?$user->profiles->f_name.' '.$user->profiles->l_name:$user->name}}</a> 
+                    <a href="{{$userpost->user->id}}" class="profile-link">{{$userpost->user->profiles?$userpost->user->profiles->f_name.' '.$userpost->user->profiles->l_name:$userpost->user->name}}</a> 
                     <span>
                     @if($userpost->privacy == 'public')
                     <i class ="ion-ios-world"></i>

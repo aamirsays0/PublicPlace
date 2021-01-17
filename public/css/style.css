@@ -1961,3 +1961,27 @@ font-style: #bb3636;}
 .jscroll-inner div div p a{
   font-size: 0.5rem;
 }
+
+/* Image dimensions for friends list */
+.friends--card_image {
+  height: 200px;
+  width: 100%;
+}
+
+.friend--trash_icon {
+  position: absolute; 
+  top: 5%; 
+  right: 0; 
+  left: 90%;
+  color: #bb3636;
+  /* font-size: 1.6rem; */
+}
+
+.friend--trash_icon:hover {
+  position: absolute; 
+  top: 5%; 
+  right: 0; 
+  left: 90%;
+  color:red;
+  /* font-size: 1.6rem; */
+}

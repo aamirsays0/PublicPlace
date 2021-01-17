@@ -50,6 +50,7 @@ Route::post('react','PostController@react');
  Route::post('sendchat', 'ChatController@sendMessage');
  Route::post('chathistory', 'ChatController@chatHistory');
  Route::get('friends/{id}', 'FriendController@showFriends'); 
+ Route::delete('/friend/unfriend_it/{friend_id}', 'FriendController@unfriend')->name('friend.unfriend');
  Route::get('/activity', 'ActivityController@index')->name('activity');
  Route::resource('notification', 'NotificationController')->middleware('auth');
  Route::get('images/{id}', 'PostController@images'); 
