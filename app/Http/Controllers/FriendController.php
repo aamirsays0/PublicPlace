@@ -72,13 +72,13 @@ class FriendController extends Controller
     
     public function showFriends($id)
     {
-        // $allFriends = FriendsList::Friends($id);
-        //  $friends = User::with('profiles')
-        // ->whereIn('id',$allFriends)
+        // $friends = Friend::with('friendInfo')
+        // ->where('user_id', Auth::id())
+        // ->where(['approved' => 1, 'blocked' => 0])
         // ->get();
-        $friends = Friend::with('friendInfo')
-        ->where('user_id', Auth::id())
-        ->where(['approved' => 1, 'blocked' => 0])
+        $allFriends = FriendsList::Friends($id);
+         $friends = User::with('profiles')
+        ->whereIn('id',$allFriends)
         ->get();
         return view('friendslist')->with('friends', $friends);
     }

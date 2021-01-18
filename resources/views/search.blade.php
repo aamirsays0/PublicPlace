@@ -16,16 +16,17 @@
 @section('sidebar-left')
           <div class="profile-card" style="background-image: url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ');">
             	
-          @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
+                 @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
                     <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="profile-photo-md " />
                     @else
-                       <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
+                       <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt=""/>
                     @endif
-          	<h5><a href="{{url('profiles/'.Auth::id())}}" title="{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}" class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
-            	<a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()}} Friends</a>
+          	<h5><a title="{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}" class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
+            	<a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()-1}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()-1}} Friends</a>
             </div><!--profile card ends-->
             <ul class="nav-news-feed">
-              <li><i class="icon ion-ios-paper"></i><div><a href="newsfeed.html">My Newsfeed</a></div></li>
+            <li><i class="icon ion-ios-paper"></i><div><a href="{{url('profiles/'.Auth::id())}}">My Timeline</a></div></li>
+              <li><i class="icon ion-ios-people"></i><div><a href="{{ route('people.nearby')}}">People Nearby</a></div></li>
               <li><i class="icon ion-ios-people-outline"></i><div><a href="{{url('friends/'.Auth::id())}}">Friends</a></div></li>
               <li><i class="icon ion-chatboxes"></i><div><a href="{{url('chat')}}">Messages</a></div></li>
               <li><i class="icon ion-images"></i><div><a href="{{url('image/'.Auth::id())}}">Images</a></div></li>
@@ -36,10 +37,10 @@
               <hr>
               <ul class="online-users list-inline list-unstyled">
               @forelse($friends as $friend)
-                @if($friend->friendInfo->id != Auth::id())
-                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->friendInfo->id)}}" title="{{$friend->friendInfo->name}}">
-                @if (file_exists(public_path('storage/profile/'.$friend->friendInfo->id.'_profile.jpg')) )
-                    <img src="{{asset('storage/profile/'.$friend->friendInfo->id.'_profile.jpg')}}" alt="" class="profile-photo-md " />
+                @if($friend->id != Auth::id())
+                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->id)}}" title="{{$friend->name}}">
+                @if (file_exists(public_path('storage/profile/'.$friend->id.'_profile.jpg')) )
+                    <img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="" class="profile-photo-md " />
                     @else
                     <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
                    @endif
@@ -306,21 +307,7 @@
           ================================================= -->
   @section('sidebar-right')
           <div class="suggestions" id="sticky-sidebar">
-              <h4 class="grey" style="font-weight: 600;">Friend Requests</h4>
-              <hr>
-              @forelse($requests as $req)
-               <div class="follow-user">
-                <img src="{{asset('storage/profile/'.$req->user_id.'_profile.jpg')}}" alt="" class="profile-photo-sm pull-left" />
-                <div>
-                  <h6><a href="{{url('profiles/'.$req->user->id)}}">{{isset($req->user->profiles->f_name, $req->user->profiles->l_name)? $req->user->profiles->f_name.' '. $req->user->profiles->l_name: $req->user->name}}</a></h6>
-                  <a class="confirmBtn text-green" data-uid="{{$req->user_id}}" href="javascript:void(0)">Confirm</a>
-                  <a class="deleteBtn text-danger" data-uid="{{$req->id}}"  href="javascript:void(0)">Delete</a>
-                </div>
-               </div>
-              @empty
-              <h5>No Friend Requests</h5>
-              @endforelse
-             
+          @include('partials.friendrequests')
              </div>
 @endsection
 

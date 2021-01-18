@@ -61,11 +61,9 @@ class HomeController extends Controller
                //dd($friendsList);
               */
               $allFriends = FriendsList::Friends($id);
-              //dd($allFriends);
-              $friends = Friend::with('friendInfo')
-        ->where('user_id', Auth::id())
-        ->where(['approved' => 1, 'blocked' => 0])
-        ->get();
+              $friends = User::with('profiles')
+              ->whereIn('id',$allFriends)
+              ->get();
 
               $his_friends = Friend::where('user_id', $id)->get();
                 //dd($friends->count());

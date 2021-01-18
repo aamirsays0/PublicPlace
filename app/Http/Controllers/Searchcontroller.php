@@ -39,9 +39,9 @@ class Searchcontroller extends Controller
          ->Where('f_name','like', '%'.$request->search.'%')
          ->orderBy('created_at', 'desc')
          ->paginate(10);
-         $friends = Friend::with('friendInfo')
-        ->where('user_id', Auth::id())
-        ->where(['approved' => 1, 'blocked' => 0])
+         $allFriends = FriendsList::Friends($id);
+         $friends = User::with('profiles')
+        ->whereIn('id',$allFriends)
         ->get();
          $sentRequest = FriendsList::Friends(Auth::id());
          $searchResult = User::with('profiles','friends')

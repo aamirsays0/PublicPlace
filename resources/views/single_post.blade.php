@@ -5,49 +5,7 @@
 
 
 @section('sidebar-left')
-        <div class="profile-card" style="background-image: url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ');">
-          <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="user" class="profile-photo" />
-              <h5><a href="{{url('profiles/'.Auth::id())}}" class="text-white">{{Auth::user()->name}}</a></h5>
-            	<a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()-1}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()-1}} Friends</a>
-              
-            </div><!--profile card ends-->
-            <ul class="nav-news-feed">
-
-<li><i class="icon ion-ios-paper"></i><div><a href="newsfeed.html">My Newsfeed</a></div></li>
-<li><i class="icon ion-ios-people"></i><div><a href="newsfeed-people-nearby.html">People Nearby</a></div></li>
-<li><i class="icon ion-ios-people-outline"></i><div><a href="{{url('friends/'.Auth::id())}}">Friends</a></div></li>
-<li><i class="icon ion-chatboxes"></i><div><a href="{{url('chat')}}">Messages</a></div></li>
-<li><i class="icon ion-images"></i><div><a href="{{url('image/'.Auth::id())}}">Images</a></div></li>
-<li><i class="icon ion-ios-videocam"></i><div><a href="newsfeed-videos.html">Videos</a></div></li>
-</ul><!--news-feed links ends-->
-<div id="friends-block">
-        <a href="{{url('friends/'.Auth::id())}}"><button type="button" class="ftitle">Friends</button></a>
-              <hr>
-              <ul class="online-users list-inline list-unstyled">
-              @forelse($friends as $friend)
-                @if($friend->id != Auth::id())
-                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->id)}}" title="{{$friend->name}}"><img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="user" class="img-responsive profile-photo" /></a></li>
-                 @endif
-                 @empty
-              <h3>no friends yet, search for new friends</h3>
-              @endforelse 
-              </ul>
-              
-            </div><!--Friends block ends-->
-            <div id="chat-block">
-            <button class="ctitle">Chat online</button>
-              <ul class="online-users list-inline list-unstyled">
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Linda Lohan"><img src="images/users/user-2.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Sophia Lee"><img src="images/users/user-3.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="John Doe"><img src="images/users/user-4.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Alexis Clark"><img src="images/users/user-5.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="James Carter"><img src="images/users/user-6.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Robert Cook"><img src="images/users/user-7.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Richard Bell"><img src="images/users/user-8.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Anna Young"><img src="images/users/user-9.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Julia Cox"><img src="images/users/user-10.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-              </ul>
-            </div><!--chat block ends-->
+    @include('partials.leftSidebar')
 @endsection
 
 @section('content')
@@ -76,11 +34,13 @@
                     <i class ="fa fa-users"></i>
                     @endif
                     </span>
-                    @if(in_array($userpost->user->id,$req))
-                    <span class="pull">Friends</span>
+                    @if(in_array($userpost->user->id,$req) )
+                      @if (Auth::user()->id !== $userpost->user->id)
+                        <span class="pull">Friends</span>
+                      @endif
                     @else
-                      @if($friends->where('friend_id', $userpost->user->id)->where('approved', 0)->first())
-                      <button class="btn pull pending" disabled><a>Pending</a></button>
+                      @if($his_friends->where('friend_id', $userpost->user->id)->where('approved', 0)->where('blocked', 0)->first())
+                      <button class="btn pull pending" disabled>Pending</button>
                       @else 
                       <button class="btn pull addFrndBtn" data-uid="{{$userpost->user->id}}">Add Friend</button>
                       @endif
@@ -152,6 +112,13 @@
                     @empty
 
                     @endforelse
+                    @if (isset($userpost->videos[0]))
+                   <video width="320" height="240" controls>
+                    <source src="{{ asset('storage/postvideos/'.$userpost->videos[0]->vidname) }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video> 
+                  @endif
+                   
                     
                   </div>
                   <div class="line-divider"></div>

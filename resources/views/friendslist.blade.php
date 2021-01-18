@@ -12,16 +12,16 @@
                     <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
                    @endif
                 	<h5><a href="{{url('profiles/'.Auth::id())}}" class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
-            	<a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()}} Friends</a>
+            	<a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()-1}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()-1}} Friends</a>
             </div><!--profile card ends-->
         <ul class="nav-news-feed">
         <li><i class="icon ion-ios-paper"></i><div><a href="newsfeed.html">My Newsfeed</a></div></li>
               <li><i class="icon ion-ios-people"></i><div><a href="newsfeed-people-nearby.html">People Nearby</a></div></li>
               <li><i class="icon ion-ios-people-outline"></i><div><a href="{{url('friends/'.Auth::id())}}">Friends</a></div></li>
               <li><i class="icon ion-chatboxes"></i><div><a href="{{url('chat')}}">Messages</a></div></li>
-              <li><i class="icon ion-images"></i><div><a href="{{url('images/'.Auth::id())}}">Images</a></div></li>
-              <li><i class="icon ion-ios-videocam"></i><div><a href="newsfeed-videos.html">Videos</a></div></li>
-               </ul><!--news-feed links ends-->
+              <li><i class="icon ion-images"></i><div><a href="{{route('my.images')}}">Images</a></div></li>
+              <li><i class="icon ion-ios-videocam"></i><div><a href="{{route('my.videos')}}">Videos</a></div></li>
+          </ul><!--news-feed links ends-->
             <!--  -->
             <!--Friends block ends-->
             <div id="chat-block">
@@ -46,24 +46,27 @@
               <div class="friend-list">
                 <div class="row">
                 @forelse($friends as $friend)
-                  <div class="col-md-6 col-sm-6" id="{{ $friend->friendInfo->id }}">
+                  @if($friend->id == Auth::id())
+                   @continue
+                   @endif
+                  <div class="col-md-6 col-sm-6" id="{{ $friend->id }}">
                     <div class="friend-card">
-                        <a href="#" class="unfriend_it friend--trash_icon" data-friend_id="{{ $friend->friendInfo->id }}"><i class="fa fa-trash fa-lg"></i></a>
-                        @if (file_exists(public_path('storage/profile/'.$friend->friendInfo->id.'_cover.jpg')) )
-                         <img src="{{asset('storage/profile/'.$friend->friendInfo->id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover friends--card_image" />
+                        <a href="#" class="unfriend_it friend--trash_icon" data-friend_id="{{ $friend->id }}"><i class="fa fa-trash fa-lg"></i></a>
+                        @if (file_exists(public_path('storage/profile/'.$friend->id.'_cover.jpg')) )
+                         <img src="{{asset('storage/profile/'.$friend->id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover friends--card_image" />
                          @else
                          <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover friends--card_image" id="uploadImage" alt="">
                          @endif
                         <div class="card-info" style="position: absolute;">
-                        @if (file_exists(public_path('storage/profile/'.$friend->friendInfo->id.'_profile.jpg')) )
-                        <img src="{{asset('storage/profile/'.$friend->friendInfo->id.'_profile.jpg')}}" alt="user" class="profile-photo-lg" style="position: absolute;bottom: 118%;left: 10%;"/>
+                        @if (file_exists(public_path('storage/profile/'.$friend->id.'_profile.jpg')) )
+                        <img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="user" class="profile-photo-lg" style="position: absolute;bottom: 118%;left: 10%;"/>
                         @else
                        <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-lg" id="uploadImage" alt="">
                         @endif
                       <div class="friend-info">
-                          <h5><a href="{{url('profiles/'.$friend->friendInfo->id)}}" class="profile-link">
-                          {{$friend->friendInfo->profiles?$friend->friendInfo->profiles->f_name.' '.$friend->friendInfo->profiles->l_name : $friend->friendInfo->name}}</a></h5>
-                          <p>{{$friend->friendInfo->email}}</p>
+                          <h5><a href="{{url('profiles/'.$friend->id)}}" class="profile-link">
+                          {{$friend->profiles?$friend->profiles->f_name.' '.$friend->profiles->l_name : $friend->name}}</a></h5>
+                          <p>{{$friend->email}}</p>
                         </div>
                       </div>
                     </div>

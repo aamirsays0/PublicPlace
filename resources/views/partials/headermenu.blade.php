@@ -28,7 +28,8 @@
     {!! Form::open(['url' => 'search','method' => 'get','class' => 'form-inline my-2 my-lg-0', 'style' => 'padding-left: 0px;
 ']) !!}
                     <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" aria-label="Search">
-                      {!! Form::close() !!}
+                    <button class="form-control mr-sm-2" type=submit><i class="fa fa-search"></i></button> 
+                    {!! Form::close() !!}
 
     <ul class="navbar-nav list-inline list-unstyled ml-auto" style="text-align: right">
       <li class="nav-item dropdown">

@@ -23,6 +23,9 @@
           </div>
           <div class="inbox_chat">
            @forelse($users as $user)
+              @if($user->id == Auth::id())
+                   @continue
+              @endif
             <div class="chat_list" data-userid ="{{$user->id}}">
               <div class="chat_people">
                 <div class="chat_img"> <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt=""> </div>
@@ -58,7 +61,7 @@
           <div class="type_msg">
             <div class="input_msg_write">
               <input type="text" fid="0" id="write_msg" placeholder="Type a message" />
-              <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+              <button id="write_msg" class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
             </div>
           </div>
         </div>

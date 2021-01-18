@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Pusher\Pusher;
 use App\Custom\FriendsList;
 use Validator;
-
+use DB;
 //use Illuminate\Http\Response;
 // import the Intervention Image Manager Class
 use Intervention\Image\ImageManagerStatic as Image;
@@ -181,11 +181,12 @@ class PostController extends Controller
     {
         $userpost = Post::
           with('pictures')
+          ->with('videos')
           ->with('comments')
           ->with('reactions')
         ->find($id);
         $allFriends = FriendsList::Friends(Auth::id());
-
+        $his_friends = Friend::where('user_id', $id)->get();
         $friends = User::with('profiles')
         ->whereIn('id',$allFriends)
          ->get();
@@ -206,7 +207,7 @@ class PostController extends Controller
        if(Friend::where('friend_id',Auth::id())->where('user_id',$userpost->user_id)->get()->count() || Friend::where('friend_id',$userpost->user_id)->where('user_id',Auth::id())->get()->count()){
         
         $friendsList = FriendsList::Friends($id);
-        return view('single_post')->with('userpost', $userpost)->with('friends', $friends)->with('requests', $friendreq)->with('req', $sentRequest) ;
+        return view('single_post', compact('his_friends'))->with('userpost', $userpost)->with('friends', $friends)->with('requests', $friendreq)->with('req', $sentRequest) ;
                }
         else{
                 return view('single_post_404')->with ('friends', $friends);
@@ -215,7 +216,7 @@ class PostController extends Controller
 
         }
         else{
-            return view('single_post', compact('friends'))->with('userpost', $userpost)->with('requests', $friendreq)->with('req', $sentRequest);
+            return view('single_post', compact('his_friends'))->with('userpost', $userpost)->with('friends', $friends)->with('requests', $friendreq)->with('req', $sentRequest);
 
         }
         
@@ -351,10 +352,24 @@ class PostController extends Controller
 
 
     }
-    public function images($id)
+    public function images()
     {
-        $posts = Post::with('pictures')->get();
-             return view('imageuploaded', compact('posts'));
+        $id = Auth::id();
+        $friendreq = Friend::with('user')
+                ->where("friend_id",$id)
+                 ->where('approved','0')
+                 ->where('blocked', '0')
+                 ->get();
+        $allFriends = FriendsList::Friends($id);
+              $friends = User::with('profiles')
+              ->whereIn('id',$allFriends)
+              ->get();
+              $images = DB::table('pictures')
+              ->select(DB::raw('post_id, imgname'))
+              ->where('post_id', '<>', Auth::id())
+              ->orderBy('created_at','DESC')
+              ->get();
+              return view('imageuploaded', compact('images'))->with('images', $images)->with('friends', $friends)->with('requests', $friendreq);
     }
 
     public function reaction($id, $type){

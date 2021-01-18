@@ -169,26 +169,27 @@ $data[] = $name;
         $friends = User::with('profiles')
         ->whereIn('id',$allFriends)
          ->get();
-        $userinfo = FriendsList::Friends(Auth::id());
+        // $userinfo = FriendsList::Friends(Auth::id());
        
         $userinfo = User::with('profiles')
              ->with('posts')
              ->with('posts.pictures')
+             ->with('posts.videos')
              ->with('posts.comments.user')
-             ->with('posts.reactions')
+             ->with('posts.reactions')->paginate(10)
             //  ->with('education')
             //  ->with('works')
             //  ->with('interests')->paginate(10)
              ->find($id)
-             ->paginate(10)
+             
              ;
 
 
-             $user_information = User::findOrFail($id);
+            //  $user_information = User::findOrFail($id);
 
              $allActivity = Activity::with('post.user')->where('user_id',Auth::id())->orderBy('created_at','desc')->limit(4)->get();
-             return view('showprofile')->with('user', $userinfo)->with('req', $userinfo)->with('allActivity',$allActivity)->with('friends', $friends)
-             ->with('user_information', $user_information) ;
+             return view('showprofile')->with('user', $userinfo)->with('allActivity',$allActivity)->with('friends', $friends)
+           /*  ->with('user_information', $user_information)*/ ;
     }
     
     public function react(Request $request){

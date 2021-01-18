@@ -14,34 +14,7 @@
 
 
 @section('sidebar-left')
-        <div class="profile-card" style="background-image: url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ');">
-          <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="user" class="profile-photo" />
-            	<h5><a href="{{url('friends/'.Auth::id())}}" class="text-white">{{Auth::user()->name}}</a></h5>
-            </div><!--profile card ends-->
-        <ul class="nav-news-feed">
-
-              <li><i class="icon ion-ios-paper"></i><div><a href="newsfeed.html">My Newsfeed</a></div></li>
-              <li><i class="icon ion-ios-people"></i><div><a href="newsfeed-people-nearby.html">People Nearby</a></div></li>
-              <li><i class="icon ion-ios-people-outline"></i><div><a href="{{url('friends/'.Auth::id())}}">Friends</a></div></li>
-              <li><i class="icon ion-chatboxes"></i><div><a href="{{url('chat')}}">Messages</a></div></li>
-              <li><i class="icon ion-images"></i><div><a href="newsfeed-images.html">Images</a></div></li>
-              <li><i class="icon ion-ios-videocam"></i><div><a href="newsfeed-videos.html">Videos</a></div></li>
-            </ul><!--news-feed links ends-->
-        <!--Friends block ends-->
-            <div id="chat-block">
-              <div class="title">Chat online</div>
-              <ul class="online-users list-inline list-unstyled">
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Linda Lohan"><img src="images/users/user-2.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Sophia Lee"><img src="images/users/user-3.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="John Doe"><img src="images/users/user-4.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Alexis Clark"><img src="images/users/user-5.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="James Carter"><img src="images/users/user-6.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Robert Cook"><img src="images/users/user-7.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Richard Bell"><img src="images/users/user-8.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Anna Young"><img src="images/users/user-9.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Julia Cox"><img src="images/users/user-10.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-              </ul>
-            </div><!--chat block ends-->
+   @include('partials.leftSidebar')
 @endsection
 
 @section('content')
@@ -116,77 +89,19 @@
             <div class="media">
             	<div class="row js-masonry" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": ".grid-sizer", "percentPosition": true }'>
                 <div class="grid-sizer col-md-6 col-sm-6"></div>
-                <div class="grid-item col-md-6 col-sm-6">
+                @foreach($images as $img)
+                 <div class="grid-item col-md-6 col-sm-6">
             			<div class="media-grid">
-                    <div class="img-wrapper" data-toggle="modal" data-target=".modal-1">
-                      <img src="images/post-images/6.jpg" alt="" class="img-responsive post-image" />
-                    </div>
-                    <div class="media-info">
-                      <div class="reaction">
-                        <a class="btn text-green"><i class="fa fa-thumbs-up"></i> 63</a>
-                        <a class="btn text-red"><i class="fa fa-thumbs-down"></i> 12</a>
+                    <div class="img-wrapper">
+                    <a href="{{url('/storage/postimages/'.$img->imgname)}}"data-lightbox="imageset-{{$img->post_id}}">
+              
+                    <img src="{{url('/storage/postimages/'.$img->imgname)}}" style="height: 200px;width: 311px;"/>
+    </a>
                       </div>
-                      <div class="user-info">
-                      @forelse($posts as $post)
-                    <?php
-                    $imageinfo = pathinfo(url('/storage/postimages/'.$post->imgname));
-                    //print_r($imageinfo);
-                    ?>   @if (Auth::check())
-                       <a href="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" data-lightbox="imageset-{{$post->id}}">
-                      <img src="{{asset('storage/profile/'.$post_id.'_profile.jpg')}}" alt="" width="120px">
-                        <div class="user">
-                          <h6><a href="#" class="profile-link">Richard Bell</a></h6>
-                          <a class="text-green" href="#">Friend</a>
-                        </div>
-                      </div>
-                      @endif 
-                    </div>
-
-                    <!--Popup-->
-                    <div class="modal fade modal-1" tabindex="-1" role="dialog" aria-hidden="true">
-                      <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                          <div class="post-content">
-                            <img src="images/post-images/1.jpg" alt="post-image" class="img-responsive post-image" />
-                            <div class="post-container">
-                              <img src="images/users/user-5.jpg" alt="user" class="profile-photo-md pull-left" />
-                              <div class="post-detail">
-                                <div class="user-info">
-                                  <h5><a href="timeline.html" class="profile-link">Alexis Clark</a> <span class="following">following</span></h5>
-                                  <p class="text-muted">Published a photo about 3 mins ago</p>
-                                </div>
-                                <div class="reaction">
-                                  <a class="btn text-green"><i class="icon ion-thumbsup"></i> 13</a>
-                                  <a class="btn text-red"><i class="fa fa-thumbs-down"></i> 0</a>
-                                </div>
-                                <div class="line-divider"></div>
-                                <div class="post-text">
-                                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <i class="em em-anguished"></i> <i class="em em-anguished"></i> <i class="em em-anguished"></i></p>
-                                </div>
-                                <div class="line-divider"></div>
-                                <div class="post-comment">
-                                  <img src="images/users/user-11.jpg" alt="" class="profile-photo-sm" />
-                                  <p><a href="timeline.html" class="profile-link">Diana </a><i class="em em-laughing"></i> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud </p>
-                                </div>
-                                <div class="post-comment">
-                                  <img src="images/users/user-4.jpg" alt="" class="profile-photo-sm" />
-                                  <p><a href="timeline.html" class="profile-link">John</a> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud </p>
-                                </div>
-                                <div class="post-comment">
-                                  <img src="images/users/user-1.jpg" alt="" class="profile-photo-sm" />
-                                  <input type="text" class="form-control" placeholder="Post a comment">
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div><!--Popup End-->
-@empty
-@endforelse
+                      
                   </div>
             		</div>
-                
+                @endforeach 
             	</div>
             </div>
           </div>
@@ -196,10 +111,7 @@
 
 @section('sidebar-right')
           <div class="suggestions" id="sticky-sidebar">
-              <h3 class="grey">Friend Requests</h3>
-              <hr>
-             
-             
+          @include('partials.friendrequests')  
              </div>
 @endsection
 
