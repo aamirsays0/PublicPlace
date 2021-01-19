@@ -28,21 +28,21 @@
             ================================================= -->
 
             <div class="media">
-            	<div class="row js-masonry" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": ".grid-sizer", "percentPosition": true }'>
-                <div class="grid-sizer col-md-6 col-sm-6"></div>
+            	<ul>
                  @foreach($videos as $vid)
-                  <div class="grid-item col-md-6 col-sm-6">
-                
-                      <video width="320" height="200" style="width: 311px;height: 205px;" controls>
-                      <a href="{{route('posts.show',$vid->post_id)}}"><span><i class="fa fa-eye"></i></span>
-                      <!-- {{$vid->vidname}} --></a>
+                  <li>
+                    <div class="card3">
+                      <video width="320" height="200" style="width: 160px;height: 150px;border-radius: 15px;" controls>
+                      <!-- {{$vid->vidname}} -->
                       <source src="{{ asset('storage/postvideos/'.$vid->vidname) }}" type="video/mp4">
                        Your browser does not support the video tag.
                        </video>
-                  </div>
+                       <a href="{{route('posts.show',$vid->post_id)}}"><span><i class="fa fa-eye"></i></span></a>
+                        </div>
+                  </li>
                     @endforeach  
                     
-              </div> 
+    </ul> 
             </div>
           </div>                       
                    

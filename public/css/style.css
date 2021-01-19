@@ -274,6 +274,7 @@ ul{
 
 ul li{
   list-style: none;
+  display: inline-block;
 }
 ul i.ion-ios-information-outline{
   color: #93c74b;
@@ -1986,4 +1987,17 @@ font-style: #bb3636;}
   left: 90%;
   color:red;
   /* font-size: 1.6rem; */
+}
+.card3{
+  border-radius: 15px;
+  width:160px;
+  height:185px;
+  border:1px solid #4d474713;}
+ul li .card3 a{
+  color: #000;
+  font-size: 1.5rem;
+}
+ul li .card3 a:hover{
+  color: rgb(35, 137, 206);
+
 }
