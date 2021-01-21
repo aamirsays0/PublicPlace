@@ -28,7 +28,7 @@
     {!! Form::open(['url' => 'search','method' => 'get','class' => 'form-inline my-2 my-lg-0', 'style' => 'padding-left: 0px;
 ']) !!}
                     <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" aria-label="Search" style="border-radius: 25px;">
-                    <button class="form-control mr-sm-2" style="position: absolute;top: 1%;right: 1%;border-radius: 50%;" type=submit><i class="fa fa-search"></i></button> 
+                    <button class="form-control mr-sm-2" style="position: absolute;top: 1%;right: 1%;border-radius: 50%;color: white;background-color: #044c59;" type=submit><i class="fa fa-search"></i></button> 
                     {!! Form::close() !!}
 
     <ul class="navbar-nav list-inline list-unstyled ml-auto" style="text-align: right">
