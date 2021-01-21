@@ -14,59 +14,8 @@
 
 
 @section('sidebar-left')
-          <div class="profile-card" style="background-image: url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ');">
-            	
-                 @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
-                    <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="profile-photo-md " />
-                    @else
-                       <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt=""/>
-                    @endif
-          	<h5><a title="{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}" class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
-            	<a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()-1}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()-1}} Friends</a>
-            </div><!--profile card ends-->
-            <ul class="nav-news-feed">
-            <li><i class="icon ion-ios-paper"></i><div><a href="{{url('profiles/'.Auth::id())}}">My Timeline</a></div></li>
-              <li><i class="icon ion-ios-people"></i><div><a href="{{ route('people.nearby')}}">People Nearby</a></div></li>
-              <li><i class="icon ion-ios-people-outline"></i><div><a href="{{url('friends/'.Auth::id())}}">Friends</a></div></li>
-              <li><i class="icon ion-chatboxes"></i><div><a href="{{url('chat')}}">Messages</a></div></li>
-              <li><i class="icon ion-images"></i><div><a href="{{url('image/'.Auth::id())}}">Images</a></div></li>
-              <li><i class="icon ion-ios-videocam"></i><div><a href="newsfeed-videos.html">Videos</a></div></li>
-            </ul><!--news-feed links ends-->
-            <div id="friends-block">
-            <a href="{{url('friends/'.Auth::id())}}"><button type="button" class="ftitle">Friends</button></a>
-              <hr>
-              <ul class="online-users list-inline list-unstyled">
-              @forelse($friends as $friend)
-                @if($friend->id != Auth::id())
-                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->id)}}" title="{{$friend->name}}">
-                @if (file_exists(public_path('storage/profile/'.$friend->id.'_profile.jpg')) )
-                    <img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="" class="profile-photo-md " />
-                    @else
-                    <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
-                   @endif
-                   </a></li>
-                 
-                 @endif
-                 @empty
-              <h3>no friends yet, search for new friends</h3>
-              @endforelse 
-              </ul>
-              
-            </div><!--Friends block ends-->
-            <div id="chat-block">
-            <button class="ctitle">Chat online</button>
-              <ul class="online-users list-inline list-unstyled">
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Linda Lohan"><img src="images/users/user-2.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Sophia Lee"><img src="images/users/user-3.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="John Doe"><img src="images/users/user-4.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Alexis Clark"><img src="images/users/user-5.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="James Carter"><img src="images/users/user-6.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Robert Cook"><img src="images/users/user-7.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Richard Bell"><img src="images/users/user-8.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Anna Young"><img src="images/users/user-9.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-                <li class="list-inline-item"><a href="newsfeed-messages.html" title="Julia Cox"><img src="images/users/user-10.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-              </ul>
-            </div><!--chat block ends-->
+   @include('partials.leftSidebar')
+
  @endsection
  @section('content')
                 @if ($message = Session::get('success'))
@@ -88,7 +37,7 @@
   <!-- Tab panes -->
   <div class="tab-content">
     <div id="home" class="tab-content tab-pane active"><br>
-      <h3>People Search Results</h3>
+      <h5>People Search Results</h5>
       <div class="people-nearby">
       @forelse($users as $user)
        <div class="nearby-user">
@@ -238,17 +187,13 @@
                     @empty
 
                     @endforelse
-                    @forelse($post->videos as $vid)
-                    <?php
-                    $vidinfo = pathinfo(url('/storage/postimages/'.$vid->vidname));
-                    //print_r($imageinfo);
-                    ?>
-                    <a href="{{url('/storage/postimages/'.$vid->vidname)}}" data-lightbox="imageset-{{$post->id}}">
-                    <img src=" {{url('/storage/postimages/'.$vidinfo['filename'].".".$vidinfo['extension'])}}" alt="" width="120px">
-                    </a>
-                    @empty
-
-                    @endforelse
+                    @if (isset($post->videos[0]))
+                     <video width="320" height="240" controls>
+                      <source src="{{ asset('storage/postvideos/'.$post->videos[0]->vidname) }}" type="video/mp4">
+                      Your browser does not support the video tag.
+                     </video> 
+                    @endif
+ 
                     
                   </div>
                   <div class="line-divider"></div>
@@ -295,7 +240,7 @@
               </div>
             </div>
        @empty
-       <h3>No posts avaliable</h3>
+       <h5>No posts avaliable</h5>
         @endforelse
         </div> 
     </div>
@@ -347,7 +292,70 @@
 
 
  });
- 
+ //CONFIRM FRIEND REQUEST
+ $(".confirmBtn").click(function(e){
+             var t = $(this);
+             e.preventDefault();
+             var f= $(this).data('uid');
+             var url = '{{URL::to('/')}}' +"/confirmfriend/"+f;
+             $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    alert(data.message);
+                    t.parent().parent().remove();
+
+                  // location.reload();
+                    
+                //RESET FORM AFTER POST
+                    //$('postform').trigger("reset");
+                    //$(".preview").html("");
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+           });
+
+//DELETE FRIEND REQUEST
+          $(".deleteBtn").click(function(e){
+             var t = $(this);
+             e.preventDefault();
+             var f= $(this).data('uid');
+             var url = '{{URL::to('/')}}' +"/deletefriend/"+f;
+             $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    alert(data.message);
+                    t.parent().parent().remove();
+
+                  // location.reload();
+                    
+                //RESET FORM AFTER POST
+                    //$('postform').trigger("reset");
+                    //$(".preview").html("");
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+           });
+
 //reaction start
 $(".reaction").on("click",".reactionBtn", function(){
       var url = '{{URL::to('/')}}' +"/react";

@@ -677,7 +677,7 @@ textarea{
   background-size: cover;
   width: 100%;
   min-height: 90px;
-  border-radius: 4px;
+  border-radius: 15px;
   padding: 10px 20px;
   color: #fff;
   margin-bottom: 40px;
@@ -1869,7 +1869,7 @@ ul.contact li i{
 .spinner {
   width: 40px;
   height: 40px;
-  background-color: #27aae1;
+  background-color: #044c59;
   position: absolute;
   top: 48%;
   left: 48%;

@@ -25,7 +25,7 @@
     
     <!--Favicon-->
     <link rel="shortcut icon" type="image/png" href="images/fav.png">
-	</head>
+	</head>  
   <body>
 
   @include('partials.headermenu')
@@ -46,7 +46,7 @@
               <div class="col-md-3">
                 <div class="profile-info">
                 <a href="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" data-lightbox="pp">
-                  <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo">
+                  <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo"></a>
                   <h4>{{isset($user->profiles->f_name , $user->profiles->l_name) ? $user->profiles->f_name.' '.$user->profiles->l_name : $user->name}}</h4>
                 </div>
               </div>
@@ -88,7 +88,7 @@
       @else
       <a href="{{ route('view.friends.profile', $user->id) }}">  Basic Information</a>
       @endif
-    </li>
+    </li><br>
     <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
       @if ( isset($user) && $user->id === Auth::id())
       <i class="icon ion-ios-information-outline"></i>
@@ -146,6 +146,7 @@
      <th>Session</th>
      <th>Level</th>
      <th>Major</th>
+     <th>Graduated?</th>
      <th>Action</th>
      </tr>
      @forelse($user->education as $education)
@@ -199,6 +200,7 @@
      <th>From</th>
      <th>To</th>
      <th>City/Town</th>
+     <th>Working?</th>
      <th>Action</th>
      </tr>
      @forelse($user->works as $works)
@@ -231,20 +233,40 @@
             </div>
             <div class="col-md-2 static">
           <div id="sticky-sidebar">
-            <h4 class="grey">Your activities</h4>
+          @if($user->id == Auth::id())
+          <h4 class="grey">Your activities</h4>
             @foreach ($allActivity as $activity)
               <div class="feed-item">
                 <div class="live-activity">
                   <p>
-                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link"> {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }} {{ $activity->type }}ed on a Post</a>
-                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }}</a>
+                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link">You {{ $activity->type }}ed on a Post</a>
+                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->post->user->profiles->f_name) ? ucfirst($activity->post->user->profiles->f_name) : ucfirst($activity->post->user->name) }}</a>
                   </p>
                   <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
                 </div>
               </div>
             @endforeach          
+
+          @else
+          <h4 class="grey">Activities</h4>
+            @foreach ($allActivity as $activity)
+              <div class="feed-item">
+                <div class="live-activity">
+                  <p>
+                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link"> {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }} {{ $activity->type }}ed on a Post</a>
+                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->post->user->profiles->f_name) ? ucfirst($activity->post->user->profiles->f_name) : ucfirst($activity->post->user->name) }}</a>
+                  </p>
+                  <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
+                </div>
+              </div>
+            @endforeach          
+
+          @endif
           </div>
-        </div>   </div>
+        </div>   
+        </div>
+        </div>
+        </div>
 
 
     <!-- Footer
@@ -257,32 +279,16 @@
     </div> -->
     <!-- Scripts
     ================================================= -->
-    <script src="js/jquery-3.1.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.sticky-kit.min.js"></script>
-    <script src="js/jquery.scrollbar.min.js"></script>
-    <script src="js/script.js"></script>
+    <script src="{{asset('js/jquery-3.1.1.min.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/jquery.sticky-kit.min.js')}}"></script>
+    <script src="{{asset('js/jquery.scrollbar.min.js')}}"></script>
+    <script src="{{asset('js/script.js')}}"></script>
     <script src="{{asset('js/lightbox.min.js')}}"></script>
+    <script src="{{asset('js/jquery.jscroll.min.js')}}"></script>
     <script src="http://unpkg.com/ionicons@4.4.2/dist/ionicons.js"></script>
-    <script>
-    $(document).ready(function(e){
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-      });
- 
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>     <script>
     $(document).ready(function(){
-      $("#edu_form_container").hide();
-      $("#edu_toggle_btn").click(function(){
-        $("#edu_form_container").toggle(200);
-
-      });
-      $("#work_form_container").hide();
-      $("#work_toggle_btn").click(function(){
-        $("#work_form_container").toggle(200);
-
-      });
         $("#showcpbtncontainer").click(function(){
           var url = ($(".timeline-cover").css('background-image'));
           var start_quot = url.indexOf("\"") + 1;
@@ -294,7 +300,6 @@ $.ajaxSetup({
         });
       
     }); 
-  }); 
     </script>
 
     

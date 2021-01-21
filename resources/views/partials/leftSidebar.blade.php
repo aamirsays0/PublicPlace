@@ -1,9 +1,9 @@
 <div id="sticky-sidebar">
-        <div class="profile-card static" style="background-image: url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ');">
+        <div class="profile-card static" style="background-image: linear-gradient(to bottom, rgb(4 76 89 / 16%), rgb(4 76 89 / 85%)), url('{{asset('storage/profile/'.Auth::id().'_cover.jpg')}} ');">
                     @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
-                    <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="profile-photo-md " />
+                    <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="profile-photo " />
                     @else
-                       <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
+                       <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo" id="uploadImage" alt="">
                     @endif
              	  <h5><a class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
             	   <a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()-1}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()-1}} Friends</a>

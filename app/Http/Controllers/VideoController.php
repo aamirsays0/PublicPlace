@@ -28,7 +28,7 @@ class VideoController extends Controller
               $videos = DB::table('videos')
               ->select(DB::raw('post_id, vidname'))
               ->where('post_id', '<>', Auth::id())
-              ->orderBy('created_at')
+              ->orderBy('created_at','DESC')
               ->get();
         return view('showvideos', compact('videos'))->with('videos', $videos)->with('friends', $friends)->with('requests', $friendreq);
     }

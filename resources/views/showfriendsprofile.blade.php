@@ -1,30 +1,4 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<!-- Copied from http://mythemestore.com/friend-finder/edit-profile-basic.html by Cyotek WebCopy 1.7.0.600, Thursday, September 5, 2019, 12:34:06 AM -->
-	<head>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="This is social network html5 template available in themeforest......">
-		<meta name="keywords" content="Social Network, Social Media, Make Friends, Newsfeed, Profile Page">
-		<meta name="robots" content="index, follow">
-<!-- CSRF Token -->
-<meta name="csrf-token" content="{{ csrf_token() }}">
-
-<title>{{ config('app.name', 'Laravel') }}</title>
-    <!-- Stylesheets
-    ================================================= -->
-		<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}"/>
-		<link rel="stylesheet" href="{{asset('css/style.css')}}"/>
-		<link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}"/>
-    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}"/>
-    <link rel="stylesheet" href="{{asset('css/headerNewStyles.css')}}"/>
-    <link rel="stylesheet" href="{{asset('css/lightbox.min.css')}}" />
-
-    
-    <!--Favicon-->
-    <link rel="shortcut icon" type="image/png" href="{{asset('images/fav.png')}}">
-    
-  </head>
+@extends("layouts.blue")
   <body>
   
 
@@ -91,7 +65,7 @@
       @else
       <a href="{{ route('view.friends.profile', $user->id) }}"> Basic Information</a>
       @endif
-    </li>
+    </li><br>
     <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
       @if ( isset($user) && $user->id === Auth::id())
       <i class="icon ion-ios-information-outline"></i>
@@ -103,14 +77,16 @@
       <a href="{{url('education')}}">  Education & Work</a>
       @else
       <a href="{{ route('view.friends.education', $user->id) }}">  Education & Work</a>
-      @endif        </li>
+      @endif        
+      </li>
       <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
       @if ( isset($user) && $user->id === Auth::id())
       <i class="icon ion-ios-locked-outline"></i>
       <a href="{{url('change-password')}}">  Change Password</a>
       @endif</li>
 
-  </ul>            </div>
+  </ul>   
+           </div>
    <div class="col-md-7" style="padding-right: 30px;">
 
               <!-- Basic Information
@@ -147,22 +123,39 @@
             </div>
             <div class="col-md-2 static">
           <div id="sticky-sidebar">
+          @if($user->id == Auth::id())
+          <h4 class="grey">Your Activities</h4>
+            @foreach ($allActivity as $activity)
+              <div class="feed-item">
+                <div class="live-activity">
+                  <p>
+                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize">You {{ $activity->type }}ed on a Post</a>
+                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ $activity->post->user->name }}</a>
+                  </p>
+                  <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
+                </div>
+              </div>
+            @endforeach          
+
+            @else
             <h4 class="grey">Activities</h4>
             @foreach ($allActivity as $activity)
               <div class="feed-item">
                 <div class="live-activity">
                   <p>
                     <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }} {{ $activity->type }}ed on a Post</a>
-                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"></a>
+                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ $activity->post->user->name }}</a>
                   </p>
                   <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
                 </div>
               </div>
             @endforeach          
+
+            @endif
           </div>
         </div>
       </div>
-   
+    </div>   
 
     <!-- Footer
     ================================================= -->
@@ -172,14 +165,16 @@
    
     <!-- Scripts
     ================================================= -->
-    <script src="js/jquery-3.1.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.sticky-kit.min.js"></script>
-    <script src="js/jquery.scrollbar.min.js"></script>
-    <script src="js/script.js"></script>
+    <script src="{{asset('js/jquery-3.1.1.min.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/jquery.sticky-kit.min.js')}}"></script>
+    <script src="{{asset('js/jquery.scrollbar.min.js')}}"></script>
+    <script src="{{asset('js/script.js')}}"></script>
     <script src="{{asset('js/lightbox.min.js')}}"></script>
+    <script src="{{asset('js/jquery.jscroll.min.js')}}"></script>
     <script src="http://unpkg.com/ionicons@4.4.2/dist/ionicons.js"></script>
-    <script>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script> 
+<script>
       $(document).ready(function(){
         $("#showcpbtncontainer").click(function(){
           var url = ($(".timeline-cover").css('background-image'));

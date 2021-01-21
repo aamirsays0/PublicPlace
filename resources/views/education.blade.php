@@ -46,7 +46,7 @@
               <div class="col-md-3">
                 <div class="profile-info">
                 <a href="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" data-lightbox="pp">
-                  <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="img-responsive profile-photo">
+                  <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="img-responsive profile-photo"></a>
                   <h4>{{isset($userinfo->profiles->f_name , $userinfo->profiles->l_name) ? $userinfo->profiles->f_name.' '.$userinfo->profiles->l_name : $userinfo->name}}</h4>
                 </div>
               </div>
@@ -80,7 +80,25 @@
           <div class="row">
             <div class="col-md-3">
               
-            @include('partials.profilemenu')
+            <ul class="edit-menu " style="margin-top: 80px">
+               <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+                  <i class="icon ion-ios-information-outline"></i>
+                  <a href="{{url('profiles')}}"> Edit Basic Information</a>
+                </li><br>
+                <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+                  <i class="icon ion-ios-information-outline"></i>
+                  <a href="{{ route('view.friends.profile', Auth::id()) }}"> Basic Information</a>
+                </li><br>
+                  <li class='{{Route::current()->uri == 'education'?'active': ''}}'>
+                  <i class="icon ion-ios-briefcase-outline"></i>
+                  <a href="{{url('education')}}">  Education & Work</a>
+                  </li><br>
+                  <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
+                  <i class="icon ion-ios-locked-outline"></i>
+                  <a href="{{url('change-password')}}">  Change Password</a>
+                  </li>
+
+              </ul>       
 
             </div>
             <div class="col-md-7" style="padding-right: 30px;">
@@ -162,10 +180,10 @@
                           </div>
                           <button type="submit" class="btn btn-primary">Save Changes</button>
                                {!! Form::close() !!}
-                                   </div>
-                                   </div>
+                         </div>
+                    </div>
                
-   <div class="edu_form_container">
+  <div class="edu_form_container">
    <table class="table table-bordered">
      <tr>
      <th>#</th>
@@ -173,6 +191,7 @@
      <th>Session</th>
      <th>Level</th>
      <th>Major</th>
+     <th>Graduated?</th>
      <th>Action</th>
      </tr>
      @forelse($userinfo->education as $education)
@@ -273,6 +292,7 @@
      <th>From</th>
      <th>To</th>
      <th>City/Town</th>
+     <th>Working?</th>
      <th>Action</th>
      </tr>
      @forelse($userinfo->works as $works)
@@ -319,8 +339,9 @@
               </div>
             @endforeach          
           </div>
-        </div>   </div>
-
+        </div> 
+      </div>
+      </div>
 
     <!-- Footer
     ================================================= -->
@@ -332,14 +353,15 @@
     </div>
     <!-- Scripts
     ================================================= -->
-    <script src="js/jquery-3.1.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.sticky-kit.min.js"></script>
-    <script src="js/jquery.scrollbar.min.js"></script>
-    <script src="js/script.js"></script>
+    <script src="{{asset('js/jquery-3.1.1.min.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/jquery.sticky-kit.min.js')}}"></script>
+    <script src="{{asset('js/jquery.scrollbar.min.js')}}"></script>
+    <script src="{{asset('js/script.js')}}"></script>
     <script src="{{asset('js/lightbox.min.js')}}"></script>
+    <script src="{{asset('js/jquery.jscroll.min.js')}}"></script>
     <script src="http://unpkg.com/ionicons@4.4.2/dist/ionicons.js"></script>
-    <script>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>     <script>
     $(document).ready(function(e){
 $.ajaxSetup({
     headers: {

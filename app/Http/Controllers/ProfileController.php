@@ -78,6 +78,7 @@ class ProfileController extends Controller
         $editPro_basic->sex = $request->sex;
         $editPro_basic->city = $request->city;
         $editPro_basic->country = $request->country;
+        $editPro_basic->description = $request->description;
         $editPro_basic->user_id = Auth::id();
         if($request->hasfile('ppic')){
             $name=Auth::id()."_profile.".$request->file('ppic')->getClientOriginalExtension();
@@ -187,7 +188,7 @@ $data[] = $name;
 
             //  $user_information = User::findOrFail($id);
 
-             $allActivity = Activity::with('post.user')->where('user_id',Auth::id())->orderBy('created_at','desc')->limit(4)->get();
+             $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(4)->get();
              return view('showprofile')->with('user', $userinfo)->with('allActivity',$allActivity)->with('friends', $friends)
            /*  ->with('user_information', $user_information)*/ ;
     }

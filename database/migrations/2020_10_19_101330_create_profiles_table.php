@@ -25,8 +25,8 @@ class CreateProfilesTable extends Migration
             $table->string('country');
             $table->unsignedInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('pp');
-            $table->string('cp');
+            $table->string('pp')->nullable();
+            $table->string('cp')->nullable();
             $table->timestamps();
         });
     }

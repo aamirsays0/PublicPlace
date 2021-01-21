@@ -215,7 +215,7 @@
                     <div class="post-comment">
                     <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
                     <p><a href="{{url('profiles/'.$usercomment->user->id)}}" class="profile-link">{{$usercomment->user->profiles?$usercomment->user->profiles->f_name.' '.$usercomment->user->profiles->l_name:$usercomment->user->name}}</a>
-                    <i class="em em-laughing"></i>{{$usercomment->comment}}</p>
+                    {{$usercomment->comment}}</p>
                     @if (Auth::check())
                     @if(count((array) $post->comments) > 0)
                     @if($usercomment->user->id == Auth::user()->id)

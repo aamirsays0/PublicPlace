@@ -74,34 +74,34 @@
             <div class="col-md-3">
               
       
-  <ul class="edit-menu " style="margin-top: 80px">
-    <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
-      <i class="icon ion-ios-information-outline"></i>
-      @if ( isset($user) && $user->id === Auth::id())
-      <a href="{{url('profiles')}}">  Edit Basic Information</a>
-      @else
-      <a href="{{ route('view.friends.profile', $user->id) }}">  Basic Information</a>
-      @endif
-    </li>
-    <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
-    @if ( isset($user) && $user->id === Auth::id())
-      <i class="icon ion-ios-information-outline"></i>
-      <a href="{{ route('view.friends.profile', $user->id) }}">Basic Information</a>
-       @endif
-    </li>
-      <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i>
-      @if ( isset($user) && $user->id === Auth::id())
-      <a href="{{url('education')}}">  Education & Work</a>
-      @else
-      <a href="{{ route('view.friends.education', $user->id) }}">  Education & Work</a>
-      @endif        </li>
-      <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
-      @if ( isset($user) && $user->id === Auth::id())
-      <i class="icon ion-ios-locked-outline"></i>
-      <a href="{{url('change-password')}}">  Change Password</a>
-      @endif</li>
-
-  </ul>            
+              <ul class="edit-menu " style="margin-top: 80px">
+                <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+                  <i class="icon ion-ios-information-outline"></i>
+                  @if ( isset($user) && $user->id === Auth::id())
+                  <a href="{{url('profiles')}}">  Edit Basic Information</a>
+                  @else
+                  <a href="{{ route('view.friends.profile', $user->id) }}">  Basic Information</a>
+                  @endif
+                </li><br>
+                <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+                @if ( isset($user) && $user->id === Auth::id())
+                  <i class="icon ion-ios-information-outline"></i>
+                  <a href="{{ route('view.friends.profile', $user->id) }}">Basic Information</a>
+                   @endif
+                </li><br>
+                  <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i>
+                  @if ( isset($user) && $user->id === Auth::id())
+                  <a href="{{url('education')}}">  Education & Work</a>
+                  @else
+                  <a href="{{ route('view.friends.education', $user->id) }}">  Education & Work</a>
+                  @endif        </li><br>
+                  <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
+                  @if ( isset($user) && $user->id === Auth::id())
+                  <i class="icon ion-ios-locked-outline"></i>
+                  <a href="{{url('change-password')}}">  Change Password</a>
+                  @endif</li>
+            
+              </ul>            
             </div>
    <div class="col-md-7" style="padding-right: 30px;">
 
@@ -144,82 +144,6 @@
                         />
                       </div>
                     </div>
-                    <!-- <div class="row">
-                      <p class="custom-label"><strong>Date of Birth</strong></p>
-                      <div class="form-group col-sm-3 col-xs-6">
-                        <label for="month" class="sr-only"></label>
-                        <select class="form-control" id="day">
-                          <option value="Day">Day</option>
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                          <option>6</option>
-                          <option>7</option>
-                          <option>8</option>
-                          <option>9</option>
-                          <option>10</option>
-                          <option>11</option>
-                          <option>12</option>
-                          <option>13</option>
-                          <option>14</option>
-                          <option>15</option>
-                          <option>16</option>
-                          <option>17</option>
-                          <option>18</option>
-                          <option selected="">19</option>
-                          <option>20</option>
-                          <option>21</option>
-                          <option>22</option>
-                          <option>23</option>
-                          <option>24</option>
-                          <option>25</option>
-                          <option>26</option>
-                          <option>27</option>
-                          <option>28</option>
-                          <option>29</option>
-                          <option>30</option>
-                          <option>31</option>
-                        </select>
-                      </div>
-                      <div class="form-group col-sm-3 col-xs-6">
-                        <label for="month" class="sr-only"></label>
-                        <select class="form-control" id="month">
-                          <option value="month">Month</option>
-                          <option>Jan</option>
-                          <option>Feb</option>
-                          <option>Mar</option>
-                          <option>Apr</option>
-                          <option>May</option>
-                          <option>Jun</option>
-                          <option>Jul</option>
-                          <option>Aug</option>
-                          <option>Sep</option>
-                          <option>Oct</option>
-                          <option>Nov</option>
-                          <option selected="">Dec</option>
-                        </select>
-                      </div>
-                      <div class="form-group col-sm-6 col-xs-12">
-                        <label for="year" class="sr-only"></label>
-                        <select class="form-control" id="year">
-                          <option value="year">Year</option>
-                          <option selected="">2000</option>
-                          <option>2001</option>
-                          <option>2002</option>
-                          <option>2004</option>
-                          <option>2005</option>
-                          <option>2006</option>
-                          <option>2007</option>
-                          <option>2008</option>
-                          <option>2009</option>
-                          <option>2010</option>
-                          <option>2011</option>
-                          <option>2012</option>
-                        </select>
-                      </div>
-                    </div> -->
                     <div class="row">
                     <div class="form-group gender ">
                       <span class="custom-label pt-1"><strong>I am a: </strong></span>
@@ -284,6 +208,9 @@
                       <div class="form-group col-xs-12">
                         <label for="my-info">About me</label>
                         <textarea id="my-info" name="information" class="form-control" placeholder="Some texts about me" rows="4" cols="400">
+                        @if($user->profiles)
+                          {{$user->profiles->description}}
+                          @endif
                         </textarea>
                       </div>
                     </div>
@@ -335,13 +262,15 @@
    
     <!-- Scripts
     ================================================= -->
-    <script src="js/jquery-3.1.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.sticky-kit.min.js"></script>
-    <script src="js/jquery.scrollbar.min.js"></script>
-    <script src="js/script.js"></script>
+    <script src="{{asset('js/jquery-3.1.1.min.js')}}"></script>
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/jquery.sticky-kit.min.js')}}"></script>
+    <script src="{{asset('js/jquery.scrollbar.min.js')}}"></script>
+    <script src="{{asset('js/script.js')}}"></script>
     <script src="{{asset('js/lightbox.min.js')}}"></script>
+    <script src="{{asset('js/jquery.jscroll.min.js')}}"></script>
     <script src="http://unpkg.com/ionicons@4.4.2/dist/ionicons.js"></script>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script> 
     <script>
       $(document).ready(function(){
         $("#showcpbtncontainer").click(function(){

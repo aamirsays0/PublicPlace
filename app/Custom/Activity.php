@@ -12,7 +12,7 @@ class Activity
         <img src="'.asset('storage/profile/'.$singleActivity->user_id.'_profile_thumb.jpg').'" alt="user" class="img-fluid profile-photo profile-photo-md" />
 
           <a style="font-size: 1.7rem !important;" href="'.route('profiles.show',Auth::id()).'">'."You".'</a>
-            Create a new <a style="font-size:1.7rem" href="'.url('posts/'.$singleActivity->post_id).'"> 
+            Created a new <a style="font-size:1.7rem" href="'.url('posts/'.$singleActivity->post_id).'"> 
             post
           </a>.
 
@@ -20,7 +20,7 @@ class Activity
     }
         elseif($singleActivity->type == "comment"){
         $html .='<p style="border-bottom: 1px solid #b5d7f3;padding: 5px;font-size: 1.7rem;">
-          <img src="'.asset('storage/profile/'.$singleActivity->post->user->id.'_profile_thumb.jpg').'" alt="user" class="img-fluid profile-photo profile-photo-md" />
+          <img src="'.asset('storage/profile/'.$singleActivity->user->id.'_profile_thumb.jpg').'" alt="user" class="img-fluid profile-photo profile-photo-md" />
           <a  style="font-size: 1.7rem !important;" href="'.route('profiles.show',Auth::id()).'">'."You".'</a>
             Commented on a <a style="font-size:1.7rem" href="'.url('posts/'.$singleActivity->post_id).'"> 
             post
