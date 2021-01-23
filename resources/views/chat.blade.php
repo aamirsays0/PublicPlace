@@ -89,21 +89,28 @@ var channel = pusher.subscribe('user-{{Auth::id()}}');
    $m = data.message;
      if(data.type == "message"){
 /*      console.log(data.mtime); */
-if(data.type == "message" || data.user_id == '{{Auth::id()}}'){
-      if(data.user_id == '{{Auth::id()}}'){
-       var template = '<div class="outgoing_msg"><div class="sent_msg"><p>'+data.chatmessage+'</p><span class="time_date">' + data.mtime.date + '(' + data.mtime.timezone + ')'+ '</span></div></div>';
+if(data.type == "message" || data.user_id == {{Auth::id()}}){
+      if(data.user_id == {{Auth::id()}}){
+       var template = '<div class="outgoing_msg"><div class="sent_msg"><p>'+data.chatmessage+'</p><span class="time_date">' + data.mtime + '</span></div></div>';
      }
      else {
-      var template = '<div class="incoming_msg"><div class="incoming_msg_img"><img src="'+baseurl+'storage/profile/'+data.user_id+'_icon.jpg'+'" alt="'+data.user_name+'"></div><div class="received_msg"><div class="received_withd_msg"><p>'+data.chatmessage+'</p><span class="time_date">' + data.mtime.date + '(' + data.mtime.timezone + ')'+ '</span></div></div></div>';
+      $("#notificationDropdown span.count").text(
+         parseInt($("#notificationDropdown span.count").text())
+         +1).addClass('text-danger');
+
+      var template = '<div class="incoming_msg"><div class="incoming_msg_img"><img src="'+baseurl+'storage/profile/'+data.user_id+'_icon.jpg'+'" alt="'+data.user_name+'"></div><div class="received_msg"><div class="received_withd_msg"><p>'+data.chatmessage+'</p><span class="time_date">' + data.mtime + '</span></div></div></div>';
      }
      $("#msg_history_container").append(template);
+
    
      }
    else{
+  console.log(typeof parseInt($("#notificationDropdown span.count").text()))
+
      $(".chat_list[data-userid='"+data.user_id+"']").find('p').html(data.chatmessage).addClass('text-danger');
-     if(data.type == "message" && data.user_id !=='{{Auth::id()}}'){
+     if(data.type == "message" && data.user_id !== {{Auth::id()}}){
        var template ='<a class="dropdown-item preview-item"><div class="preview-thumbnail"><div class="preview-icon bg-success"><i class="mdi mdi-alert-circle-outline mx-0"></i>\n' +
-            '</div></div><div class="preview-item-content"><h6 class="preview-subject font-weight-medium text-dark">New Message from'+ data.user_name +'</h6><p class="small-text text-success">'+data.mtime.date+'(utc)</p></div></a><div class="dropdown-divider"></div>';
+            '</div></div><div class="preview-item-content"><h6 class="preview-subject font-weight-medium text-dark">New Message from'+ data.user_name +'</h6><p class="small-text text-success">'+data.mtime+'</p></div></a><div class="dropdown-divider"></div>';
        $("#notificationDropdown span.count").text(
          parseInt($("#notificationDropdown span.count").text())
          +1).addClass('text-danger');
@@ -207,20 +214,37 @@ if(data.type == "message" || data.user_id == '{{Auth::id()}}'){
         //send chat end
 
         function showMessages(data){
+          var month = new Array();
+              month[0] = "Jan";
+              month[1] = "Feb";
+              month[2] = "Mar";
+              month[3] = "Apr";
+              month[4] = "May";
+              month[5] = "Jun";
+              month[6] = "Jul";
+              month[7] = "Aug";
+              month[8] = "Sep";
+              month[9] = "Oct";
+              month[10] = "Nov";
+              month[11] = "Dec";
           $t = "";
+
           if(!data.length){
             $t = "<h3>No messages to show</h3>";
           }
           else {
             for(var d in data){ 
+              let date = new Date(data[d].created_at);
+          date = `${date.getDate()} ${month[date.getMonth()]} ${date.getFullYear()} ${ date.getHours() }:${ date.getMinutes() }`
               console.log(data[d]);
-        if(data[d].user_id == '{{Auth::id()}}'){
-       $t += '<div class="outgoing_msg"><div class="sent_msg"><p>'+data[d].message+'</p><span class="time_date">' + data[d].created_at + '(UTC)'+'</span></div></div>';
-     }
-     else {
-      $t += '<div class="incoming_msg"><div class="incoming_msg_img"><img src="'+baseurl+'storage/profile/'+data[d].user_id+'_icon.jpg'+'" alt="'+data[d].user_id+'"></div><div class="received_msg"><div class="received_withd_msg"><p>'+data[d].message+'</p><span class="time_date">' + data[d].created_at + '(UTC)'+'</span></div></div></div>';
-     }
-     }
+                  if(data[d].user_id == '{{Auth::id()}}'){
+                    
+                $t += '<div class="outgoing_msg"><div class="sent_msg"><p>'+data[d].message+'</p><span class="time_date">' + date +'</span></div></div>';
+              }
+              else {
+                $t += '<div class="incoming_msg"><div class="incoming_msg_img"><img src="'+baseurl+'storage/profile/'+data[d].user_id+'_icon.jpg'+'" alt="'+data[d].user_id+'"></div><div class="received_msg"><div class="received_withd_msg"><p>'+data[d].message+'</p><span class="time_date">' + date + '</span></div></div></div>';
+              }
+           }
      $("#msg_history_container").html($t);
    }
         }

@@ -18,34 +18,23 @@
 @endsection
 
 @section('content')
-       @if ($message = Session::get('success'))
-              <div class="alert alert-success" id="errorcontainer">
-              <h3>{{$message}}</h3>
-              </div>
-              @endif
-       <div class="scroll">
-                   <!-- Media
-            ================================================= -->
+  @if ($message = Session::get('success'))
+    <div class="alert alert-success" id="errorcontainer">
+    <h3>{{$message}}</h3>
+    </div>
+  @endif
+  <div class="row">
+    @foreach($videos as $vid)
+      <div class="col-sm-12 col-md-6">
+        <video style="width: 100%;height: 150px;border-radius: 15px;" controls>
+          <!-- {{$vid->vidname}} -->
+          <source src="{{ asset('storage/postvideos/'.$vid->vidname) }}" type="video/mp4">
+           Your browser does not support the video tag.
+        </video>
+      </div>
+    @endforeach  
+  </div>
 
-            <div class="media">
-            	<ul>
-                 @foreach($videos as $vid)
-                  <li>
-                    <div class="card3">
-                      <video width="320" height="200" style="width: 160px;height: 150px;border-radius: 15px;" controls>
-                      <!-- {{$vid->vidname}} -->
-                      <source src="{{ asset('storage/postvideos/'.$vid->vidname) }}" type="video/mp4">
-                       Your browser does not support the video tag.
-                       </video>
-                       <a href="{{route('posts.show',$vid->post_id)}}"><span><i class="fa fa-eye"></i></span></a>
-                        </div>
-                  </li>
-                    @endforeach  
-                    
-    </ul> 
-            </div>
-          </div>                       
-                   
 @endsection
 
 @section('sidebar-right')

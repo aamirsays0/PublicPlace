@@ -297,7 +297,6 @@ class PostController extends Controller
 
     public function react(Request $request){
         //echo "hi";
-        //return;
         //return response()->json($request);
         
         $this->validate($request, [
@@ -333,6 +332,7 @@ class PostController extends Controller
 
             $data['message'] = Auth::user()->name.' '.$reactType. ' a Post from ' . $postuser;
             $data['type'] = 'reaction';
+            $data['sender_id'] = Auth::id();
             $this->p->trigger('user-'.$post->user_id, 'new-post', $data);
             return response()->json([
                 'success' => true,

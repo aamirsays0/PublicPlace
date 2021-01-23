@@ -33,14 +33,11 @@
                 @foreach($images as $img)
                  <div class="grid-item col-md-6 col-sm-6">
             			<div class="media-grid">
-                  <a href="{{route('posts.show',$img->post_id)}}"><span><i class="fa fa-eye" style="font-size: 1.5rem;"></i></span></a>
+                  <a href="{{route('posts.show',$img->post_id)}}">
                     <div class="img-wrapper">
-                    <a href="{{url('/storage/postimages/'.$img->imgname)}}"data-lightbox="imageset-{{$img->post_id}}">
-              
-                    <img src="{{url('/storage/postimages/'.$img->imgname)}}" style="height: 200px;width: 311px;"/>
-    </a>
-                      </div>
-                      
+                        <img src="{{url('/storage/postimages/'.$img->imgname)}}" style="height: 200px;width: 311px;"/>
+                    </div>        
+                  </a>              
                   </div>
             		</div>
                 @endforeach 

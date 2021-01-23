@@ -86,6 +86,7 @@ class ChatController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->limit(10)
                 ->get();
+                
         $allChats = $allChats->reverse()->values();
         return response()->json($allChats);
     }
@@ -100,7 +101,7 @@ class ChatController extends Controller
             $data['chatmessage'] = $request->input('m');
             $data['type'] = 'message';
             $data['pid'] = $message->id;
-            $data['mtime'] = $message->created_at;
+            $data['mtime'] = \Carbon\Carbon::parse($message->created_at)->Format('d M Y H:i');
             $data['user_id'] = Auth::id();
             $data['user_name'] = $user->name;
        // broadcast( new MessagesSent($user, $message))->toOthers();

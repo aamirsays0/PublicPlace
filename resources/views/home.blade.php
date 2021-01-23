@@ -299,6 +299,8 @@
             '</div></div><div class="preview-item-content"><h5 class="preview-subject font-weight-medium text-dark">'+ data.message +'</h5><p class="small-text text-success">\n' +
                'Just Now</p></div></a><div class="dropdown-divider"></div>';
   }
+
+  console.log(data, "Pusher data");
          
   $("#notificationDropdown span.count").text(
     parseInt($("#notificationDropdown span.count").text())

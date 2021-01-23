@@ -8,6 +8,7 @@ use App\User;
 use App\Friend;
 use Illuminate\Support\Facades\Auth;
 use App\Custom\FriendsList;
+use App\Profile;
 
 class FriendController extends Controller
 {
@@ -72,21 +73,20 @@ class FriendController extends Controller
     
     public function showFriends($id)
     {
-        // $friends = Friend::with('friendInfo')
-        // ->where('user_id', Auth::id())
-        // ->where(['approved' => 1, 'blocked' => 0])
-        // ->get();
+
         $allFriends = FriendsList::Friends($id);
          $friends = User::with('profiles')
         ->whereIn('id',$allFriends)
         ->get();
+
+
         return view('friendslist')->with('friends', $friends);
     }
 
     public function unfriend($id){
-        $friend = Friend::where(['user_id' => Auth::id(), 'friend_id' => $id])->first();
+        $friend = Friend::findOrFail($id);
 
-        if (empty($friend)) return response()->json(['message' => 'friend not found'], 422);
+        if (empty($friend)) return response()->json(['message' => 'friend not found'], 404);
 
         $friend->delete();
 
