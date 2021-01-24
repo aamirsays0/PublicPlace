@@ -38,7 +38,7 @@
               </ul>
               
             </div><!--Friends block ends-->
-            <div id="chat-block">
+            <!-- <div id="chat-block">
             <button class="ctitle">Chat online</button>
               <ul class="online-users list-inline list-unstyled">
                 <li class="list-inline-item"><a href="newsfeed-messages.html" title="Linda Lohan"><img src="images/users/user-2.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
@@ -51,5 +51,6 @@
                 <li class="list-inline-item"><a href="newsfeed-messages.html" title="Anna Young"><img src="images/users/user-9.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
                 <li class="list-inline-item"><a href="newsfeed-messages.html" title="Julia Cox"><img src="images/users/user-10.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
               </ul>
-            </div><!--chat block ends-->
+            </div>  -->
+            <!--chat block ends-->
             </div>

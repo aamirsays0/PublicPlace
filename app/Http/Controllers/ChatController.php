@@ -39,9 +39,16 @@ class ChatController extends Controller
      */
     public function index()
     {
-        $friends = FriendsList::Friends(Auth::id());
-        $users = User::with(['profiles'])->whereIn('id', $friends)->get();
-        return view('chat')->with('users',$users);
+        $id = Auth::id();
+        $friendreq = Friend::with('user')
+                ->where("friend_id",$id)
+                 ->where('approved','0')
+                 ->where('blocked', '0')
+                 ->get();
+        $allFriends = FriendsList::Friends($id);
+        //friends 
+        $friends = User::with(['profiles'])->whereIn('id', $allFriends)->get();
+        return view('chat')->with('friends',$friends)->with('requests', $friendreq);
         // $friends = User::with('profiles')
         // ->whereIn('id',$friends)
         //  ->get();

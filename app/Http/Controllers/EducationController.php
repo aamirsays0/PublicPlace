@@ -31,7 +31,6 @@ class EducationController extends Controller
         $friends = User::with('profiles')
         ->whereIn('id',$allFriends)
          ->get();
-        
        // dd(Route::current());
        $userinfo= User::with(['education','works'])->find(Auth::id());
        $allActivity = Activity::with('post.user')->where('user_id',Auth::id())->orderBy('created_at','desc')->limit(4)->get();
@@ -50,7 +49,7 @@ class EducationController extends Controller
         $friends = User::with('profiles')
         ->whereIn('id',$allFriends)
          ->get();
-        
+         $user_information = User::with(['education','works'])->findOrFail($id);
        // dd(Route::current());
        $userinfo= User::with(['education','works'])->find($id);
        $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(4)->get();
@@ -59,7 +58,7 @@ class EducationController extends Controller
         $data['education']= Education::where('user_id', $userid)->orderBy('created_at', 'desc')->get();
         $data['work']= Work::where('user_id', $userid)->orderBy('created_at', 'desc')->get();
         dd($data); */
-        return view('showusereducation')->with('user',$userinfo)->with('allActivity',$allActivity)->with('friends', $friends) ;
+        return view('showusereducation', compact('user_information'))->with('allActivity',$allActivity)->with('friends', $friends) ;
     }
 
     /**

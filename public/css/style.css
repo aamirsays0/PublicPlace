@@ -50,7 +50,7 @@ html, body {
 body{
 	font-family: 'Raleway', sans-serif;
   color: #6d6e71;
-  background-color: #efefef;
+  background-color: #ffffff;
 	font-size: 12px;
 }
 p {
@@ -163,7 +163,7 @@ section .wrapper{
 
 #page-contents{
   padding: 30px 0 50px;
-  background-color: #e2e5e5c7;
+  background-color: #ffffff;
   min-height: 1500px;
 }
 
@@ -990,6 +990,7 @@ ul.online-users li span.online-dot{
 .chat-room ul.contact-list li{
   width: 100%;
   margin-bottom: 0;
+  background-color: white;
 }
 
 .chat-room ul.contact-list li a{
@@ -1004,6 +1005,7 @@ ul.online-users li span.online-dot{
   border-radius: 0;
   cursor: pointer;
   background: none;
+  background-color: #e9f6fc;
 }
 
 .chat-room ul.contact-list li a .contact{
@@ -1113,7 +1115,7 @@ ul.online-users li span.online-dot{
 }
 
 .chat-room .send-message{
-  background: #f8f8f8;
+  background: #ffffff;
   padding: 20px;
   border-radius: 4px;
 }
@@ -1540,17 +1542,17 @@ ul.album-photos li img{
   ==================================================*/
 
 #footer{
-  background: #e4e7e7;
+  background: #ffffff;
   position: relative;
 }
 
-/* #footer::before{
+ #footer::before{
   content: "";
-  background: linear-gradient(to right, #ffffff 0%,#53cbf1 50%,#ffffff 100%);
+  background: linear-gradient(to right, #ffffff 0%,#044c59 50%,#ffffff 100%);
   height: 5px;
   width: 100%;
   position: absolute;
-} */
+}
 
 .footer-wrapper{
   padding: 50px 0;

@@ -1,77 +1,99 @@
 @extends('layouts.chatbox')
-@section('content')
-<div class="container">
-<h3 class=" text-center">Messaging</h3>
-<div class="messaging">
-      <div class="inbox_msg">
-        <div class="inbox_people">
-          <div class="headind_srch">
-            <div class="recent_heading">
-              <h4>Recent</h4>
-             </div>
-             <div class="srch_bar">
-              <div class="stylish-input-group">
-              <span class="input-group-addon">
-                <input type="text" class="search-bar"  placeholder="Search" >
-                <button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>
-                <!-- {!! Form::open(['url' => 'chat','method' => 'get','class' => 'form-inline my-2 my-lg-0', 'style' => 'padding-left: 0px;']) !!}
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" aria-label="Search">
-                    {!! Form::close() !!} -->
-                </span> 
-             </div>
-            </div>
-          </div>
-          <div class="inbox_chat">
-           @forelse($users as $user)
-              @if($user->id == Auth::id())
-                   @continue
-              @endif
-            <div class="chat_list" data-userid ="{{$user->id}}">
-              <div class="chat_people">
-                <div class="chat_img"> <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt=""> </div>
-                <div class="chat_ib">
-                  <h5>{{isset($user->profiles->f_name, $user->profiles->l_name)? $user->profiles->f_name.' '. $user->profiles->l_name: $user->name}}<span class="chat_date">Dec 25</span></h5>
-                  <!-- <p>Test, which is a new approach to have all solutions 
-                    astrology under one roof.</p> -->
-                </div>
-              </div>
-            </div>
-            @empty
-            @endforelse
-</div>
-         </div>
-        <div class="mesgs">
-          <div class="msg_history" id="msg_history_container">
-            <!-- <div class="incoming_msg">
-              <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-              <div class="received_msg">
-                <div class="received_withd_msg">
-                  <p>Test which is a new approach to have all
-                    solutions</p>
-                  <span class="time_date">data.mtime.date</span></div>
-              </div>
-            </div>
-            <!-- <div class="outgoing_msg">
-              <div class="sent_msg">
-                <p>Test which is a new approach to have all
-                  solutions</p>
-                <span class="time_date"> 11:01 AM    |    June 9</span> </div>
-            </div> -->
-          </div>
-          <div class="type_msg">
-            <div class="input_msg_write">
-              <input type="text" fid="0" id="write_msg" placeholder="Type a message" />
-              <button id="write_msg" class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      
-<!--       <p class="text-center top_spac"> Design by <a target="_blank" href="#">Sunil Rajput</a></p> -->
-      
-    </div></div>
+
+@section('sidebar-left')
+    @include('partials.leftSidebar')
 @endsection
+
+@section('content')
+<h3 class=" text-center">Messaging</h3>
+            <!-- Chat Room
+            ================================================= -->
+            <div class="chat-room">
+              <div  class="row">
+                <div class="col-md-5" style="background-color: white;border: solid 1px #0000003d;">
+
+                  <!-- Contact List in Left-->
+                  <ul class="nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer">
+                  @forelse($friends as $user)
+                    @if($user->id == Auth::id())
+                         @continue
+                    @endif
+      
+                    <li class="chat_lists active_chat" data-userid ="{{$user->id}}">
+                      <a href="#contact-1" data-toggle="tab">
+                        <div class="contact">
+                        @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
+                        <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt="" class="profile-photo-sm pull-left"style="position: absolute; top: 15%;">
+                           @else
+                              <img src="{{ asset('images/noimage.jpg') }}" alt="" class="profile-photo-sm pull-left"style="position: absolute; top: 15%;">
+                           @endif
+                        	<div class="msg-preview">
+                          <h5>{{isset($user->profiles->f_name, $user->profiles->l_name)? $user->profiles->f_name.' '. $user->profiles->l_name: $user->name}}
+                            <small class="text-muted">a min ago</small></h5>
+                        	</div>
+                        </div>
+                      </a>
+                    </li>
+                    @empty
+                   @endforelse
+                  </ul><!--Contact List in Left End-->
+
+                </div>
+                <div class="col-md-7" style="background-color: white;border: solid 1px #0000003d;">
+
+                  <!--Chat Messages in Right-->
+                  <div class="tab-content scrollbar-wrapper wrapper scrollbar-outer">
+                    <div class="tab-pane active" id="contact-1">
+                      <div class="chat-body">
+                      	<ul class="chat-message" id="msg_history_container">
+                        <!-- <li class="left">
+                          <img src="images/users/user-2.jpg" alt="" class="profile-photo-sm pull-left" />
+                          <div class="chat-item">
+                            <div class="chat-item-header">
+                              <h5>Linda Lohan</h5>
+                              <small class="text-muted">3 days ago</small>
+                            </div>
+                            <p>Hi honey, how are you doing???? Long time no see. Where have you been?</p>
+                          </div>
+                        </li>
+                        <li class="right">
+                          <img src="images/users/user-1.jpg" alt="" class="profile-photo-sm pull-right" />
+                          <div class="chat-item">
+                            <div class="chat-item-header">
+                              <h5>Sarah Cruiz</h5>
+                              <small class="text-muted">3 days ago</small>
+                            </div>
+                            <p>I have been on vacation</p>
+                          </div>
+                        </li>-->
+                      	</ul>
+                      </div>
+                    </div>
+                    </div>
+                  </div><!--Chat Messages in Right End-->
+
+                  <div class="send-message">
+                    <div class="input-group">
+                      <input type="text" id="write_msgs" class="form-control" placeholder="Type your message">
+                      <span class="input-group-btn">
+                        <button id="write_msgss" class="btn btn-default" type="button">Send</button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+              
+            </div>
+
+@endsection
+
+@section('sidebar-right')
+          <div class="suggestions" id="sticky-sidebar">
+          @include('partials.friendrequests')
+           
+             </div>
+@endsection
+
 @section('script')
 <script>
     $(document).ready(function(){
@@ -91,14 +113,14 @@ var channel = pusher.subscribe('user-{{Auth::id()}}');
 /*      console.log(data.mtime); */
 if(data.type == "message" || data.user_id == {{Auth::id()}}){
       if(data.user_id == {{Auth::id()}}){
-       var template = '<div class="outgoing_msg"><div class="sent_msg"><p>'+data.chatmessage+'</p><span class="time_date">' + data.mtime + '</span></div></div>';
+       var template = '<li class="right pull-right" style="padding-left: 150px;padding-top: 15px;""><img src="'+baseurl+'storage/profile/'+data.user_id+'_icon.jpg'+'" alt="'+data.user_name+'" class="profile-photo-sm pull-right"><div class="chat-item"><p style="font-size: 13px;">'+data.chatmessage+'</p><small class="text-muted">' + data.mtime + '</small></div></li>';
      }
      else {
       $("#notificationDropdown span.count").text(
          parseInt($("#notificationDropdown span.count").text())
          +1).addClass('text-danger');
 
-      var template = '<div class="incoming_msg"><div class="incoming_msg_img"><img src="'+baseurl+'storage/profile/'+data.user_id+'_icon.jpg'+'" alt="'+data.user_name+'"></div><div class="received_msg"><div class="received_withd_msg"><p>'+data.chatmessage+'</p><span class="time_date">' + data.mtime + '</span></div></div></div>';
+      var template = '<li class="left" style="padding-right: 150px;padding-top: 15px;""><img src="'+baseurl+'storage/profile/'+data.user_id+'_icon.jpg'+'" alt="'+data.user_name+'" class="profile-photo-sm pull-left"><div class="chat-item"><p style="font-size: 13px;">'+data.chatmessage+'</p><small class="text-muted">' + data.mtime + '</small></div></li>';
      }
      $("#msg_history_container").append(template);
 
@@ -107,7 +129,7 @@ if(data.type == "message" || data.user_id == {{Auth::id()}}){
    else{
   console.log(typeof parseInt($("#notificationDropdown span.count").text()))
 
-     $(".chat_list[data-userid='"+data.user_id+"']").find('p').html(data.chatmessage).addClass('text-danger');
+     $(".chat_lists[data-userid='"+data.user_id+"']").find('p').html(data.chatmessage).addClass('text-danger');
      if(data.type == "message" && data.user_id !== {{Auth::id()}}){
        var template ='<a class="dropdown-item preview-item"><div class="preview-thumbnail"><div class="preview-icon bg-success"><i class="mdi mdi-alert-circle-outline mx-0"></i>\n' +
             '</div></div><div class="preview-item-content"><h6 class="preview-subject font-weight-medium text-dark">New Message from'+ data.user_name +'</h6><p class="small-text text-success">'+data.mtime+'</p></div></a><div class="dropdown-divider"></div>';
@@ -133,7 +155,7 @@ if(data.type == "message" || data.user_id == {{Auth::id()}}){
 
         //ajax setup
   //select user
-        $(".inbox_chat").on("click",".chat_list",function(){
+        $(".contact-list").on("click",".chat_lists",function(){
           
             $.ajaxSetup({
                 headers: {
@@ -141,14 +163,14 @@ if(data.type == "message" || data.user_id == {{Auth::id()}}){
                    }
               });
             $s = $(this);
-            if($('.chat_list').hasClass('active_chat')){
-                $('.chat_list').removeClass('active_chat');
+            if($('.chat_lists').hasClass('active_chat')){
+                $('.chat_lists').removeClass('active_chat');
             }
             $s.addClass('active_chat');
             $s.find('p').html('');
             $withUser= $s.data("userid");
             //($withUser);
-            $("#write_msg").attr('fid',$withUser);
+            $("#write_msgs").attr('fid',$withUser);
              var url = '{{URL::to('/')}}' +"/chathistory";
                 $.ajax({
           method: "POST",
@@ -175,7 +197,7 @@ if(data.type == "message" || data.user_id == {{Auth::id()}}){
       });
   //select user
          //send chat
-        $("#write_msg").keypress(function(e){
+        $("#write_msgs").keypress(function(e){
             if(e.which == '13' && $(this).val() != ""){
               if($(this).attr('fid') == '0'){
                 alert("select a friend first");
@@ -192,7 +214,7 @@ if(data.type == "message" || data.user_id == {{Auth::id()}}){
             m:$(this).val()
           }
         }).done(function(data){
-          $("#write_msg").val("");
+          $("#write_msgs").val("");
           //console.log(data);
           /* if(data.status){
            // alert(data.message);
@@ -239,10 +261,10 @@ if(data.type == "message" || data.user_id == {{Auth::id()}}){
               console.log(data[d]);
                   if(data[d].user_id == '{{Auth::id()}}'){
                     
-                $t += '<div class="outgoing_msg"><div class="sent_msg"><p>'+data[d].message+'</p><span class="time_date">' + date +'</span></div></div>';
+                $t += '<li class="right pull-right" style="padding-left: 150px;padding-top: 15px;""><img src="'+baseurl+'storage/profile/'+data[d].user_id+'_icon.jpg'+'" alt="'+data[d].user_name+'" class="profile-photo-sm pull-right"><div class="chat-item"><p style="font-size: 13px;">'+data[d].message+'</p><small class="text-muted">' + date + '</small></div></li>';
               }
               else {
-                $t += '<div class="incoming_msg"><div class="incoming_msg_img"><img src="'+baseurl+'storage/profile/'+data[d].user_id+'_icon.jpg'+'" alt="'+data[d].user_id+'"></div><div class="received_msg"><div class="received_withd_msg"><p>'+data[d].message+'</p><span class="time_date">' + date + '</span></div></div></div>';
+                $t += '<li class="left" style="padding-right: 150px;padding-top: 15px;""><img src="'+baseurl+'storage/profile/'+data[d].user_id+'_icon.jpg'+'" alt="'+data[d].user_name+'" class="profile-photo-sm pull-left"><div class="chat-item"><p style="font-size: 13px;">'+data[d].message+'</p><small class="text-muted">' + date + '</small></div></li>';
               }
            }
      $("#msg_history_container").html($t);

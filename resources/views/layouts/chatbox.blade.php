@@ -5,7 +5,7 @@
 	<head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="This is social network html5 template available in themeforest......" />
+		<meta name="description" content="This is social network " />
 		<meta name="keywords" content="Social Network, Social Media, Make Friends, Newsfeed, Profile Page" />
     <meta name="robots" content="index, follow" />
 
@@ -17,19 +17,24 @@
     <!-- Stylesheets
     ================================================= -->
 		<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}" />
+		<link rel="stylesheet" href="{{asset('css/bootstrap.css')}}" />
 		<link rel="stylesheet" href="{{asset('css/style.css')}}" />
-		<link rel="stylesheet" href="{{asset('css/chatbox.css')}}" />
     <link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}" />
+    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}" />
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/duotone.css" integrity="sha384-R3QzTxyukP03CMqKFe0ssp5wUvBPEyy9ZspCB+Y01fEjhMwcXixTyeot+S40+AjZ" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/fontawesome.css" integrity="sha384-eHoocPgXsiuZh+Yy6+7DsKAerLXyJmu2Hadh4QYyt+8v86geixVYwFqUvMU8X90l" crossorigin="anonymous"/>   
     <link rel="stylesheet" href="{{asset('css/lightbox.min.css')}}" />
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="{{asset('css/emoji.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="{{asset('css/headerNewStyles.css')}}"/>
+
     <!--Favicon-->
     <link rel="shortcut icon" type="image/png" href="{{asset('images/fav.png')}}"/>
     @stack('head')
-   <style>
-     .container{max-width:1170px; margin:auto;}
+    <style>
+     .container{
+       margin:auto;
+      }
 img{ max-width:100%;}
 .inbox_people {
   background: #05728f none repeat scroll 0 0;
@@ -75,14 +80,15 @@ img{ max-width:100%;}
 .chat_ib p{ font-size:14px; color:#989898; margin:auto}
 .chat_img {
   float: left;
-  width: 11%;
 }
 .chat_ib {
-  float: left;
   padding: 0 0 0 15px;
   width: 88%;
 }
-
+.chat-item-header {
+    border-bottom: 1px dotted #caef8e;
+    margin-bottom: 10px;
+}
 .chat_people{ overflow:hidden; clear:both;  
    cursor: pointer;
 }
@@ -91,25 +97,30 @@ img{ max-width:100%;}
   margin: 0;
   padding: 18px 16px 10px;
 }
-.inbox_chat { height: 550px; overflow-y: scroll;}
+.inbox_chat { height: 471px; overflow-y: scroll;}
 
 .active_chat{ background:#ebebeb;}
 .active_chat div div h5{
    color: #05728f}
 
-.incoming_msg_img {
-  display: inline-block;
-  width: 6%;
-  
+.received_withd_msg::before{
+border-bottom: 10px solid transparent;
+    border-right: 8px solid rgba(141,198,63, .1);
+    border-top: 10px solid transparent;
+    content: "";
+    height: 0;
+    left: -8px;
+    position: absolute;
+    top: 11%;
+    left: 44.5%;
+    width: 0;
 }
 .received_msg {
-  display: inline-block;
-  padding: 0 0 0 10px;
   vertical-align: top;
   width: 92%;
+  margin: 10px 0 10px 0;
  }
  .received_withd_msg p {
-  background: #ebebeb none repeat scroll 0 0;
   border-radius: 3px;
   color: #646464;
   font-size: 14px;
@@ -123,25 +134,37 @@ img{ max-width:100%;}
   font-size: 12px;
   margin: 8px 0 0;
 }
-.received_withd_msg { width: 57%;}
+.received_withd_msg { width: 57%;
+  background: rgba(141,198,63, .1);
+    margin-left: 50px;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
 .mesgs {
   float: left;
-  padding: 30px 15px 0 25px;
   width: 60%;
 }
 
  .sent_msg p {
-  background: #05728f none repeat scroll 0 0;
+  background: rgb(233 246 252) none repeat scroll 0 0;
   border-radius: 3px;
   font-size: 14px;
-  margin: 0; color:#fff;
+  margin: 0;
+  color: #000;
   padding: 5px 10px 5px 12px;
   width:100%;
 }
-.outgoing_msg{ overflow:hidden; margin:26px 0 26px;}
+.outgoing_msg{ overflow:hidden; margin:10px 0 10px;}
 .sent_msg {
   float: right;
   width: 46%;
+  width: 57%;
+    background: rgb(233 246 252);
+    margin-left: 50px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    margin: 10px 0 10px 0;
+
 }
 .input_msg_write input {
   background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
@@ -168,7 +191,7 @@ img{ max-width:100%;}
 }
 .messaging { padding: 0 0 50px 0;}
 .msg_history {
-  height: 516px;
+  height: 420px;
   overflow-y: auto;
   color: #fff;
 }
@@ -176,23 +199,50 @@ img{ max-width:100%;}
       @stack('style')
 
     </style>	
- </head>
+
+</head>
   <body>
 
- @include('partials.headermenu')
- <div id="page-contents" class="mt-5">
- <div class="row">
- <div class="col-md-12" id="contentpostContainer">
- 
- @section('content')
+@include('partials.headermenu')
+
+    <div id="page-contents" class="mt-5">
+    	<div class="container">
+    		<div class="row">
+
+          <!-- Newsfeed Common Side Bar Left
+          ================================================= -->
+    	  <div class="col-md-3 static">
+          @section('sidebar-left')
+            this is master bar
+
+            @show
+
+          </div>
+    	  <div class="col-md-7" id="contentpostContainer">
+
+          @section('content')
             this is master bar
 
           @show
+
+          </div>
+
+          <!-- Newsfeed Common Side Bar Right
+          ================================================= -->
+    	     <div class="col-md-2 static">
+             @section('sidebar-right')
+              this is master sidebar
+
+              @show
+        </div>
+   	</div>
+   </div>
 </div>
-</div>
-</div>
-</div>
-@include('partials.footer')
+
+    <!-- Footer
+    ================================================= -->
+    @include('partials.footer')
+
     <!--preloader-->
     <div id="spinner-wrapper">
       <div class="spinner"></div>
@@ -204,11 +254,13 @@ img{ max-width:100%;}
     <script src="{{asset('js/bootstrap.min.js')}}"></script>
     <script src="{{asset('js/jquery.sticky-kit.min.js')}}"></script>
     <script src="{{asset('js/jquery.scrollbar.min.js')}}"></script>
+    <script src="{{asset('js/masonry.pkgd.min.js')}}"></script>
     <script src="{{asset('js/script.js')}}"></script>
     <script src="{{asset('js/lightbox.min.js')}}"></script>
     <script src="{{asset('js/jquery.jscroll.min.js')}}"></script>
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script src="http://unpkg.com/ionicons@4.4.2/dist/ionicons.js"></script>
+  	<script src="{{asset('js/jquery.validate.min.js')}}"></script>
     @yield('script')
 
     

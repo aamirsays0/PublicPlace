@@ -45,7 +45,6 @@
             </div>
           </div>
          
-        </div>
 @endsection
 
 @section('sidebar-right')

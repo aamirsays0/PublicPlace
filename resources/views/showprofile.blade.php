@@ -1,4 +1,30 @@
-@extends("layouts.blue")
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<!-- Copied from http://mythemestore.com/friend-finder/edit-profile-basic.html by Cyotek WebCopy 1.7.0.600, Thursday, September 5, 2019, 12:34:06 AM -->
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="This is social network html5 template available in themeforest......">
+		<meta name="keywords" content="Social Network, Social Media, Make Friends, Newsfeed, Profile Page">
+		<meta name="robots" content="index, follow">
+<!-- CSRF Token -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
+<title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- Stylesheets
+    ================================================= -->
+		<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}"/>
+		<link rel="stylesheet" href="{{asset('css/style.css')}}"/>
+		<link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/headerNewStyles.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/lightbox.min.css')}}" />
+
+    
+    <!--Favicon-->
+    <link rel="shortcut icon" type="image/png" href="{{asset('images/fav.png')}}">
+    
+  </head>
   <body>
   
 
@@ -19,7 +45,7 @@
                 <div class="profile-info">
                 @if (file_exists(public_path('storage/profile/'.$user_information->profiles->id.'_profile.jpg')) )
                     <a href="{{asset('storage/profile/'.$user_information->profiles->id.'_profile.jpg')}}" data-lightbox="pp">
-                    <img src="{{asset('storage/profile/'.$user_information->profiles->id.'_profile.jpg')}}" alt="" class="img-fluid profile-photo"/>
+                    <img src="{{asset('storage/profile/'.$user_information->profiles->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo"/>
                     @else
                     <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo" id="uploadImage" alt="">
                    @endif
@@ -40,22 +66,26 @@
           </div><!--Timeline Menu for Large Screens End-->
 
           <!--Timeline Menu for Small Screens-->
-          <!-- <div class="navbar-mobile hidden-lg hidden-md">
+          <div class="navbar-mobile hidden-lg hidden-md">
             <div class="profile-info">
-              <img src="images/users/user-1.jpg" alt="" class="img-responsive profile-photo">
-              <h4>Sarah Cruiz</h4>
-              <p class="text-muted">Creative Director</p>
+            @if (file_exists(public_path('storage/profile/'.$user_information->profiles->id.'_profile.jpg')) )
+                    <a href="{{asset('storage/profile/'.$user_information->profiles->id.'_profile.jpg')}}" data-lightbox="pp">
+                    <img src="{{asset('storage/profile/'.$user_information->profiles->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo"/>
+                    @else
+                    <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive profile-photo" id="uploadImage" alt="">
+                   @endif
+                   </a>
+                   <h4>{{isset($user_information->profiles->f_name , $user_information->profiles->l_name) ? $user_information->profiles->f_name.' '.$user_information->profiles->l_name : $user_information->name}}</h4>
             </div>
             <div class="mobile-menu">
               <ul class="list-inline">
-                <li><a href="timline.html">Timeline</a></li>
-                <li><a href="timeline-about.html" class="active">About</a></li>
-                <li><a href="timeline-album.html">Album</a></li>
-                <li><a href="timeline-friends.html">Friends</a></li>
+                  <li><a href="{{url('profiles/'.$user_information->profiles->id)}}" class="active">Timeline</a></li>
+                  <li><a href="timeline-about.html">About</a></li>
+                  <li><a href="timeline-album.html">Album</a></li>
+                  <li><a href="{{url('friends/'.$user_information->profiles->id)}}">Friends</a></li>
               </ul>
-              <button class="btn-primary">Add Friend</button>
             </div>
-          </div> --><!--Timeline Menu for Small Screens End-->
+          </div><!--Timeline Menu for Small Screens End-->
 
         </div>
     
@@ -305,7 +335,7 @@
               </div>
             @endforeach          
            @else
-           <h4 class="grey">Activities</h4>
+           <h4 class="grey">{{ isset($user->profiles->f_name) ? ucfirst($user->profiles->f_name) : ucfirst($user->name) }}'s Activities</h4>
             @foreach ($allActivity as $activity)
               <div class="feed-item">
                 <div class="live-activity">

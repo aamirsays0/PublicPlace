@@ -1,4 +1,30 @@
-@extends("layouts.blue")
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<!-- Copied from http://mythemestore.com/friend-finder/edit-profile-basic.html by Cyotek WebCopy 1.7.0.600, Thursday, September 5, 2019, 12:34:06 AM -->
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="This is social network html5 template available in themeforest......">
+		<meta name="keywords" content="Social Network, Social Media, Make Friends, Newsfeed, Profile Page">
+		<meta name="robots" content="index, follow">
+<!-- CSRF Token -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
+<title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- Stylesheets
+    ================================================= -->
+		<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}"/>
+		<link rel="stylesheet" href="{{asset('css/style.css')}}"/>
+		<link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/headerNewStyles.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/lightbox.min.css')}}" />
+
+    
+    <!--Favicon-->
+    <link rel="shortcut icon" type="image/png" href="{{asset('images/fav.png')}}">
+    
+  </head>
   <body>
   
 
@@ -8,7 +34,7 @@
       <!-- Timeline
       ================================================= -->
        <div class="timeline">
-      <div class="timeline-cover" style="background-image: url('{{asset('storage/profile/'.$user->id.'_cover.jpg')}} ')" data-lightbox="cp">
+      <div class="timeline-cover" style="background-image: url('{{asset('storage/profile/'.$user_information->id.'_cover.jpg')}} ')" data-lightbox="cp">
       <div id="showcpbtncontainer">
       <span><i class ="fa fa-expand text-dark"></i></span>
      </div>
@@ -17,24 +43,43 @@
             <div class="row">
               <div class="col-md-3">
                 <div class="profile-info">
-                <a href="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" data-lightbox="pp">
-                <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt="" class="img-fluid profile-photo"/>
+                <a href="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" data-lightbox="pp">
+                <img src="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" alt="" class="img-fluid profile-photo"/>
                  </a>
-                 <h4>{{isset($user->profiles->f_name , $user->profiles->l_name) ? $user->profiles->f_name.' '.$user->profiles->l_name : $user->name}}</h4>
+                 <h4>{{isset($user_information->profiles->f_name , $user_information->profiles->l_name) ? $user_information->profiles->f_name.' '.$user_information->profiles->l_name : $user_information->name}}</h4>
                 </div>
               </div>
               <div class="col-md-9">
                 <ul class="list-inline profile-menu">
-                  <li><a href="{{url('profiles/'.$user->id)}}">Timeline</a></li>
+                  <li><a href="{{url('profiles/'.$user_information->id)}}">Timeline</a></li>
                   <li><a href="{{url('profiles/about')}}">About</a></li>
                   <li><a href="timeline-album.html">Album</a></li>
-                  <li><a href="{{url('friends/'.$user->id)}}">Friends</a></li>
+                  <li><a href="{{url('friends/'.$user_information->id)}}">Friends</a></li>
                 </ul>
               </div>
             </div>
           </div><!--Timeline Menu for Large Screens End-->
-
-
+          <!--Timeline Menu for Small Screens-->
+          <div class="navbar-mobile hidden-lg hidden-md">
+            <div class="profile-info">
+            @if (file_exists(public_path('storage/profile/'.$user_information->profiles->id.'_profile.jpg')) )
+                    <a href="{{asset('storage/profile/'.$user_information->profiles->id.'_profile.jpg')}}" data-lightbox="pp">
+                    <img src="{{asset('storage/profile/'.$user_information->profiles->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo"/>
+                    @else
+                    <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive profile-photo" id="uploadImage" alt="">
+                   @endif
+                   </a>
+                   <h4>{{isset($user_information->profiles->f_name , $user_information->profiles->l_name) ? $user_information->profiles->f_name.' '.$user_information->profiles->l_name : $user_information->name}}</h4>
+            </div>
+            <div class="mobile-menu">
+              <ul class="list-inline">
+                  <li><a href="{{url('profiles/'.$user_information->profiles->id)}}" class="active">Timeline</a></li>
+                  <li><a href="timeline-about.html">About</a></li>
+                  <li><a href="timeline-album.html">Album</a></li>
+                  <li><a href="{{url('friends/'.$user_information->profiles->id)}}">Friends</a></li>
+              </ul>
+            </div>
+          </div><!--Timeline Menu for Small Screens End-->
         </div>
     
    <div id="cpmodal" class="modal" tabindex="-1" role="dialog">
@@ -57,35 +102,36 @@
               
       
 <!--Edit Profile Menu-->
-<ul class="edit-menu " style="margin-top: 80px">
-    <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
-      <i class="icon ion-ios-information-outline"></i>
-      @if ( isset($user) && $user->id === Auth::id())
-      <a href="{{url('profiles')}}"> Edit Basic Information</a>
-      @else
-      <a href="{{ route('view.friends.profile', $user->id) }}"> Basic Information</a>
-      @endif
-    </li><br>
-    <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
-      @if ( isset($user) && $user->id === Auth::id())
-      <i class="icon ion-ios-information-outline"></i>
-      <a href="{{ route('view.friends.profile', $user->id) }}">Basic Information</a>
-       @endif
-    </li>
-      <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i>
-      @if ( isset($user) && $user->id === Auth::id())
-      <a href="{{url('education')}}">  Education & Work</a>
-      @else
-      <a href="{{ route('view.friends.education', $user->id) }}">  Education & Work</a>
-      @endif        
-      </li>
-      <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
-      @if ( isset($user) && $user->id === Auth::id())
-      <i class="icon ion-ios-locked-outline"></i>
-      <a href="{{url('change-password')}}">  Change Password</a>
-      @endif</li>
-
-  </ul>   
+            <ul class="edit-menu " style="margin-top: 80px">
+                <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+                    <i class="icon ion-ios-information-outline"></i>
+                    @if ( isset($user_information) && $user_information->id === Auth::id())
+                    <a href="{{url('profiles')}}"> Edit Basic Information</a>
+                    @else
+                    <a href="{{ route('view.friends.profile', $user_information->id) }}"> Basic Information</a>
+                    @endif
+                </li><br>
+                <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+                      @if ( isset($user_information) && $user_information->id === Auth::id())
+                      <i class="icon ion-ios-information-outline"></i>
+                      <a href="{{ route('view.friends.profile', $user_information->id) }}">Basic Information</a>
+                      @endif
+                </li><br>
+                  <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i>
+                      @if ( isset($user_information) && $user_information->id === Auth::id())
+                      <a href="{{url('education')}}">  Education & Work</a>
+                      @else
+                      <a href="{{ route('view.friends.education', $user_information->id) }}">  Education & Work</a>
+                      @endif        
+                  </li>
+                  <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
+                     @if ( isset($user_information) && $user_information->id === Auth::id())
+                     <i class="icon ion-ios-locked-outline"></i>
+                     <a href="{{url('change-password')}}">  Change Password</a>
+                     @endif
+                    </li>
+            
+              </ul>   
            </div>
    <div class="col-md-7" style="padding-right: 30px;">
 
@@ -94,25 +140,25 @@
               <div class="edit-profile-container">
                 <div class="edit-block">
                    <div class="row">
-                   @if($user->profiles)
+                   @if($user_information->profiles)
                         <div class="col-md-6 col-sm-12">
-                            <h5>Email: <span style="color: #7f8c8d">{{ $user->email }}</span> </h5>
+                            <h5>Email: <span style="color: #7f8c8d">{{ $user_information->email }}</span> </h5>
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            <h5>Location: <span style="color: #7f8c8d">{{ $user->profiles->city }}</span> </h5>
+                            <h5>Location: <span style="color: #7f8c8d">{{ $user_information->profiles->city }}</span> </h5>
                         </div>
 
                         <div class="col-md-6 col-sm-12">
-                            <h5>Gender: <span style="color: #7f8c8d">{{ $user->profiles->sex }}</span> </h5>
+                            <h5>Gender: <span style="color: #7f8c8d">{{ $user_information->profiles->sex }}</span> </h5>
                         </div>
                         
                         <div class="col-md-6 col-sm-12">
-                           <h5>Age: <span style="color: #7f8c8d">{{ isset($user->profiles->dob) ? \Carbon\Carbon::parse($user->profiles->dob)->age : "" }}</span> </h5>
+                           <h5>Age: <span style="color: #7f8c8d">{{ isset($user_information->profiles->dob) ? \Carbon\Carbon::parse($user_information->profiles->dob)->age : "" }}</span> </h5>
                         </div>
                         
                         <div class="col-md-12">
                             <h5>Bio</h5>
-                            <h5 style="color: #7f8c8d">{{ $user->profiles->description }}</h5>
+                            <h5 style="color: #7f8c8d">{{ $user_information->profiles->description }}</h5>
                         </div>
                     @else
                     <h4>This user has no profile information</h4>
@@ -121,9 +167,9 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-2 static">
+   <div class="col-md-2 static">
           <div id="sticky-sidebar">
-          @if($user->id == Auth::id())
+          @if($user_information->id == Auth::id())
           <h4 class="grey">Your Activities</h4>
             @foreach ($allActivity as $activity)
               <div class="feed-item">
@@ -138,7 +184,7 @@
             @endforeach          
 
             @else
-            <h4 class="grey">Activities</h4>
+            <h4 class="grey">{{ isset($user_information->profiles->f_name) ? ucfirst($user_information->profiles->f_name) : ucfirst($user_information->name) }}'s Activities</h4>
             @foreach ($allActivity as $activity)
               <div class="feed-item">
                 <div class="live-activity">

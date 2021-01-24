@@ -72,7 +72,12 @@ class FriendController extends Controller
     } 
     
     public function showFriends($id)
-    {
+    {   $id = Auth::id();
+        $friendreq = Friend::with('user')
+               ->where("friend_id",$id)
+                ->where('approved','0')
+                ->where('blocked', '0')
+                ->get();
 
         $allFriends = FriendsList::Friends($id);
          $friends = User::with('profiles')
@@ -80,7 +85,7 @@ class FriendController extends Controller
         ->get();
 
 
-        return view('friendslist')->with('friends', $friends);
+        return view('friendslist')->with('friends', $friends)->with('requests', $friendreq);
     }
 
     public function unfriend($id){
@@ -92,6 +97,21 @@ class FriendController extends Controller
 
         return response()->json(['message' => 'Friend have been unfriendded'], 200);
   
+    }
+    public function userFriends($id)
+    {    $id = Auth::id();
+         $friendreq = Friend::with('user')
+                ->where("friend_id",$id)
+                 ->where('approved','0')
+                 ->where('blocked', '0')
+                 ->get();
+       
+        $user_information = User::with('profiles')->findOrFail($id);
+        $allFriends = FriendsList::Friends($id);
+         $friends = User::with('profiles')
+        ->whereIn('id',$allFriends)
+        ->get();
+        return view('userFriends', compact('user_information'))->with('friends', $friends)->with('requests', $friendreq);
     }
 
 }

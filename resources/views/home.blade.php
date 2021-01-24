@@ -24,12 +24,13 @@
 
         </div>
         <div class="create-post">
+        <div class="row">
   
             <form action="{{ route('posts.create') }}" enctype="multipart/form-data" class="postform" id="postform" novalidate>
               @csrf
             	<div class="row">
-            		<div class="col-12">
-                  <div class="form-group w-100" >
+            		<div class="col-md-6 col-sm-6">
+                  <div class="form-group" >
                     @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
                     <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="homepage-profile-avatar" />
                     @else
@@ -45,7 +46,7 @@
                   <div class="preview"></div>
                   </div>-->
                 </div>
-            		<div class="col-md-12">
+            		<div class="col-md-6 col-sm-5">
                   <div class="tools">
                   
 					        <ul class="publishing-tools list-inline list-unstyled">
@@ -80,6 +81,7 @@
 
               </div>
                </form>
+               </div>
             </div><!-- Post Create Box End-->
 
        @if ($message = Session::get('success'))

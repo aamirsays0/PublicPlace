@@ -108,7 +108,7 @@ class ProfileController extends Controller
             $name_thumb=Auth::id()."_cover_thumb.".$request->file('cpic')->getClientOriginalExtension();
             //dd($name);
             $request->file('cpic')->move(public_path().'/storage/profile/',$name);
-            $resizedImage = Image::make(public_path().'/storage/profile/' .$name)->resize(1030, null, function ($constraint) {
+            $resizedImage = Image::make(public_path().'/storage/profile/' .$name)->resize(1030, 430, function ($constraint) {
                 $constraint->aspectRatio();
             });
 
@@ -179,8 +179,6 @@ $data[] = $name;
                     ->with('reactions')
                     ->where('user_id', $id)
                     ->paginate(10);
-
-
         $user_information = User::with('profiles')->findOrFail($id);
         $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(4)->get();
         return view('showprofile', compact('user_information', 'posts'))->with('user', $userinfo)->with('allActivity',$allActivity)->with('friends', $friends)
@@ -266,27 +264,27 @@ $data[] = $name;
     {
         
     }
-    public function showFriends($id)
-    {
-        $allFriends = FriendsList::Friends($id);
-         $friends = User::with('profiles')
-        ->whereIn('id',$allFriends)
-        ->get();
-        return view('friendslist')->with('friends', $friends);
+    // public function showFriends($id)
+    // {
+    //     $allFriends = FriendsList::Friends($id);
+    //      $friends = User::with('profiles')
+    //     ->whereIn('id',$allFriends)
+    //     ->get();
+    //     return view('friendslist')->with('friends', $friends);
  
         
-    }
+    // }
 
     public function viewFriendsProfile($id) {
         if ($id) {
             $friends = User::with('profiles')
             ->where('id',$id)
             ->get();
+            $user_information = User::with('profiles')->findOrFail($id);
             $userinfo = User::with('profiles')->find($id);
             $countryList = config('country.list');
             $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(10)->get(); 
-            return view('showfriendsprofile')
-            ->with('user',$userinfo)
+            return view('showfriendsprofile', compact('user_information'))
             ->with('country',$countryList)->with('allActivity',$allActivity)->with ('friends', $friends) ;;
 
             if(!empty($user)) {

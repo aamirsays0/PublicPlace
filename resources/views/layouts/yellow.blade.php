@@ -19,7 +19,6 @@
 		<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}" />
 		<link rel="stylesheet" href="{{asset('css/bootstrap.css')}}" />
 		<link rel="stylesheet" href="{{asset('css/style.css')}}" />
-		<link rel="stylesheet" href="{{asset('css/overlay.css')}}" />
     <link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}" />
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}" />
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/duotone.css" integrity="sha384-R3QzTxyukP03CMqKFe0ssp5wUvBPEyy9ZspCB+Y01fEjhMwcXixTyeot+S40+AjZ" crossorigin="anonymous"/>

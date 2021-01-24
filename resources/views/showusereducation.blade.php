@@ -36,7 +36,7 @@
       <!-- Timeline
       ================================================= -->
       <div class="timeline">
-        <div class="timeline-cover" style="background-image: url('{{asset('storage/profile/'.$user->id.'_cover.jpg')}} ')" data-lightbox="cp">
+        <div class="timeline-cover" style="background-image: url('{{asset('storage/profile/'.$user_information->id.'_cover.jpg')}} ')" data-lightbox="cp">
         <div id="showcpbtncontainer">
          <span><i class ="fa fa-expand text-dark"></i></span>
         </div>
@@ -45,21 +45,42 @@
             <div class="row">
               <div class="col-md-3">
                 <div class="profile-info">
-                <a href="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" data-lightbox="pp">
-                  <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo"></a>
-                  <h4>{{isset($user->profiles->f_name , $user->profiles->l_name) ? $user->profiles->f_name.' '.$user->profiles->l_name : $user->name}}</h4>
+                <a href="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" data-lightbox="pp">
+                  <img src="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo"></a>
+                  <h4>{{isset($user_information->profiles->f_name , $user_information->profiles->l_name) ? $user_information->profiles->f_name.' '.$user_information->profiles->l_name : $user_information->name}}</h4>
                 </div>
               </div>
               <div class="col-md-9">
                 <ul class="list-inline profile-menu">
-                  <li><a href="{{url('profiles/'.$user->id)}}">Timeline</a></li>
+                  <li><a href="{{url('profiles/'.$user_information->id)}}">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
                   <li><a href="timeline-album.html">Album</a></li>
-                  <li><a href="{{url('friends/'.$user->id)}}">Friends</a></li>
+                  <li><a href="{{url('friends/'.$user_information->id)}}">Friends</a></li>
                 </ul>
               </div>
             </div>
           </div><!--Timeline Menu for Large Screens End-->
+          <!--Timeline Menu for Small Screens-->
+          <div class="navbar-mobile hidden-lg hidden-md">
+            <div class="profile-info">
+            @if (file_exists(public_path('storage/profile/'.$user_information->profiles->id.'_profile.jpg')) )
+                    <a href="{{asset('storage/profile/'.$user_information->profiles->id.'_profile.jpg')}}" data-lightbox="pp">
+                    <img src="{{asset('storage/profile/'.$user_information->profiles->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo"/>
+                    @else
+                    <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive profile-photo" id="uploadImage" alt="">
+                   @endif
+                   </a>
+                   <h4>{{isset($user_information->profiles->f_name , $user_information->profiles->l_name) ? $user_information->profiles->f_name.' '.$user_information->profiles->l_name : $user_information->name}}</h4>
+            </div>
+            <div class="mobile-menu">
+              <ul class="list-inline">
+                  <li><a href="{{url('profiles/'.$user_information->profiles->id)}}" class="active">Timeline</a></li>
+                  <li><a href="timeline-about.html">About</a></li>
+                  <li><a href="timeline-album.html">Album</a></li>
+                  <li><a href="{{url('friends/'.$user_information->profiles->id)}}">Friends</a></li>
+              </ul>
+            </div>
+          </div><!--Timeline Menu for Small Screens End-->
 
         </div>
     <div id="cpmodal" class="modal" tabindex="-1" role="dialog">
@@ -83,28 +104,28 @@
 <ul class="edit-menu " style="margin-top: 80px">
     <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
       <i class="icon ion-ios-information-outline"></i>
-      @if ( isset($user) && $user->id === Auth::id())
+      @if ( isset($user_information) && $user_information->id === Auth::id())
       <a href="{{url('profiles')}}">  Basic Information</a>
       @else
-      <a href="{{ route('view.friends.profile', $user->id) }}">  Basic Information</a>
+      <a href="{{ route('view.friends.profile', $user_information->id) }}">  Basic Information</a>
       @endif
     </li><br>
     <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
-      @if ( isset($user) && $user->id === Auth::id())
+      @if ( isset($user_information) && $user_information->id === Auth::id())
       <i class="icon ion-ios-information-outline"></i>
-      <a href="{{ route('view.friends.profile', $user->id) }}"> Edit Basic Information</a>
+      <a href="{{ route('view.friends.profile', $user_information->id) }}"> Edit Basic Information</a>
        @endif
     </li>
       <li class='{{Route::current()->uri == 'education'?'active': ''}}'>
       <i class="icon ion-ios-briefcase-outline"></i>
-      @if ( isset($user) && $user->id === Auth::id())
+      @if ( isset($user_information) && $user_information->id === Auth::id())
       <a href="{{url('education')}}">  Education & Work</a>
       @else
-      <a href="{{ route('view.friends.education', $user->id) }}">  Education & Work</a>
+      <a href="{{ route('view.friends.education', $user_information->id) }}">  Education & Work</a>
       @endif 
       </li>
       <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
-      @if ( isset($user) && $user->id === Auth::id())
+      @if ( isset($user_information) && $user_information->id === Auth::id())
       <i class="icon ion-ios-locked-outline"></i>
       <a href="{{url('change-password')}}">  Change Password</a>
       @endif
@@ -139,43 +160,43 @@
                                    </div>
                
    <div class="edu_form_container">
-   <table class="table table-bordered">
-     <tr>
-     <th>#</th>
-     <th>institute</th>
-     <th>Session</th>
-     <th>Level</th>
-     <th>Major</th>
-     <th>Graduated?</th>
-     <th>Action</th>
-     </tr>
-     @forelse($user->education as $education)
-      <tr>
-        <td>{{$loop->iteration}}</td>
-        <td>{{$education->institute}}</td>
-        <td>{{$education->sess}}</td>
-        <td>{{$education->level}}</td>
-        <td>{{$education->major}}</td>
-        <td>{{$education->graduate}}</td>
-        <td><a href="#"><span class="fa fa-edit"></span> </a>
-            @if (Auth::check())
-                    @if(count((array) $user->education) > 0)
-                    @if($education->user->id == Auth::user()->id)
-                    {!! Form::open(['url' => 'deleteEducation/'.$education->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
-                    <button title="Delete info" class="fa fa-trash" onclick="return confirm('are sure you want to delete this info?')"></button>
-                    {!! Form::close() !!}
-                    @endif
-                    @endif
-                   @endif</td>
-      </tr>
-
-     @empty
-      <h5>No Education info found.</h5>
-      
-     @endforelse
-     </table>
-
-
+   <div class="table-responsive">
+           <table class="table table-bordered">
+             <tr>
+             <th>#</th>
+             <th>institute</th>
+             <th>Session</th>
+             <th>Level</th>
+             <th>Major</th>
+             <th>Graduated?</th>
+             <th>Action</th>
+             </tr>
+             @forelse($user_information->education as $education)
+              <tr>
+                <td>{{$loop->iteration}}</td>
+                <td>{{$education->institute}}</td>
+                <td>{{$education->sess}}</td>
+                <td>{{$education->level}}</td>
+                <td>{{$education->major}}</td>
+                <td>{{$education->graduate}}</td>
+                <td><a href="#"><span class="fa fa-edit"></span> </a>
+                    @if (Auth::check())
+                            @if(count((array) $user_information->education) > 0)
+                            @if($education->user->id == Auth::user()->id)
+                            {!! Form::open(['url' => 'deleteEducation/'.$education->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
+                            <button title="Delete info" class="fa fa-trash" onclick="return confirm('are sure you want to delete this info?')"></button>
+                            {!! Form::close() !!}
+                            @endif
+                            @endif
+                           @endif</td>
+              </tr>
+        
+             @empty
+              <h5>No Education info found.</h5>
+              
+             @endforelse
+             </table>
+</div>
    </div>
     <div class="block-title">
 
@@ -190,50 +211,53 @@
                </div>
 <div class="workrecord_container">
   <div id="work_form_container">
-  @if (Auth::check())
+   <div class="table-responsive">
+    @if (Auth::check())
 
-   <table class="table table-bordered">
-     <tr>
-     <th>#</th>
-     <th>Comany</th>
-     <th>Designation</th>
-     <th>From</th>
-     <th>To</th>
-     <th>City/Town</th>
-     <th>Working?</th>
-     <th>Action</th>
-     </tr>
-     @forelse($user->works as $works)
-      <tr>
-        <td>{{$loop->iteration}}</td>
-        <td>{{$works->company}}</td>
-        <td>{{$works->designation}}</td>
-        <td>{{$works->workfrom}}</td>
-        <td>{{$works->workto}}</td>
-        <td>{{$works->city}}</td>
-        <td>{{$works->working}}</td>
-        <td><a href="#"><span class="fa fa-edit"></span> </a>
-                    @if(count((array) $user->works) > 0)
-                    @if($works->user->id == Auth::user()->id)
-                    {!! Form::open(['url' => 'deleteWork/'.$works->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
-                    <button title="Delete info" class="fa fa-trash" onclick="return confirm('are sure you want to delete this info?')"></button>
-                    {!! Form::close() !!}
-                    @endif
-                    @endif
-                   </td>
-      </tr>
-
-     @empty
-      <h5>No Work info found.</h5>
-     @endforelse
-     </table>@endif
-         </div>
-               </div>
-            </div>
-            </div>
-            <div class="col-md-2 static">
+                <table class="table table-bordered">
+                   <tr>
+                   <th>#</th>
+                   <th>Comany</th>
+                   <th>Designation</th>
+                   <th>From</th>
+                   <th>To</th>
+                   <th>City/Town</th>
+                   <th>Working?</th>
+                   <th>Action</th>
+                   </tr>
+                   @forelse($user_information->works as $works)
+                    <tr>
+                      <td>{{$loop->iteration}}</td>
+                      <td>{{$works->company}}</td>
+                      <td>{{$works->designation}}</td>
+                      <td>{{$works->workfrom}}</td>
+                      <td>{{$works->workto}}</td>
+                      <td>{{$works->city}}</td>
+                      <td>{{$works->working}}</td>
+                      <td><a href="#"><span class="fa fa-edit"></span> </a>
+                                  @if(count((array) $user_information->works) > 0)
+                                  @if($works->user->id == Auth::user()->id)
+                                  {!! Form::open(['url' => 'deleteWork/'.$works->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
+                                  <button title="Delete info" class="fa fa-trash" onclick="return confirm('are sure you want to delete this info?')"></button>
+                                  {!! Form::close() !!}
+                                  @endif
+                                  @endif
+                                 </td>
+                    </tr>
+              
+                   @empty
+                    <h5>No Work info found.</h5>
+                   @endforelse
+                   </table>
+        @endif
+        </div>
+      </div>
+     </div>
+    </div>
+    </div>
+  <div class="col-md-2 static">
           <div id="sticky-sidebar">
-          @if($user->id == Auth::id())
+          @if($user_information->id == Auth::id())
           <h4 class="grey">Your activities</h4>
             @foreach ($allActivity as $activity)
               <div class="feed-item">
@@ -246,9 +270,8 @@
                 </div>
               </div>
             @endforeach          
-
           @else
-          <h4 class="grey">Activities</h4>
+          <h4 class="grey">{{ isset($user_information->profiles->f_name) ? ucfirst($user_information->profiles->f_name) : ucfirst($user_information->name) }}'s Activities</h4>
             @foreach ($allActivity as $activity)
               <div class="feed-item">
                 <div class="live-activity">
@@ -260,7 +283,6 @@
                 </div>
               </div>
             @endforeach          
-
           @endif
           </div>
         </div>   

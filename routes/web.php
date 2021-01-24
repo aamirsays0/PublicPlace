@@ -62,3 +62,4 @@ Route::post('react','PostController@react');
  Route::get('/nearby', 'HomeController@nearby')->name('people.nearby');
  Route::get('/myvideos', 'VideoController@index')->name('my.videos');
 
+ Route::get('allfriends/{id}', 'FriendController@userFriends')->name('user.friends'); 
