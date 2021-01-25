@@ -30,7 +30,7 @@
               @csrf
             	<div class="row">
             		<div class="col-md-6 col-sm-6">
-                  <div class="form-group" >
+                  <div class="form-group w-100" >
                     @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
                     <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="" class="homepage-profile-avatar" />
                     @else
@@ -89,7 +89,7 @@
               <h3>{{$message}}</h3>
               </div>
               @endif
-       <div class="scroll">
+       <div class="scroll scoll-page-content" >
       
        @forelse($posts as $post)
 
@@ -264,7 +264,10 @@
        @empty
        <h3>No posts avaliable. create new one</h3>
         @endforelse
+        </div>
+        <div class="col-12 scroll-page-pagination">
         {{ $posts->links() }}
+
         </div>
 @endsection
 

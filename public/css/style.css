@@ -164,7 +164,7 @@ section .wrapper{
 #page-contents{
   padding: 30px 0 50px;
   background-color: #ffffff;
-  min-height: 1500px;
+  /* min-height: 1500px; */
 }
 
 .btn-primary{
@@ -2002,4 +2002,23 @@ ul li .card3 a{
 ul li .card3 a:hover{
   color: rgb(35, 137, 206);
 
+}
+
+.scoll-page-content {
+  height: 1000px;
+  overflow: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scoll-page-content::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-page-pagination {
+  text-align: center;
+}
+
+.scroll-page-pagination .pagination {
+  left: 0 !important;
 }
