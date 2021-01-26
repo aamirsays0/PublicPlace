@@ -16,6 +16,7 @@ use Pusher\Pusher;
 use App\Custom\FriendsList;
 use Validator;
 use DB;
+use RealRashid\SweetAlert\Facades\Alert;
 //use Illuminate\Http\Response;
 // import the Intervention Image Manager Class
 use Intervention\Image\ImageManagerStatic as Image;

@@ -97,7 +97,7 @@
     <script src="http://unpkg.com/ionicons@4.4.2/dist/ionicons.js"></script>
   	<script src="{{asset('js/jquery.validate.min.js')}}"></script>
     @yield('script')
-
+    @include('sweetalert::alert')
     
   </body>
 </html>

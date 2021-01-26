@@ -9,6 +9,7 @@ use App\Friend;
 use Illuminate\Support\Facades\Auth;
 use App\Custom\FriendsList;
 use App\Profile;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class FriendController extends Controller
 {
