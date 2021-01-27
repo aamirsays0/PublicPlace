@@ -12,6 +12,7 @@
         "ext-gd": "*",
         "barryvdh/laravel-debugbar": "~3.3.3",
         "fideloper/proxy": "^4.0",
+        "guzzlehttp/guzzle": "^6.5.0",
         "intervention/image": "^2.5",
         "kartik-v/bootstrap-fileinput": "^5.1",
         "laminas/laminas-diactoros": "^2.4",
