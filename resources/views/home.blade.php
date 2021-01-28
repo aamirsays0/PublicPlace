@@ -84,11 +84,6 @@
                </div>
             </div><!-- Post Create Box End-->
 
-       @if ($message = Session::get('success'))
-              <div class="alert alert-success" id="errorcontainer">
-              <h3>{{$message}}</h3>
-              </div>
-              @endif
        <div class="scroll scoll-page-content" >
       
        @forelse($posts as $post)
@@ -177,8 +172,8 @@
                     <a href="{{ route('posts.show', $post->id) }}" class="btn btn-info fa fa-eye"></a>
 
                     @if($post->user_id == Auth::id())
-                    {!! Form::open(['url' => 'posts/'.$post->id,'method' => 'delete','class' => 'btn d-inline']) !!}
-                    <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this post?')"></button>
+                    {!! Form::open(['url' => 'posts/'.$post->id,'method' => 'delete','class' => 'btn d-inline', 'id' => 'delete-button']) !!}
+                    <button class="btn btn-danger fa fa-trash" ></button>
 
                     {!! Form::close() !!}                   
                     <!-- DELETE ICON -->
@@ -327,8 +322,19 @@ $.ajaxSetup({
       // ADD FRIEND START//
 $(".post-detail").on("click",".addFrndBtn",function(){
    var url = '{{URL::to('/')}}' +"/addfriend/" +$(this).data('uid');
-    alert(url);
-   $.ajax({
+   swal({
+          title: "Are you sure?",
+          text: "Once deleted, post cannot be recovered",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+                
+    $.ajax({
           method: "POST",
           url:url,
           cache: false,
@@ -336,7 +342,6 @@ $(".post-detail").on("click",".addFrndBtn",function(){
         }).done(function(data){
           console.log(data);
           if(data.success){
-            alert(data.message);
             location.reload();
         //RESET FORM AFTER POST
            // $('postform').trigger("reset");
@@ -347,6 +352,12 @@ $(".post-detail").on("click",".addFrndBtn",function(){
           console.log(data);
           alert(data.message);
         });
+
+          } else {
+            swal("Cancelled", "Your imaginary file is safe :)", "error");
+          }
+        });
+
 
 
 
@@ -626,6 +637,27 @@ $("#contentpostContainer").on("click",".postcommentToggleBtn", function(){
           });
 //post comment container show hide end
 
+    });
+    document.querySelector('#delete-button').addEventListener('submit', function(e) {
+      var form = this;
+      
+      e.preventDefault();
+      
+      swal({
+          title: "Are you sure?",
+          text: "Once deleted, post cannot be recovered",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            form.submit();
+
+          }
+        });
     });
     </script>
 

@@ -161,4 +161,42 @@ class ChatController extends Controller
     {
         //
     }
+
+    public function publicChats() {
+        $friendreq = Friend::with('user')->get();        //friends 
+        $friends = User::with(['profiles'])->get();
+        return view('publicchats')->with('friends',$friends)->with('requests', $friendreq);
+    }
+
+    public function userChats($id) {
+        $friendreq = Friend::with('user')
+                ->where("friend_id",$id)
+                 ->where('approved','0')
+                 ->where('blocked', '0')
+                 ->get();
+
+        $allFriends = FriendsList::Friends($id);
+        //friends 
+        $friends = User::with(['profiles'])->whereIn('id', $allFriends)->get();
+
+        return response()->json($friends);
+    }
+
+    public function allpublicChats($sender, $receiver){
+
+        $first = DB::table('chats')
+                ->where('user_id',Auth::id())
+                ->where('friends_id', $request->id);
+
+        $allChats = DB::table('chats')
+                ->where('friends_id',Auth::id())
+                ->where('user_id', $request->id)
+                ->union($first)
+                ->orderBy('created_at', 'desc')
+                ->limit(10)
+                ->get();
+                
+        $allChats = $allChats->reverse()->values();
+        return response()->json($allChats);
+    }
 }

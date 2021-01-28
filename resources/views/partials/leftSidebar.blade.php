@@ -14,7 +14,8 @@
               <li><i class="icon ion-ios-paper"></i><div><a href="{{url('profiles/'.Auth::id())}}">My Timeline</a></div></li>
               <li><i class="icon ion-ios-people"></i><div><a href="{{ route('people.nearby')}}">People Nearby</a></div></li>
               <li><i class="icon ion-ios-people-outline"></i><div><a href="{{url('friends/'.Auth::id())}}">Friends</a></div></li>
-              <li><i class="icon ion-chatboxes"></i><div><a href="{{url('chat')}}">Messages</a></div></li>
+              <li><i class="icon ion-chatboxes"></i><div><a href="{{url('chat')}}">Chat</a></div></li>
+              <li><i class="icon ion-chatbubbles"></i><div><a href="{{ route('public.chats') }}">Public Chats</a></div></li>
               <li><i class="icon ion-images"></i><div><a href="{{route('my.images')}}">Images</a></div></li>
               <li><i class="icon ion-ios-videocam"></i><div><a href="{{route('my.videos')}}">Videos</a></div></li>
             </ul><!--news-feed links ends-->

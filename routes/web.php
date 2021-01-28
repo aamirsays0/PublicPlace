@@ -63,3 +63,7 @@ Route::post('react','PostController@react');
  Route::get('/myvideos', 'VideoController@index')->name('my.videos');
 
  Route::get('allfriends/{id}', 'FriendController@userFriends')->name('user.friends'); 
+
+//  Public chats;
+Route::get('/public-chats', 'ChatController@publicChats')->name('public.chats');
+Route::get('/user-chats/{id}', 'ChatController@userChats')->name('user.chats');

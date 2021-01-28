@@ -13,7 +13,7 @@
                 <div class="col-md-5" style="background-color: white;border: solid 1px #0000003d; height:500px !important;">
 
                   <!-- Contact List in Left-->
-                  <ul class="nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer">
+                  <ul class="nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer" id="allusers">
                   @forelse($friends as $user)
                     @if($user->id == Auth::id())
                          @continue
@@ -29,7 +29,7 @@
                            @endif
                         	<div class="msg-preview">
                           <h5>{{isset($user->profiles->f_name, $user->profiles->l_name)? $user->profiles->f_name.' '. $user->profiles->l_name: $user->name}}
-                            <small class="text-muted">a min ago</small></h5>
+                            <small class="text-muted"><i class="ion ion-chevron-right"></i></small></h5>
                         	</div>
                         </div>
                       </a>
@@ -37,6 +37,8 @@
                     @empty
                    @endforelse
                   </ul><!--Contact List in Left End-->
+
+                  <ul class="nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer" id="particularUser" style="display: none"></ul>
 
                 </div>
                 <div class="col-md-7" style="background-color: white;border: solid 1px #0000003d;height:500px !important;">
@@ -171,22 +173,35 @@
             $withUser= $s.data("userid");
             //($withUser);
             $("#write_msgs").attr('fid',$withUser);
-             var url = '{{URL::to('/')}}' +"/chathistory";
-                $.ajax({
-          method: "POST",
-          url:url,
-          data:{
-            id:$withUser
-          }
-        }).done(function(data){
-          if(data.length){
-            showMessages(data);
-          }
-          else{
-            $("#msg_history_container").html("");
-          }
-        }).fail(function(data){
-          console.log(data)        }); 
+             var url = '{{URL::to('/')}}' +`/user-chats/${$withUser}`;
+            $.ajax({
+                method: "get",
+                url:url,
+                }).done(function(data){
+                    if(data.length){
+                        let mapData = data.map(el => {
+                            return `<li class="chat_lists active_chat" data-userid ="${el.id}">
+                            <a href="#contact-1" data-toggle="tab">
+                            <div class="contact">
+                                <img src="" alt="" class="profile-photo-sm pull-left"style="position: absolute; top: 15%;">
+                                <div class="msg-preview">
+                                <h5>${el.name}</h5>
+                                </div>
+                            </div>
+                            </a>
+                        </li>`;
+                        })
+
+                        $('#particularUser').append(mapData);
+                        $('#allusers').hide();
+                        $('#particularUser').show();
+                    }
+                    else{
+                        $("#msg_history_container").html("");
+                    }
+            }).fail(function(data){
+                console.log(data)       
+            }); 
             
       });
   //select user
