@@ -2434,7 +2434,6 @@ class ComposerStaticInit4f67e1bd0261d813018ff89b633fa59d
         'Laminas\\Diactoros\\Exception\\ExceptionInterface' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/Exception/ExceptionInterface.php',
         'Laminas\\Diactoros\\Exception\\InvalidArgumentException' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/Exception/InvalidArgumentException.php',
         'Laminas\\Diactoros\\Exception\\InvalidStreamPointerPositionException' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/Exception/InvalidStreamPointerPositionException.php',
-        'Laminas\\Diactoros\\Exception\\RuntimeException' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/Exception/RuntimeException.php',
         'Laminas\\Diactoros\\Exception\\SerializationException' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/Exception/SerializationException.php',
         'Laminas\\Diactoros\\Exception\\UnreadableStreamException' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/Exception/UnreadableStreamException.php',
         'Laminas\\Diactoros\\Exception\\UnrecognizedProtocolVersionException' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/Exception/UnrecognizedProtocolVersionException.php',

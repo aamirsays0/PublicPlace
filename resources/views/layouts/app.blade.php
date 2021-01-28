@@ -68,7 +68,7 @@
                                     </form>
                                 </div>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" style="background-color: #044c59;">
-                                    <a class="dropdown-item" href="{{ route('/home') }}">
+                                    <a class="dropdown-item" href="{{ route('home') }}">
                                         {{ __('Home') }}
                                     </a>
                                 </div>
