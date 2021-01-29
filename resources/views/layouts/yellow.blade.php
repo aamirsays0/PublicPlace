@@ -99,7 +99,6 @@
     /* Sweet alert CDN */
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     @yield('script')
-    @include('sweetalert::alert')
 
     </script>
 

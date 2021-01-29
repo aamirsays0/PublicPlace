@@ -258,7 +258,7 @@ class PostController extends Controller
     {
         if($post->user_id == Auth::id()){
             if(Post::destroy($post->id)){
-                return redirect('home')->with('success', 'Post Deleted!!');
+                return redirect()->back()->with('success', 'Post Deleted!!');
             }
             else{
                 return redirect()->route('home')

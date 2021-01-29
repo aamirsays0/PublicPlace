@@ -164,8 +164,8 @@
                     <a href="{{ route('posts.show', $post->id) }}" class="btn btn-info fa fa-eye"></a>
 
                     @if($post->user_id == Auth::id())
-                    {!! Form::open(['url' => 'posts/'.$post->id,'method' => 'delete','class' => 'btn d-inline']) !!}
-                    <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this post?')"></button>
+                    {!! Form::open(['url' => 'posts/'.$post->id,'method' => 'delete','class' => 'btn d-inline', 'id' => 'delete-button']) !!}
+                    <button class="btn btn-danger fa fa-trash"></button>
 
                     {!! Form::close() !!}                   
                     @endif
@@ -210,7 +210,7 @@
                     @if(count((array) $post->comments) > 0)
                     @if($usercomment->user->id == Auth::user()->id)
                     {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
-                    <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this comment?')"></button>
+                    <button class="btn btn-danger fa fa-trash deleteComment"></button>
                     {!! Form::close() !!}
                     @endif
                     @endif
@@ -260,45 +260,116 @@
 <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 
     <script>
-     $(document).ready(function(e){
-     $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
+          $(document).ready(function(e){
+          $.ajaxSetup({
+           headers: {
+             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+         }
+           });
+      
+      $(".nearby-user").on("click",".addFrndBtn",function(){
+        var url = '{{URL::to('/')}}' +"/addfriend/" +$(this).data('uid');
+        swal({
+               title: "Are you sure?",
+               text: "Once added, Request will be sent",
+               icon: "warning",
+               buttons: [
+                 'No, cancel it!',
+                 'Yes, I am sure!'
+               ],
+               dangerMode: true,
+             }).then(function(isConfirm) {
+               if (isConfirm) {
+                     
+         $.ajax({
+               method: "POST",
+               url:url,
+               cache: false,
+               data:{r:Math.random()}
+             }).done(function(data){
+               console.log(data);
+               if(data.success){
+                 location.reload();
+             //RESET FORM AFTER POST
+                // $('postform').trigger("reset");
+                 //$(".preview").html("");
+               }
+               //console.log(data);
+             }).fail(function(data){
+               console.log(data);
+               alert(data.message);
+             });
+     
+               } else {
+                 swal("Cancelled", "Your imaginary file is safe :)", "error");
+               }
+             });
+     
+     
+     
+     
       });
- 
- $(".nearby-user").on("click",".addFrndBtn",function(){
-   var url = '{{URL::to('/')}}' +"/addfriend/" +$(this).data('uid');
-   $.ajax({
-          method: "POST",
-          url:url,
-          cache: false,
-          data:{r:Math.random()}
-        }).done(function(data){
-          console.log(data);
-          if(data.success){
-            alert(data.message);
-            location.reload();
-        //RESET FORM AFTER POST
-           // $('postform').trigger("reset");
-            //$(".preview").html("");
-          }
-          //console.log(data);
-        }).fail(function(data){
-          console.log(data);
-          alert(data.message);
-        });
-
-
-
- });
- //CONFIRM FRIEND REQUEST
+ //add friend from post
+          $(".nearby-user").on("click",".addFrndBtn1",function(){
+            var url = '{{URL::to('/')}}' +"/addfriend/" +$(this).data('uid');
+            swal({
+                   title: "Are you sure?",
+                   text: "Once added, Request will be sent",
+                   icon: "warning",
+                   buttons: [
+                     'No, cancel it!',
+                     'Yes, I am sure!'
+                   ],
+                   dangerMode: true,
+                 }).then(function(isConfirm) {
+                   if (isConfirm) {
+                         
+             $.ajax({
+                   method: "POST",
+                   url:url,
+                   cache: false,
+                   data:{r:Math.random()}
+                 }).done(function(data){
+                   console.log(data);
+                   if(data.success){
+                     location.reload();
+                 //RESET FORM AFTER POST
+                    // $('postform').trigger("reset");
+                     //$(".preview").html("");
+                   }
+                   //console.log(data);
+                 }).fail(function(data){
+                   console.log(data);
+                   alert(data.message);
+                 });
+         
+                   } else {
+                     swal("Cancelled", "Your imaginary file is safe :)", "error");
+                   }
+                 });
+         
+         
+         
+         
+          });
+  //CONFIRM FRIEND REQUEST
  $(".confirmBtn").click(function(e){
              var t = $(this);
              e.preventDefault();
              var f= $(this).data('uid');
              var url = '{{URL::to('/')}}' +"/confirmfriend/"+f;
-             $.ajax({
+             swal({
+          title: "Are you sure?",
+          text: "Once added, Request will be sent",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            $.ajax({
                   method: "POST",
                   url:url,
                   cache: false,
@@ -309,7 +380,7 @@
                 // console.log(data);
                 // return;
                   if(data.success){
-                    alert(data.message);
+                    swal("Cancelled", data.message, "error");
                     t.parent().parent().remove();
 
                   // location.reload();
@@ -322,7 +393,18 @@
                 }).fail(function(data){
                   alert(data.message);
                 });
+    
+
+          } else {
+             swal("Cancelled", "You have no new friend :)", "error");
+          }
+        });
+
+
+
+
            });
+  
 
 //DELETE FRIEND REQUEST
           $(".deleteBtn").click(function(e){
@@ -450,6 +532,44 @@ $(".viewpost").on("click",".postcommentToggleBtn", function(){
 
 
    });
+   document.querySelector('#delete-button').addEventListener('submit', function(e) {
+      var form = this;
+      
+      e.preventDefault();
+      
+      swal({
+          title: "Are you sure?",
+          text: "Once deleted, post cannot be recovered",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            form.submit();
+
+          }
+        });
+    });
+    $('.deleteComment').click(function (e){
+    e.preventDefault();
+    let form = $(this).parents('form');
+    swal({
+        title: 'Are you sure?',
+        text: 'Once deleted, Comment cannot be recovered',
+        icon: 'warning',
+        buttons: ["Cancel it", "Yes, sure"],
+        dangerMode: true,
+    }).then(function(value) {
+        if(value){
+            form.submit();
+        }
+    });
+})
+
+
     </script>
     @endsection
   </body>

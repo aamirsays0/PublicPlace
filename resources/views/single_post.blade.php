@@ -90,8 +90,8 @@
                       <span class="smiled">{{$reactCount['s']}}</span>
                     </a>
                     @if($userpost->user_id == Auth::id())
-                    {!! Form::open(['url' => 'post/'.$userpost->id,'method' => 'delete','class' => 'btn d-inline']) !!}
-                    <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this post?')"></button>
+                    {!! Form::open(['url' => 'post/'.$userpost->id,'method' => 'delete','class' => 'btn d-inline', 'id' => 'delete-button']) !!}
+                    <button class="btn btn-danger fa fa-trash"></button>
                     {!! Form::close() !!}                   
                     @endif
 
@@ -133,7 +133,7 @@
                       @if(count((array) $userpost->comments) > 0)
                        @if($usercomment->user->id == Auth::user()->id)
                         {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
-                         <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this comment?')"></button>
+                         <button class="btn btn-danger fa fa-trash deleteComment"></button>
                         {!! Form::close() !!}
                        @endif
                       @endif
@@ -228,33 +228,52 @@ $.ajaxSetup({
     }
       });
 
-// ADD FRIEND START//
-$(".post-detail").on("click",".addFrndBtn",function(){
-   var url = '{{URL::to('/')}}' +"/addfriend/" +$(this).data('uid');
-    alert(url);
-   $.ajax({
-          method: "POST",
-          url:url,
-          cache: false,
-          data:{r:Math.random()}
-        }).done(function(data){
-          console.log(data);
-          if(data.success){
-            alert(data.message);
-            location.reload();
-        //RESET FORM AFTER POST
-           // $('postform').trigger("reset");
-            //$(".preview").html("");
-          }
-          //console.log(data);
-        }).fail(function(data){
-          console.log(data);
-          alert(data.message);
-        });
+      // ADD FRIEND START//
+      $(".post-detail").on("click",".addFrndBtn",function(){
+          var url = '{{URL::to('/')}}' +"/addfriend/" +$(this).data('uid');
+          swal({
+                 title: "Are you sure?",
+                 text: "Once added, Request will be sent",
+                 icon: "warning",
+                 buttons: [
+                   'No, cancel it!',
+                   'Yes, I am sure!'
+                 ],
+                 dangerMode: true,
+               }).then(function(isConfirm) {
+                 if (isConfirm) {
+                       
+           $.ajax({
+                 method: "POST",
+                 url:url,
+                 cache: false,
+                 data:{r:Math.random()}
+               }).done(function(data){
+                 console.log(data);
+                 if(data.success){
+                  swal("Request Sent", data.message, 'success');
 
-
+                   location.reload();
+               //RESET FORM AFTER POST
+                  // $('postform').trigger("reset");
+                   //$(".preview").html("");
+                 }
+                 //console.log(data);
+               }).fail(function(data){
+                 console.log(data);
+                 alert(data.message);
+               });
+       
+                 } else {
+                   swal("Cancelled", "User in not added as friend", "error");
+                 }
+               });
+       
+       
+       
 
  });
+
 // ADD FRIEND END//
 
 //JSCROLL
@@ -448,6 +467,43 @@ $("#contentpostContainer").on("click",".postcommentToggleBtn", function(){
 //post comment container show hide end
 
     });
+    document.querySelector('#delete-button').addEventListener('submit', function(e) {
+      var form = this;
+      
+      e.preventDefault();
+      
+      swal({
+          title: "Are you sure?",
+          text: "Once deleted, post cannot be recovered",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            form.submit();
+
+          }
+        });
+    });
+    $('.deleteComment').click(function (e){
+    e.preventDefault();
+    let form = $(this).parents('form');
+    swal({
+        title: 'Are you sure?',
+        text: 'Once deleted, Comment cannot be recovered',
+        icon: 'warning',
+        buttons: ["Cancel it", "Yes, sure"],
+        dangerMode: true,
+    }).then(function(value) {
+        if(value){
+            form.submit();
+        }
+    });
+})
+
     </script>
 
 @endsection

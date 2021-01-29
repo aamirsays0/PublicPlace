@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\Custom\FriendsList;
 use Illuminate\Support\Facades\Auth;
-
+use App\Friend;
 class ChangePasswordController extends Controller
 {
     /**
@@ -27,13 +27,21 @@ class ChangePasswordController extends Controller
      */
     public function index()
     {
+        $id = Auth::id();
+        $friendreq = Friend::with('user')
+                ->where("friend_id",$id)
+                 ->where('approved','0')
+                 ->where('blocked', '0')
+                 ->get();
+
+
         $allFriends = FriendsList::Friends(Auth::id());
 
         $friends = User::with('profiles')
         ->whereIn('id',$allFriends)
          ->get();
    
-        return view('changePassword')->with ('friends', $friends) ;
+        return view('changePassword')->with ('friends', $friends)->with('requests', $friendreq);
     } 
    
     /**

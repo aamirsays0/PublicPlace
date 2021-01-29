@@ -34,7 +34,7 @@
       <!-- Timeline
       ================================================= -->
        <div class="timeline">
-      <div class="timeline-cover" style="background-image: url('{{asset('storage/profile/'.$user_information->profiles->id.'_cover.jpg')}} ')"  data-lightbox="cp">
+      <div class="timeline-cover" style="background-image: url('{{asset('storage/profile/'.$user_information->id.'_cover.jpg')}} ')"  data-lightbox="cp">
       <div id="showcpbtncontainer">
       <span><i class ="fa fa-expand text-dark"></i></span>
      </div>
@@ -43,9 +43,9 @@
             <div class="row">
               <div class="col-md-3">
                 <div class="profile-info">
-                @if (file_exists(public_path('storage/profile/'.$user_information->profiles->id.'_profile.jpg')) )
-                    <a href="{{asset('storage/profile/'.$user_information->profiles->id.'_profile.jpg')}}" data-lightbox="pp">
-                    <img src="{{asset('storage/profile/'.$user_information->profiles->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo"/>
+                @if (file_exists(public_path('storage/profile/'.$user_information->id.'_profile.jpg')) )
+                    <a href="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" data-lightbox="pp">
+                    <img src="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo"/>
                     @else
                     <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo" id="uploadImage" alt="">
                    @endif
@@ -55,10 +55,10 @@
               </div>
               <div class="col-md-9">
                 <ul class="list-inline profile-menu">
-                  <li><a href="{{url('profiles/'.$user_information->profiles->id)}}" class="active">Timeline</a></li>
+                  <li><a href="{{url('profiles/'.$user_information->id)}}" class="active">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
                   <li><a href="timeline-album.html">Album</a></li>
-                  <li><a href="{{url('friends/'.$user_information->profiles->id)}}">Friends</a></li>
+                  <li><a href="{{url('friends/'.$user_information->id)}}">Friends</a></li>
                 </ul>
                 
               </div>
@@ -68,9 +68,9 @@
           <!--Timeline Menu for Small Screens-->
           <div class="navbar-mobile hidden-lg hidden-md">
             <div class="profile-info">
-            @if (file_exists(public_path('storage/profile/'.$user_information->profiles->id.'_profile.jpg')) )
-                    <a href="{{asset('storage/profile/'.$user_information->profiles->id.'_profile.jpg')}}" data-lightbox="pp">
-                    <img src="{{asset('storage/profile/'.$user_information->profiles->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo"/>
+            @if (file_exists(public_path('storage/profile/'.$user_information->id.'_profile.jpg')) )
+                    <a href="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" data-lightbox="pp">
+                    <img src="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo"/>
                     @else
                     <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive profile-photo" id="uploadImage" alt="">
                    @endif
@@ -79,10 +79,10 @@
             </div>
             <div class="mobile-menu">
               <ul class="list-inline">
-                  <li><a href="{{url('profiles/'.$user_information->profiles->id)}}" class="active">Timeline</a></li>
+                  <li><a href="{{url('profiles/'.$user_information->id)}}" class="active">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
                   <li><a href="timeline-album.html">Album</a></li>
-                  <li><a href="{{url('friends/'.$user_information->profiles->id)}}">Friends</a></li>
+                  <li><a href="{{url('friends/'.$user_information->id)}}">Friends</a></li>
               </ul>
             </div>
           </div><!--Timeline Menu for Small Screens End-->
@@ -141,11 +141,7 @@
 
   </ul>            </div>
             <div class="col-md-7" style="padding-right: 30px;">
-            @if ($message = Session::get('success'))
-              <div class="alert alert-success" id="errorcontainer">
-              <h3>{{$message}}</h3>
-              </div>
-              @endif
+
             
 <!-- tabs start-->
   <br>
@@ -158,7 +154,7 @@
                         </ul>
                     </div>
                     @endif
-    <div class="scroll">
+    <div class="scroll scoll-page-content">
 
        @forelse($posts as $userpost)
 
@@ -229,8 +225,8 @@
                     <a href="{{ route('posts.show', $userpost->id) }}" class="btn btn-info fa fa-eye"></a>
 
                     @if($userpost->user_id == Auth::id())
-                    {!! Form::open(['url' => 'posts/'.$userpost->id,'method' => 'delete','class' => 'btn d-inline']) !!}
-                    <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this post?')"></button>
+                    {!! Form::open(['url' => 'posts/'.$userpost->id,'method' => 'delete','class' => 'btn d-inline', 'id' => 'delete-button']) !!}
+                    <button class="btn btn-danger fa fa-trash"></button>
                     {!! Form::close() !!}                   
                     <!-- DELETE ICON -->
                     <!--<a href={{url('post'.'/'.$userpost->id) }}" onclick="event.preventDefault(); document.getElementById('delete-post').submit();" class="fa fa-trash"></a><form id="delete-post" action="{{ url('post'.'/'.$userpost->id)}}" method="DELETE" style="display: none;"@csrf</form>-->
@@ -280,7 +276,7 @@
                       @if(count((array) $userpost->comments) > 0)
                        @if($usercomment->user->id == Auth::user()->id)
                         {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
-                         <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this comment?')"></button>
+                         <button class="btn btn-danger fa fa-trash deleteComment"></button>
                         {!! Form::close() !!}
                        @endif
                       @endif
@@ -312,7 +308,7 @@
        <h3>No posts avaliable</h3>
         @endforelse
 
-        <div class="col-12">
+        <div class="col-12 scroll-page-pagination">
           {{ $posts->links() }}
         </div>
 
@@ -387,7 +383,9 @@
     ================================================= -->
     @include('partials.footer')
     <!--preloader-->
-   
+    <div id="spinner-wrapper">
+      <div class="spinner"></div>
+    </div>
 
     <!-- Scripts
     ================================================= -->
@@ -400,6 +398,8 @@
     <script src="{{asset('js/jquery.jscroll.min.js')}}"></script>
     <script src="http://unpkg.com/ionicons@4.4.2/dist/ionicons.js"></script>
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <!-- Sweet alert CDN -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
       $(document).ready(function(){
         $("#showcpbtncontainer").click(function(){
@@ -628,6 +628,43 @@ $(".viewpost").on("click",".postcommentToggleBtn", function(){
 //post comment container show hide end
 
     });
+          document.querySelector('#delete-button').addEventListener('submit', function(e) {
+            var form = this;
+            
+            e.preventDefault();
+            
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, post cannot be recovered",
+                icon: "warning",
+                buttons: [
+                  'No, cancel it!',
+                  'Yes, I am sure!'
+                ],
+                dangerMode: true,
+              }).then(function(isConfirm) {
+                if (isConfirm) {
+                  form.submit();
+      
+                }
+              });
+          });
+          $('.deleteComment').click(function (e){
+              e.preventDefault();
+              let form = $(this).parents('form');
+              swal({
+                  title: 'Are you sure?',
+                  text: 'Once deleted, Comment cannot be recovered',
+                  icon: 'warning',
+                  buttons: ["Cancel it", "Yes, sure"],
+                  dangerMode: true,
+              }).then(function(value) {
+                  if(value){
+                      form.submit();
+                  }
+              });
+          })
+          
     </script>
 
 

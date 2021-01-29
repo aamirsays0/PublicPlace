@@ -128,12 +128,7 @@
 
             </div>
             <div class="col-md-7" style="padding-right: 30px;">
-            @if ($message = Session::get('success'))
-                       <div class="alert alert-success" id="errorcontainer">
-                      <h3>{{$message}}</h3>
-                          </div>
-                              @endif
-
+ 
               <!-- Edit Work and Education
               ================================================= -->
               <div class="edit-profile-container">
@@ -204,7 +199,7 @@
                            <input id="graduate" type="checkbox" name="graduate" value="graduate" checked=""> Yes!! 
                           </div>
                           </div>
-                          <button type="submit" class="btn btn-primary">Save Changes</button>
+                          <button type="submit" class="btn btn-primary submitEducation">Save Changes</button>
                                {!! Form::close() !!}
                          </div>
                     </div>
@@ -234,7 +229,7 @@
                     @if(count((array) $userinfo->education) > 0)
                     @if($education->user->id == Auth::user()->id)
                     {!! Form::open(['url' => 'deleteEducation/'.$education->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
-                    <button title="Delete info" class="fa fa-trash" onclick="return confirm('are sure you want to delete this info?')"></button>
+                    <button title="Delete info" class="fa fa-trash deleteEducation"></button>
                     {!! Form::close() !!}
                     @endif
                     @endif
@@ -242,7 +237,7 @@
       </tr>
 
      @empty
-      <tr><td><h5>No info found. Add some education info</h5></td></tr>
+      <h5>No info found. Add some education info</h5>
       
      @endforelse
      </table>
@@ -305,7 +300,7 @@
                            <input id="working" type="checkbox" name="working" value="working" checked=""> Yes!! 
                           </div>
                           </div>
-                    <button class="btn btn-primary">Save Changes</button>
+                    <button class="btn btn-primary submitWork">Save Changes</button>
                     {!! Form::close() !!}
                 </div>
                </div>
@@ -337,7 +332,7 @@
                                @if(count((array) $userinfo->works) > 0)
                                @if($works->user->id == Auth::user()->id)
                                {!! Form::open(['url' => 'deleteWork/'.$works->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
-                               <button title="Delete info" class="fa fa-trash" onclick="return confirm('are sure you want to delete this info?')"></button>
+                               <button title="Delete info" class="fa fa-trash deleteWork"></button>
                                {!! Form::close() !!}
                                @endif
                                @endif
@@ -390,37 +385,108 @@
     <script src="{{asset('js/lightbox.min.js')}}"></script>
     <script src="{{asset('js/jquery.jscroll.min.js')}}"></script>
     <script src="http://unpkg.com/ionicons@4.4.2/dist/ionicons.js"></script>
-    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>     <script>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <!-- Sweet alert CDN -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
     $(document).ready(function(e){
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-      });
- 
-    $(document).ready(function(){
-      $("#edu_form_container").hide();
-      $("#edu_toggle_btn").click(function(){
-        $("#edu_form_container").toggle(200);
-
-      });
-      $("#work_form_container").hide();
-      $("#work_toggle_btn").click(function(){
-        $("#work_form_container").toggle(200);
-
-      });
-        $("#showcpbtncontainer").click(function(){
-          var url = ($(".timeline-cover").css('background-image'));
-          var start_quot = url.indexOf("\"") + 1;
-          var end_quot = url.lastIndexOf("\"");
-          url=(url.substring(start_quot,end_quot));
-          $('#modal_image_container').attr("src",url);
-          $('#cpmodal').modal();
-          //location.reload();
-        });
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+            });
+       
+          $(document).ready(function(){
+            $("#edu_form_container").hide();
+            $("#edu_toggle_btn").click(function(){
+              $("#edu_form_container").toggle(200);
       
-    }); 
-  }); 
+            });
+            $("#work_form_container").hide();
+            $("#work_toggle_btn").click(function(){
+              $("#work_form_container").toggle(200);
+      
+            });
+              $("#showcpbtncontainer").click(function(){
+                var url = ($(".timeline-cover").css('background-image'));
+                var start_quot = url.indexOf("\"") + 1;
+                var end_quot = url.lastIndexOf("\"");
+                url=(url.substring(start_quot,end_quot));
+                $('#modal_image_container').attr("src",url);
+                $('#cpmodal').modal();
+                //location.reload();
+              });
+            
+          }); 
+        }); 
+  //submit education changes
+            $('.submitEducation').click(function (e){
+                        e.preventDefault();
+                        let form = $(this).parents('form');
+                        swal({
+                            title: 'Are you sure?',
+                            text: 'All changes to profile will be submitted',
+                            icon: 'warning',
+                            buttons: ["Cancel it", "Yes, sure"],
+                            dangerMode: true,
+                        }).then(function(value) {
+                            if(value){
+                                form.submit();
+                            }
+                        });
+                    })
+
+  //submit work changes
+           $('.submitWork').click(function (e){
+                       e.preventDefault();
+                       let form = $(this).parents('form');
+                       swal({
+                           title: 'Are you sure?',
+                           text: 'All changes to profile will be submitted',
+                           icon: 'warning',
+                           buttons: ["Cancel it", "Yes, sure"],
+                           dangerMode: true,
+                       }).then(function(value) {
+                           if(value){
+                               form.submit();
+                           }
+                       });
+                   })
+         
+  //delete education table row
+
+        $('.deleteEducation').click(function (e){
+                    e.preventDefault();
+                    let form = $(this).parents('form');
+                    swal({
+                        title: 'Are you sure?',
+                        text: 'Once deleted, row cannot be recovered',
+                        icon: 'warning',
+                        buttons: ["Cancel it", "Yes, sure"],
+                        dangerMode: true,
+                    }).then(function(value) {
+                        if(value){
+                            form.submit();
+                        }
+                    });
+                })
+  //delete work table row
+                $('.deleteWork').click(function (e){
+                    e.preventDefault();
+                    let form = $(this).parents('form');
+                    swal({
+                        title: 'Are you sure?',
+                        text: 'Once deleted, row cannot be recovered',
+                        icon: 'warning',
+                        buttons: ["Cancel it", "Yes, sure"],
+                        dangerMode: true,
+                    }).then(function(value) {
+                        if(value){
+                            form.submit();
+                        }
+                    });
+                })
+                
     </script>
 
     

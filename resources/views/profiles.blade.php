@@ -237,7 +237,7 @@
                     <div class="row">
                           <div class="form-group col-xs-12">
                             <label for="my-info">About me</label>
-                            <textarea id="my-info" name="information" class="form-control" placeholder="Some texts about me" rows="4" cols="400">
+                            <textarea id="my-info" name="description" class="form-control" placeholder="Some texts about me" rows="4" cols="400">
                             @if($user->profiles)
                               {{$user->profiles->description}}
                               @endif
@@ -255,7 +255,7 @@
                           <input type="file" name="cpic" class="form-control-file profiles_file_display" id="my-info">
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="submit" class="btn btn-primary submitChanges">Save Changes</button>
                     {!! Form::close() !!}
 
                 </div>
@@ -301,7 +301,9 @@
     <script src="{{asset('js/jquery.jscroll.min.js')}}"></script>
     <script src="http://unpkg.com/ionicons@4.4.2/dist/ionicons.js"></script>
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script> 
-    <script>
+      <!-- Sweet alert CDN -->
+      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script>
       $(document).ready(function(){
         $("#showcpbtncontainer").click(function(){
           var url = ($(".timeline-cover").css('background-image'));
@@ -313,7 +315,22 @@
           //location.reload();
         });
       })
-      
+      $('.submitChanges').click(function (e){
+              e.preventDefault();
+              let form = $(this).parents('form');
+              swal({
+                  title: 'Are you sure?',
+                  text: 'All changes to profile will be submitted',
+                  icon: 'warning',
+                  buttons: ["Cancel it", "Yes, sure"],
+                  dangerMode: true,
+              }).then(function(value) {
+                  if(value){
+                      form.submit();
+                  }
+              });
+          })
+
     </script>
     
   </body>

@@ -217,7 +217,7 @@
                     @if(count((array) $post->comments) > 0)
                     @if($usercomment->user->id == Auth::user()->id)
                     {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
-                    <button class="btn btn-danger fa fa-trash" onclick="return confirm('are sure you want to delete this comment?')"></button>
+                    <button class="btn btn-danger fa fa-trash deleteComment"></button>
                     {!! Form::close() !!}
                     @endif
                     @endif
@@ -324,7 +324,7 @@ $(".post-detail").on("click",".addFrndBtn",function(){
    var url = '{{URL::to('/')}}' +"/addfriend/" +$(this).data('uid');
    swal({
           title: "Are you sure?",
-          text: "Once deleted, post cannot be recovered",
+          text: "Once added, Request will be sent",
           icon: "warning",
           buttons: [
             'No, cancel it!',
@@ -333,28 +333,29 @@ $(".post-detail").on("click",".addFrndBtn",function(){
           dangerMode: true,
         }).then(function(isConfirm) {
           if (isConfirm) {
-                
-    $.ajax({
-          method: "POST",
-          url:url,
-          cache: false,
-          data:{r:Math.random()}
-        }).done(function(data){
-          console.log(data);
-          if(data.success){
-            location.reload();
-        //RESET FORM AFTER POST
-           // $('postform').trigger("reset");
-            //$(".preview").html("");
-          }
-          //console.log(data);
-        }).fail(function(data){
-          console.log(data);
-          alert(data.message);
-        });
-
+                         
+             $.ajax({
+                   method: "POST",
+                   url:url,
+                   cache: false,
+                   data:{r:Math.random()}
+                 }).done(function(data){
+                   console.log(data);
+                   if(data.success){
+                     swal("Request sent", data.message, 'success');
+                     location.reload();
+                 //RESET FORM AFTER POST
+                    // $('postform').trigger("reset");
+                     //$(".preview").html("");
+                   }
+                   //console.log(data);
+                 }).fail(function(data){
+                   console.log(data);
+                   alert(data.message);
+                 });
+         
           } else {
-            swal("Cancelled", "Your imaginary file is safe :)", "error");
+            swal("Cancelled", "User in not added as friend", "error");
           }
         });
 
@@ -487,7 +488,18 @@ $(".post-detail").on("click",".addFrndBtn",function(){
              e.preventDefault();
              var f= $(this).data('uid');
              var url = '{{URL::to('/')}}' +"/confirmfriend/"+f;
-             $.ajax({
+             swal({
+          title: "Are you sure?",
+          text: "Once added, Request will be sent",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            $.ajax({
                   method: "POST",
                   url:url,
                   cache: false,
@@ -498,7 +510,7 @@ $(".post-detail").on("click",".addFrndBtn",function(){
                 // console.log(data);
                 // return;
                   if(data.success){
-                    alert(data.message);
+                    swal("Cancelled", data.message, "error");
                     t.parent().parent().remove();
 
                   // location.reload();
@@ -511,6 +523,16 @@ $(".post-detail").on("click",".addFrndBtn",function(){
                 }).fail(function(data){
                   alert(data.message);
                 });
+    
+
+          } else {
+             swal("Cancelled", "You have no new friend :)", "error");
+          }
+        });
+
+
+
+
            });
 
 //DELETE FRIEND REQUEST
@@ -659,6 +681,21 @@ $("#contentpostContainer").on("click",".postcommentToggleBtn", function(){
           }
         });
     });
+    $('.deleteComment').click(function (e){
+    e.preventDefault();
+    let form = $(this).parents('form');
+    swal({
+        title: 'Are you sure?',
+        text: 'Once deleted, Comment cannot be recovered',
+        icon: 'warning',
+        buttons: ["Cancel it", "Yes, sure"],
+        dangerMode: true,
+    }).then(function(value) {
+        if(value){
+            form.submit();
+        }
+    });
+})
     </script>
 
 @endsection
