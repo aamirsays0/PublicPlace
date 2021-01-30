@@ -169,28 +169,19 @@ class ChatController extends Controller
     }
 
     public function userChats($id) {
-        $friendreq = Friend::with('user')
-                ->where("friend_id",$id)
-                 ->where('approved','0')
-                 ->where('blocked', '0')
-                 ->get();
-
-        $allFriends = FriendsList::Friends($id);
-        //friends 
-        $friends = User::with(['profiles'])->whereIn('id', $allFriends)->get();
-
+        $friends = Chat::with('friends_data')->whereRaw("( user_id =  $id OR friends_id = $id)")->groupBy('friends_id')->get();
         return response()->json($friends);
     }
 
     public function allpublicChats($sender, $receiver){
 
         $first = DB::table('chats')
-                ->where('user_id',Auth::id())
-                ->where('friends_id', $request->id);
+                ->where('user_id',$sender)
+                ->where('friends_id', $receiver);
 
         $allChats = DB::table('chats')
-                ->where('friends_id',Auth::id())
-                ->where('user_id', $request->id)
+                ->where('friends_id',$sender)
+                ->where('user_id', $receiver)
                 ->union($first)
                 ->orderBy('created_at', 'desc')
                 ->limit(10)

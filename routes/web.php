@@ -67,3 +67,4 @@ Route::post('react','PostController@react');
 //  Public chats;
 Route::get('/public-chats', 'ChatController@publicChats')->name('public.chats');
 Route::get('/user-chats/{id}', 'ChatController@userChats')->name('user.chats');
+Route::get('/user_specific/{hostid}/{receiverid}', 'ChatController@allpublicChats')->name('user.specific.chat');

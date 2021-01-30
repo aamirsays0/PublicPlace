@@ -18,4 +18,8 @@ class Chat extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function friends_data() {
+        return $this->belongsTo('App\User', 'friends_id');
+    }
+
 }

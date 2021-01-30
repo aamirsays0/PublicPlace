@@ -186,7 +186,8 @@
             $("#msg_history_container").html("");
           }
         }).fail(function(data){
-          console.log(data)        }); 
+          console.log(data)        
+          }); 
             
       });
   //select user

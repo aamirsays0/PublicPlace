@@ -64,9 +64,8 @@ class HomeController extends Controller
               $friends = User::with('profiles')
               ->whereIn('id',$allFriends)
               ->get();
-
-              $his_friends = Friend::where('user_id', $id)->get();
-                //dd($friends->count());
+              $his_friends = Friend::select('user_id', 'friend_id')->whereRaw("( user_id = $id OR friend_id = $id )")->get()->toArray();
+            //   dd($his_friends);
            $allpost = Post::
            with('pictures')
            ->with('videos')

@@ -114,7 +114,7 @@
                         <span class="pull">Friends</span>
                       @endif
                     @else
-                      @if($his_friends->where('friend_id', $post->user->id)->where('approved', 0)->where('blocked', 0)->first())
+                      @if(array_search($post->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
                       <button class="btn pull pending" disabled>Pending</button>
                       @else 
                       <button class="btn pull addFrndBtn" data-uid="{{$post->user->id}}">Add Friend</button>

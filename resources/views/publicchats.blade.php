@@ -10,10 +10,10 @@
             ================================================= -->
             <div class="chat-room">
               <div  class="row">
-                <div class="col-md-5" style="background-color: white;border: solid 1px #0000003d; height:500px !important;">
+                <div class="col-md-5" style="background-color: white;border: solid 1px #0000003d; height:500px !important;" id="allusers">
 
                   <!-- Contact List in Left-->
-                  <ul class="nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer" id="allusers">
+                  <ul class="nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer">
                   @forelse($friends as $user)
                     @if($user->id == Auth::id())
                          @continue
@@ -38,9 +38,12 @@
                    @endforelse
                   </ul><!--Contact List in Left End-->
 
-                  <ul class="nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer" id="particularUser" style="display: none"></ul>
-
                 </div>
+                <div class="col-md-5" style="background-color: white;border: solid 1px #0000003d; height:500px !important; display: none" id="particularUser">
+                  <button class="btn btn-block btn-info back-to-list" style="margin: 2rem 0">Back to list</button>
+                  <ul class="nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer"></ul>
+                </div>
+
                 <div class="col-md-7" style="background-color: white;border: solid 1px #0000003d;height:500px !important;">
 
                   <!--Chat Messages in Right-->
@@ -157,8 +160,9 @@
 
         //ajax setup
   //select user
-        $(".contact-list").on("click",".chat_lists",function(){
-          
+        $(".chat_lists").on("click",function(){
+          $('#particularUser ul').html("")
+          pusherchat()
             $.ajaxSetup({
                 headers: {
                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -178,21 +182,22 @@
                 method: "get",
                 url:url,
                 }).done(function(data){
+                  console.log('data', data)
                     if(data.length){
                         let mapData = data.map(el => {
-                            return `<li class="chat_lists active_chat" data-userid ="${el.id}">
-                            <a href="#contact-1" data-toggle="tab">
+                            return `<li class="user_chat" onclick="getChat(${el.friends_data.id}, ${$withUser})">
+                            <a href="#" data-toggle="tab">
                             <div class="contact">
-                                <img src="" alt="" class="profile-photo-sm pull-left"style="position: absolute; top: 15%;">
+                                <img  src="http://${window.location.host}/storage/profile/${el.friends_data.id}_profile.jpg" alt="" class="profile-photo-sm pull-left"style="position: absolute; top: 15%;">
                                 <div class="msg-preview">
-                                <h5>${el.name}</h5>
+                                <h5>${el.friends_data.name}</h5>
                                 </div>
                             </div>
                             </a>
                         </li>`;
                         })
 
-                        $('#particularUser').append(mapData);
+                        $('#particularUser ul').append(mapData);
                         $('#allusers').hide();
                         $('#particularUser').show();
                     }
@@ -204,6 +209,13 @@
             }); 
             
       });
+
+      // Back to chat list;
+      $('.back-to-list').click(function() {
+        $(this).parent().hide()
+        $('#allusers').show()
+      })
+
   //select user
          //send chat
         $("#write_msgs").keypress(function(e){
@@ -285,6 +297,42 @@
       $('.type-message').show();
     }) 
 
+    getChat = function(user_id, host_id) {
+      $.ajaxSetup({
+                headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                   }
+              });
+            $s = $(this);
+            if($('.chat_lists').hasClass('active_chat')){
+                $('.chat_lists').removeClass('active_chat');
+            }
+            $s.addClass('active_chat');
+            $s.find('p').html('');
+            $withUser= user_id;
+            //($withUser);
+            $("#write_msgs").attr('fid',$withUser);
+             var url = '{{URL::to('/')}}' +`/user_specific/${host_id}/${user_id}`;
+                $.ajax({
+          method: "GET",
+          url:url
+        }).done(function(data){
+          console.log('chatlog', data)
+          if(data.length){
+            showMessages(data);
+          }
+          else{
+            $("#msg_history_container").html("");
+          }
+        }).fail(function(data){
+          console.log(data)        
+          }); 
+      }
+      
+      pusherchat = function(user_id)
+      {
+      }
     });
+
     </script>
 @endsection
