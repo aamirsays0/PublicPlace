@@ -28,7 +28,7 @@
   <body>
   
 
-@include('partials.headermenu')
+   @include('partials.headermenu')
     <div class="container">
 
       <!-- Timeline
