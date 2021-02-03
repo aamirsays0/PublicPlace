@@ -15,7 +15,7 @@ use App\Events\Myevent;
 Route::get('/', function () {
     return view('auth.login');
 });
-Auth::routes(['verify' => true]);
+Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 

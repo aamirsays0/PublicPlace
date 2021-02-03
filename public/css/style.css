@@ -2022,3 +2022,8 @@ ul li .card3 a:hover{
 .scroll-page-pagination .pagination {
   left: 0 !important;
 }
+
+/* RESPONSIVE ICON BAR */   
+.icon-bar{
+  background-color: #ffffff;
+}
