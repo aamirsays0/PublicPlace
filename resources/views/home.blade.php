@@ -99,8 +99,60 @@
                 <div class="post-detail">
                   <div class="user-info">
                     <h5>
+                    <div class="profile-link1">
+                    <a href="{{url('profiles/'.$post->user->id)}}" class="profile-link">{{$post->user->profiles?$post->user->profiles->f_name.' '.$post->user->profiles->l_name:$post->user->name}}</a>
+                    <div class="friend-card1">
+                        @if (file_exists(public_path('storage/profile/'.$post->user_id.'_cover.jpg')) )
+                         <img src="{{asset('storage/profile/'.$post->user_id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
+                         @else
+                         <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
+                         @endif
+                        <div class="card-info">
+                        @if (file_exists(public_path('storage/profile/'.$post->user_id.'_profile.jpg')) )
+                        <img src="{{asset('storage/profile/'.$post->user_id.'_profile.jpg')}}" alt="user" class="profile-photo-md"/>
+                        @else
+                       <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-lg" id="uploadImage" alt="">
+                        @endif
+                      <div class="friend-info">
+                                  <h5><a href="{{url('profiles/'.$post->user_id)}}" class="profile-link">
+                                   {{$post->user->profiles?$post->user->profiles->f_name.' '.$post->user->profiles->l_name:$post->user->name}}</a>
+                                                     
+                                      @if(in_array($post->user->id,$req) )
+                                        @if (Auth::user()->id !== $post->user->id)
+                                          <span class="pull pull-right">Friends</span>
+                                        @endif
+                                      @else
+                                        @if(array_search($post->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
+                                        <button class="btn pull pending pull-right" disabled>Pending</button>
+                                        @else 
+                                        <button class="btn pull addFrndBtn pull-right" data-uid="{{$post->user->id}}">Add Friend</button>
+                                        @endif
+                                      @endif
+                                    </h5>
+                                  <h5 style="color: #7f8c8d"><i class="fa fa-envelope"></i>  {{$post->user->email}}</h5>
+                                  <h5 style="color: #7f8c8d"><i class="fa fa-map-marker" aria-hidden="true"></i>  {{ $post->user->profiles->city}}, {{ $post->user->profiles->country}}</h5>
+                                  <h5 style="color: #7f8c8d">{{ $post->user->profiles->description }}</h5>
+                                <table class="tablecard">
+                                    <tr>
+                                        <td>
+                                          <h5 style="color: #7f8c8d"><b>{{$post->user->posts->count()}}</b></h5>
+                                          <h5 style="color: #7f8c8d">Posts</h5>
+                                        </td>
+                                        <td>
+                                          <h5 style="color: #7f8c8d"><b>{{$post->user->friends->count()-1}}</b></h5>
+                                          <h5 style="color: #7f8c8d">Friends</h5>
+                                        </td>
+                                        <td>
+                                          <h5 style="color: #7f8c8d"><b>892</b></h5>
+                                          <h5 style="color: #7f8c8d">Following</h5>
+                                        </td>
+                                    </tr>
+                                </table>
+                        </div>
+                      </div>
+                    </div>
 
-                    <a href="{{url('profiles/'.$post->user->id)}}" class="profile-link">{{$post->user->profiles?$post->user->profiles->f_name.' '.$post->user->profiles->l_name:$post->user->name}}</a> 
+                  </div> 
                     <span>
                     @if($post->privacy == 'public')
                     <i class ="ion-ios-world"></i>

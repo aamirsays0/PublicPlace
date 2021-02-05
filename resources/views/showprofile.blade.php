@@ -58,7 +58,7 @@
                   <li><a href="{{url('profiles/'.$user_information->id)}}" class="active">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
                   <li><a href="timeline-album.html">Album</a></li>
-                  <li><a href="{{url('friends/'.$user_information->id)}}">Friends</a></li>
+                  <li><a href="{{url('allfriends/'.$user_information->id)}}">Friends</a></li>
                 </ul>
                 
               </div>

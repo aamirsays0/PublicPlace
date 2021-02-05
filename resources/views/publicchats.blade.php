@@ -189,7 +189,7 @@
                             <a href="#" data-toggle="tab">
                             <div class="contact">
                             @if (file_exists('http://${window.location.host}/storage/profile/${el.friends_data.id}_profile.jpg')) )
-                              <img src="{{asset('http://${window.location.host}/storage/profile/${el.friends_data.id}_profile.jpg')}}" alt="" class="profile-photo-sm pull-left"style="position: absolute; top: 15%;">
+                              <img src="http://${window.location.host}/storage/profile/${el.friends_data.id}_profile.jpg" alt="" class="profile-photo-sm pull-left"style="position: absolute; top: 15%;">
                             @else
                               <img src="{{ asset('images/noimage.jpg') }}" alt="" class="profile-photo-sm pull-left"style="position: absolute; top: 15%;">
                             @endif
