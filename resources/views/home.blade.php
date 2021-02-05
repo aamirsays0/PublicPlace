@@ -108,12 +108,12 @@
                          <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
                          @endif
                         <div class="card-info">
-                        @if (file_exists(public_path('storage/profile/'.$post->user_id.'_profile.jpg')) )
-                        <img src="{{asset('storage/profile/'.$post->user_id.'_profile.jpg')}}" alt="user" class="profile-photo-md"/>
-                        @else
-                       <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-lg" id="uploadImage" alt="">
-                        @endif
-                      <div class="friend-info">
+                             @if (file_exists(public_path('storage/profile/'.$post->user_id.'_profile.jpg')) )
+                             <img src="{{asset('storage/profile/'.$post->user_id.'_profile.jpg')}}" alt="user" class="profile-photo-md"/>
+                             @else
+                            <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-lg" id="uploadImage" alt="">
+                             @endif
+                           <div class="friend-info">
                                   <h5><a href="{{url('profiles/'.$post->user_id)}}" class="profile-link">
                                    {{$post->user->profiles?$post->user->profiles->f_name.' '.$post->user->profiles->l_name:$post->user->name}}</a>
                                                      
