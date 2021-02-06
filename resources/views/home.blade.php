@@ -111,7 +111,7 @@
                              @if (file_exists(public_path('storage/profile/'.$post->user_id.'_profile.jpg')) )
                              <img src="{{asset('storage/profile/'.$post->user_id.'_profile.jpg')}}" alt="user" class="profile-photo-md"/>
                              @else
-                            <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-lg" id="uploadImage" alt="">
+                            <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="user">
                              @endif
                            <div class="friend-info">
                                   <h5><a href="{{url('profiles/'.$post->user_id)}}" class="profile-link">
@@ -130,8 +130,8 @@
                                       @endif
                                     </h5>
                                   <h5 style="color: #7f8c8d"><i class="fa fa-envelope"></i>  {{$post->user->email}}</h5>
-                                  <h5 style="color: #7f8c8d"><i class="fa fa-map-marker" aria-hidden="true"></i>  {{ $post->user->profiles->city}}, {{ $post->user->profiles->country}}</h5>
-                                  <h5 style="color: #7f8c8d">{{ $post->user->profiles->description }}</h5>
+                                  <h5 style="color: #7f8c8d"><i class="fa fa-map-marker" aria-hidden="true"></i>  {{$post->user->profiles?$post->user->profiles->city:"No city details"}}, {{$post->user->profiles?$post->user->profiles->country:"No country details"}}</h5>
+                                  <h5 style="color: #7f8c8d">{{ $post->user->profiles?$post->user->profiles->description:"No Description" }}</h5>
                                 <table class="tablecard">
                                     <tr>
                                         <td>
@@ -262,18 +262,18 @@
                   <div class="commentContainer" style="display: none;">
                   @forelse($post->comments as $usercomment)
                     <div class="post-comment">
-                    <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
-                    <p><a href="{{url('profiles/'.$usercomment->user->id)}}" class="profile-link">{{$usercomment->user->profiles?$usercomment->user->profiles->f_name.' '.$usercomment->user->profiles->l_name:$usercomment->user->name}}</a>
-                    {{$usercomment->comment}}</p>
-                    @if (Auth::check())
-                    @if(count((array) $post->comments) > 0)
-                    @if($usercomment->user->id == Auth::user()->id)
-                    {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
-                    <button class="btn btn-danger fa fa-trash deleteComment"></button>
-                    {!! Form::close() !!}
-                    @endif
-                    @endif
-                   @endif
+                         <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
+                         <p><a href="{{url('profiles/'.$usercomment->user->id)}}" class="profile-link">{{$usercomment->user->profiles?$usercomment->user->profiles->f_name.' '.$usercomment->user->profiles->l_name:$usercomment->user->name}}</a>
+                         {{$usercomment->comment}}</p>
+                         @if (Auth::check())
+                         @if(count((array) $post->comments) > 0)
+                         @if($usercomment->user->id == Auth::user()->id)
+                         {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
+                         <button class="btn btn-danger fa fa-trash deleteComment"></button>
+                         {!! Form::close() !!}
+                         @endif
+                         @endif
+                        @endif
 
                   </div>
                   @empty
@@ -748,6 +748,9 @@ $("#contentpostContainer").on("click",".postcommentToggleBtn", function(){
         }
     });
 })
+// $('#publishpost').click(function() {
+//   $('#publishpost').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...').addClass('disabled');
+// });
     </script>
 
 @endsection

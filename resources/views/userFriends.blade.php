@@ -148,7 +148,7 @@
                         @if (file_exists(public_path('storage/profile/'.$friend->id.'_cover.jpg')) )
                          <img src="{{asset('storage/profile/'.$friend->id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
                          @else
-                         <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover" id="uploadImage" alt="">
+                         <img src="{{ asset('images/no-cover.png') }}" class="img-responsive cover" id="uploadImage" alt="">
                          @endif
                         <div class="card-info">
                         @if (file_exists(public_path('storage/profile/'.$friend->id.'_profile.jpg')) )
@@ -174,12 +174,41 @@
                 </div>
               </div>
             </div>
-            </div>            
+        <div class="col-md-2 static">
+          <div id="sticky-sidebar">
+          @if($user_information->id == Auth::id())
+          <h4 class="grey">Your activities</h4>
+            @foreach ($allActivity as $activity)
+              <div class="feed-item">
+                <div class="live-activity">
+                  <p>
+                  <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> You {{ $activity->type }}ed on a Post</a>
+                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->post->user->profiles->f_name) ? $activity->post->user->profiles->f_name : $activity->post->user->name }}</a>
+                  </p>
+                  <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
+                </div>
+              </div>
+            @endforeach          
+           @else
+           <h4 class="grey">{{ isset($user->profiles->f_name) ? ucfirst($user->profiles->f_name) : ucfirst($user->name) }}'s Activities</h4>
+            @foreach ($allActivity as $activity)
+              <div class="feed-item">
+                <div class="live-activity">
+                  <p>
+                  <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }} {{ $activity->type }}ed on a Post</a>
+                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->post->user->profiles->f_name) ? $activity->post->user->profiles->f_name : $activity->post->user->name }}</a>
+                  </p>
+                  <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
+                </div>
+              </div>
+            @endforeach          
 
-            <div class="col-md-2 static">
+           @endif
+           </div>
         </div>
-      </div>
-    </div>   
+</div>
+</div>
+                
 
     <!-- Footer
     ================================================= -->

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Custom\FriendsList;
 use App\Profile;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Activity;
 
 class FriendController extends Controller
 {
@@ -73,9 +74,9 @@ class FriendController extends Controller
     } 
     
     public function showFriends($id)
-    {   $id = Auth::id();
+    {  
         $friendreq = Friend::with('user')
-               ->where("friend_id",$id)
+               ->where("friend_id",Auth::id())
                 ->where('approved','0')
                 ->where('blocked', '0')
                 ->get();
@@ -100,19 +101,14 @@ class FriendController extends Controller
   
     }
     public function userFriends($id)
-    {    $id = Auth::id();
-         $friendreq = Friend::with('user')
-                ->where("friend_id",$id)
-                 ->where('approved','0')
-                 ->where('blocked', '0')
-                 ->get();
-       
+    {      
         $user_information = User::with('profiles')->findOrFail($id);
         $allFriends = FriendsList::Friends($id);
          $friends = User::with('profiles')
         ->whereIn('id',$allFriends)
         ->get();
-        return view('userFriends', compact('user_information'))->with('friends', $friends)->with('requests', $friendreq);
+        $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(4)->get(); 
+        return view('userFriends', compact('user_information'))->with('allActivity',$allActivity)->with('friends', $friends);
     }
 
 }

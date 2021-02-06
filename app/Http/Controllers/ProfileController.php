@@ -283,7 +283,7 @@ $data[] = $name;
             $user_information = User::with('profiles')->findOrFail($id);
             $userinfo = User::with('profiles')->find($id);
             $countryList = config('country.list');
-            $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(10)->get(); 
+            $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(4)->get(); 
             return view('showfriendsprofile', compact('user_information'))
             ->with('country',$countryList)->with('allActivity',$allActivity)->with ('friends', $friends) ;;
 

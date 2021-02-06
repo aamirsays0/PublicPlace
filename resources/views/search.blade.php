@@ -52,7 +52,62 @@
 
                   <div class="col-md-7 col-sm-7">
 
-                    <h5><a href="{{url('profiles/'.$user->id)}}" class="profile-link">{{$user->profiles?$user->profiles->f_name.' '.$user->profiles->l_name:$user->name}}</a></h5>
+                    <h5>
+                    <div class="profile-link1">
+                    <a href="{{url('profiles/'.$user->id)}}" class="profile-link">{{$user->profiles?$user->profiles->f_name.' '.$user->profiles->l_name:$user->name}}</a>
+                    <div class="friend-card1">
+                        @if (file_exists(public_path('storage/profile/'.$user->id.'_cover.jpg')) )
+                         <img src="{{asset('storage/profile/'.$user->id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
+                         @else
+                         <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
+                         @endif
+                        <div class="card-info">
+                             @if (file_exists(public_path('storage/profile/'.$user->id.'_profile.jpg')) )
+                             <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt="user" class="profile-photo-md"/>
+                             @else
+                            <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="user">
+                             @endif
+                           <div class="friend-info">
+                                  <h5><a href="{{url('profiles/'.$user->user_id)}}" class="profile-link">
+                                   {{$user->profiles?$user->profiles->f_name.' '.$user->profiles->l_name:$user->name}}</a>
+                                                     
+                                      @if(in_array($user->id,$req))
+                                        @if (Auth::user()->id !== $user->id)
+                                         <span class="pull">Friends</span>
+                                        @endif
+                                      @else
+                                        @if($his_friends->where('friend_id', $user->id)->where('approved', 0)->where('blocked', 0)->first())
+                                         <button class="btn pull pending" disabled>Pending</button>
+                                        @else 
+                                        <button class="btn pull addFrndBtn" data-uid="{{$user->id}}">Add Friend</button>
+                                       @endif
+                                      @endif
+                                </h5>
+                                  <h5 style="color: #7f8c8d"><i class="fa fa-envelope"></i>  {{$user->email}}</h5>
+                                  <h5 style="color: #7f8c8d"><i class="fa fa-map-marker" aria-hidden="true"></i>  {{$user->profiles?$user->profiles->city:"No city details"}}, {{$user->profiles?$user->profiles->country:"No country details"}}</h5>
+                                  <h5 style="color: #7f8c8d">{{ $user->profiles?$user->profiles->description:"No Description" }}</h5>
+                                <table class="tablecard">
+                                    <tr>
+                                        <td>
+                                          <h5 style="color: #7f8c8d"><b>{{$user->posts->count()}}</b></h5>
+                                          <h5 style="color: #7f8c8d">Posts</h5>
+                                        </td>
+                                        <td>
+                                          <h5 style="color: #7f8c8d"><b>{{$user->friends->count()-1}}</b></h5>
+                                          <h5 style="color: #7f8c8d">Friends</h5>
+                                        </td>
+                                        <td>
+                                          <h5 style="color: #7f8c8d"><b>892</b></h5>
+                                          <h5 style="color: #7f8c8d">Following</h5>
+                                        </td>
+                                    </tr>
+                                </table>
+                        </div>
+                      </div>
+
+                  </div> 
+                  </div> 
+                  </h5>
                     <p style="font-size: 1.7rem;">{{$user->email}}</p>
                   </div>
                   <div class="col-md-3 col-sm-3">
@@ -301,7 +356,7 @@
              });
      
                } else {
-                 swal("Cancelled", "Your imaginary file is safe :)", "error");
+                 swal("Cancelled", "You have no new friends :)", "error");
                }
              });
      
@@ -344,7 +399,7 @@
                  });
          
                    } else {
-                     swal("Cancelled", "Your imaginary file is safe :)", "error");
+                     swal("Cancelled", "You no new friends :)", "error");
                    }
                  });
          
