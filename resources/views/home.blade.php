@@ -264,12 +264,13 @@
                     <div class="post-comment">
                          <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
                          <p><a href="{{url('profiles/'.$usercomment->user->id)}}" class="profile-link">{{$usercomment->user->profiles?$usercomment->user->profiles->f_name.' '.$usercomment->user->profiles->l_name:$usercomment->user->name}}</a>
+                         <span class="text-muted">{{\Carbon\Carbon::parse($usercomment->created_at)->diffForHumans()}}</span>
                          {{$usercomment->comment}}</p>
                          @if (Auth::check())
                          @if(count((array) $post->comments) > 0)
                          @if($usercomment->user->id == Auth::user()->id)
-                         {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
-                         <button class="btn btn-danger fa fa-trash deleteComment"></button>
+                         {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment','style' => 'position: absolute; right: 0%']) !!}
+                         <button class="btn fa fa-trash deleteComment"style="color: #e23a14;"></button>
                          {!! Form::close() !!}
                          @endif
                          @endif
@@ -279,6 +280,7 @@
                   @empty
                   <h5>No comments added yet</hf>
                   @endforelse
+                  
                   </div>
                   <a href="javascript:void(0)" class="postcommentToggleBtn"><span><i class="ion-compose ion-icons-colors" style="font-size: 18px; position:absolute; right:65%; "></i></span></a>
                   <div class="postcommentContainer" style="display: none;">

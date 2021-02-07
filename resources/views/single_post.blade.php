@@ -175,29 +175,7 @@
                     
                   </div>
                   <div class="line-divider"></div>
-                  <div class="viewpost"><a href="javascript:void(0)" class="commentToggleBtn">{{$userpost->comments->count()}} <span><i class="fa fa-comment" style="font-size: 18px;"></i></span></a>
-                  <div class="commentContainer" style="display: none;">
-                  @forelse($userpost->comments as $usercomment)
-                    <div class="post-comment">
-                    <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
-                    <p><a href="{{url('profiles/'.$usercomment->user->id)}}" class="profile-link">{{$usercomment->user->name}}</a>
-                    <i class="em em-laughing"></i>{{$usercomment->comment}}</p>
-                    @if (Auth::check())
-                      @if(count((array) $userpost->comments) > 0)
-                       @if($usercomment->user->id == Auth::user()->id)
-                        {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment']) !!}
-                         <button class="btn btn-danger fa fa-trash deleteComment"></button>
-                        {!! Form::close() !!}
-                       @endif
-                      @endif
-                     @endif
-                  </div>
-                  @empty
-                  <h5>No comments added yet</hf>
-                  @endforelse
-                  </div>
-                  <a href="javascript:void(0)" class="postcommentToggleBtn"><span><i class="ion-compose ion-icons-colors" style="font-size: 18px; position:absolute; right:65%; "></i></span></a>
-                  <div class="postcommentContainer" style="display: none;">
+                  <div class="postcommentContainer">
                   <div class="post-comment">
                     <img src="{{asset('storage/profile/'.Auth::id().'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
                     {!! Form::open([
@@ -210,6 +188,29 @@
                     {!! Form::close() !!}
                    </div>
                    </div>
+
+                  <div class="viewpost"><a class="">{{$userpost->comments->count()}} Comments</a>
+                  <div class="commentContainer" >
+                  @forelse($userpost->comments as $usercomment)
+                    <div class="post-comment">
+                          <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
+                          <p><a href="{{url('profiles/'.$usercomment->user->id)}}" class="profile-link">{{$usercomment->user->name}}</a>
+                          <span class="text-muted">{{\Carbon\Carbon::parse($usercomment->created_at)->diffForHumans()}}</span>
+                          {{$usercomment->comment}}</p>
+                          @if (Auth::check())
+                            @if(count((array) $userpost->comments) > 0)
+                             @if($usercomment->user->id == Auth::user()->id)
+                              {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment','style' => 'position: absolute; right: 0%']) !!}
+                               <button class="btn fa fa-trash deleteComment"style="color: #e23a14;"></button>
+                              {!! Form::close() !!}
+                             @endif
+                            @endif
+                           @endif
+                  </div>
+                  @empty
+                  <h5>No comments added yet</hf>
+                  @endforelse
+                  </div>
                 </div>
                     </div>
               </div>
@@ -328,19 +329,6 @@ $.ajaxSetup({
  });
 
 // ADD FRIEND END//
-
-//JSCROLL
-             $("ul.pagination").hide();
-             $('.scroll').jscroll({
-               autoTrigger: true,
-               nextSelector : '.pagination li.active + li a',
-               contentSelector: 'div.scroll',
-               callback: function(){
-                 $('ul.pagination:visible:first').hide();
-               }
-
-             });
-//SCROLL ends
 
       /* WHEN YOU UPLOAD ONE OR MULTIPLE FILES*/
     $(document).on('change', '#post-images',function(){
@@ -506,17 +494,6 @@ $.ajax({
  //ajax end
      });  
 //reaction ends
-//comment container show hide start
-$("#contentpostContainer").on("click",".commentToggleBtn", function(){
-            $(this).next(".commentContainer").toggle(250);
-
-          });
-//comment container show hide end
-//post comment container show hide start
-$("#contentpostContainer").on("click",".postcommentToggleBtn", function(){
-            $(this).next(".postcommentContainer").toggle(250);
-
-          });
 //post comment container show hide end
 
     });
