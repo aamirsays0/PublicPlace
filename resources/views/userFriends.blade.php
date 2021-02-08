@@ -190,7 +190,7 @@
               </div>
             @endforeach          
            @else
-           <h4 class="grey">{{ isset($user->profiles->f_name) ? ucfirst($user->profiles->f_name) : ucfirst($user->name) }}'s Activities</h4>
+           <h4 class="grey">{{ isset($user_information->profiles->f_name) ? ucfirst($user_information->profiles->f_name) : ucfirst($user_information->name) }}'s Activities</h4>
             @foreach ($allActivity as $activity)
               <div class="feed-item">
                 <div class="live-activity">

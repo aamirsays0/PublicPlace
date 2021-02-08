@@ -101,7 +101,7 @@ class FriendController extends Controller
   
     }
     public function userFriends($id)
-    {      
+         
     {   
         //  $id = Auth::id();
          $friendreq = Friend::with('user')
