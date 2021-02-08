@@ -180,8 +180,7 @@ div p.small-text{
 a, a:active, a:focus {outline: none;}
 .indicator-badge:not(._regular){
   position: absolute;
-  top: -6px;
-  right: -6px;
+    top: 20%;
   transition: top cubic-bezier(.165, .84, .44, 1) .15s;
 }
 .indicator-badge.wb-unread-count {
@@ -438,8 +437,7 @@ textarea{
 
 .menu ul.main-menu li.dropdown a{
   color: rgb(24, 6, 6);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 1.5rem;
   text-decoration: none;
 }
 
@@ -454,7 +452,7 @@ textarea{
 }
 
 .menu ul.main-menu li ul.dropdown-menu{
-  background: #231F20;
+  background: #044c59;
   box-shadow: none;
   border: 0;
   padding: 0;
@@ -1728,7 +1726,7 @@ ul.contact li i{
 
 @media only screen and (max-width : 768px) {
 
-  .menu ul.main-menu li.dropdown ul.dropdown-menu li{background: #282425}
+  .menu ul.main-menu li.dropdown ul.dropdown-menu li{background: #044c59}
 
 
   section h1.section-title{font-size: 90px !important; margin-bottom: 0 !important;}
