@@ -78,7 +78,8 @@
                   </div><!--Chat Messages in Right End-->
                 <div class="clearfix"></div>
             </div>
-            <div class="row type-message" style="display: none">
+            {{-- Make is visible when allowed to chat --}}
+            {{-- <div class="row type-message" style="display: none">
               <div class="col-12">
                 <div class="send-message">
                   <div class="input-group">
@@ -89,8 +90,8 @@
                   </div>
                 </div>
               </div>
-              </div>
-            </div>
+            </div> --}}
+          </div>
 
 @endsection
 

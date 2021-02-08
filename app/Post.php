@@ -10,7 +10,7 @@ class Post extends Model
         'id','content', 'privacy', 'user_id',
     ];
     public function user(){
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User', 'user_id');
     }
     public function pictures(){
         return $this->hasMany('App\Picture');
