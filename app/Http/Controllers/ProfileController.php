@@ -10,6 +10,7 @@ use App\Activity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Pusher\Pusher;
+use App\Friend;
 // import the Intervention Image Manager Class
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -170,9 +171,9 @@ $data[] = $name;
         ->whereIn('id',$allFriends)
          ->get();
         // $userinfo = FriendsList::Friends(Auth::id());
-       
+        $sentRequest = FriendsList::Friends(Auth::id());
         $userinfo = User::with('profiles')->where('id', $id)->first();
-
+        $his_friends = Friend::select('user_id', 'friend_id')->whereRaw("( user_id = $id OR friend_id = $id )")->get()->toArray();
         $posts    = Post::with('pictures')
                     ->with('videos')
                     ->with('comments.user')
@@ -181,7 +182,7 @@ $data[] = $name;
                     ->paginate(10);
         $user_information = User::with('profiles')->findOrFail($id);
         $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(4)->get();
-        return view('showprofile', compact('user_information', 'posts'))->with('user', $userinfo)->with('allActivity',$allActivity)->with('friends', $friends)
+        return view('showprofile', compact('user_information', 'posts','his_friends'))->with('user', $userinfo)->with('allActivity',$allActivity)->with('friends', $friends)->with('req', $sentRequest)
         /*  ->with('user_information', $user_information)*/ ;
     }
     

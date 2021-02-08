@@ -237,17 +237,39 @@
                   <div class="post-text">
                     <p>{{$post->content}}</p>
                     <hr>
+                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+ 
+                        <ol class="carousel-indicators">
+                         @foreach($post->pictures as $pic)
+                            <li data-target="#carouselExampleIndicators" data-slide-to="{{ $loop->index }}" class="{{ $loop->first ? 'active' : '' }}"></li>
+                         @endforeach
+                        </ol>
+                       
+                 <div class="carousel-inner" role="listbox">
                     @forelse($post->pictures as $pic)
+                    <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
                     <?php
                     $imageinfo = pathinfo(url('/storage/postimages/'.$pic->imgname));
                     //print_r($imageinfo);
                     ?>
                     <a href="{{url('/storage/postimages/'.$pic->imgname)}}" data-lightbox="imageset-{{$post->id}}">
-                    <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" width="120px">
+                    <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" width="400px">
                     </a>
+                    </div>
+
                     @empty
 
                     @endforelse
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </div>
                     @if (isset($post->videos[0]))
                    <video width="320" height="240" controls>
                     <source src="{{ asset('storage/postvideos/'.$post->videos[0]->vidname) }}" type="video/mp4">
@@ -259,7 +281,7 @@
                   <div class="viewpost"><a href="javascript:void(0)" class="commentToggleBtn">{{$post->comments->count()}} 
                     <span><i class="fa fa-comment" style="font-size: 18px;"></i></span>
                   </a>
-                  <div class="commentContainer" style="display: none;">
+                  <!-- <div class="commentContainer" style="display: none;">
                   @forelse($post->comments as $usercomment)
                     <div class="post-comment">
                          <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
@@ -281,7 +303,88 @@
                   <h5>No comments added yet</hf>
                   @endforelse
                   
-                  </div>
+                  </div> -->
+                  <div class="comment-widgets m-b-20 commentContainer" style="display: none;">
+                  @forelse($post->comments as $usercomment)
+                    <div class="d-flex flex-row comment-row"style="padding-left: 0px; cursor: auto;">
+                        <div class="p-2"><span class="round"><img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" class="profile-photo-sm" alt="user" width="50"></span></div>
+                        <div class="comment-text w-100">
+                            <h5>
+                              <div class="profile-link1">
+                               <a href="{{url('profiles/'.$usercomment->user->id)}}" class="profile-link">{{$usercomment->user->profiles?$usercomment->user->profiles->f_name.' '.$usercomment->user->profiles->l_name:$usercomment->user->name}}</a>
+                                    <div class="friend-card1">
+                                        @if (file_exists(public_path('storage/profile/'.$usercomment->user_id.'_cover.jpg')) )
+                                        <img src="{{asset('storage/profile/'.$usercomment->user_id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
+                                        @else
+                                        <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
+                                        @endif
+                                        <div class="card-info">
+                                            @if (file_exists(public_path('storage/profile/'.$usercomment->user_id.'_profile.jpg')) )
+                                            <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile.jpg')}}" alt="user" class="profile-photo-md"/>
+                                            @else
+                                            <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="user">
+                                            @endif
+                                          <div class="friend-info">
+                                                  <h5><a href="{{url('profiles/'.$usercomment->user_id)}}" class="profile-link">
+                                                  {{$usercomment->user->profiles?$usercomment->user->profiles->f_name.' '.$usercomment->user->profiles->l_name:$usercomment->user->name}}</a>
+                                                                    
+                                                      @if(in_array($usercomment->user->id,$req) )
+                                                        @if (Auth::user()->id !== $usercomment->user->id)
+                                                          <span class="pull pull-right">Friends</span>
+                                                        @endif
+                                                      @else
+                                                        @if(array_search($usercomment->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
+                                                        <button class="btn pull pending pull-right" disabled>Pending</button>
+                                                        @else 
+                                                        <button class="btn pull addFrndBtn pull-right" data-uid="{{$usercomment->user->id}}">Add Friend</button>
+                                                        @endif
+                                                      @endif
+                                                    </h5>
+                                                  <h5 style="color: #7f8c8d"><i class="fa fa-envelope"></i>  {{$usercomment->user->email}}</h5>
+                                                  <h5 style="color: #7f8c8d"><i class="fa fa-map-marker" aria-hidden="true"></i>  {{$usercomment->user->profiles?$usercomment->user->profiles->city:"No city details"}}, {{$usercomment->user->profiles?$usercomment->user->profiles->country:"No country details"}}</h5>
+                                                  <h5 style="color: #7f8c8d">{{ $usercomment->user->profiles?$usercomment->user->profiles->description:"No Description" }}</h5>
+                                                <table class="tablecard">
+                                                    <tr>
+                                                        <td>
+                                                          <h5 style="color: #7f8c8d"><b>{{$usercomment->user->posts->count()}}</b></h5>
+                                                          <h5 style="color: #7f8c8d">Posts</h5>
+                                                        </td>
+                                                        <td>
+                                                          <h5 style="color: #7f8c8d"><b>{{$usercomment->user->friends->count()-1}}</b></h5>
+                                                          <h5 style="color: #7f8c8d">Friends</h5>
+                                                        </td>
+                                                        <td>
+                                                          <h5 style="color: #7f8c8d"><b>892</b></h5>
+                                                          <h5 style="color: #7f8c8d">Following</h5>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                        </div>
+                                      </div>
+                                    </div>
+                
+                                  </div> 
+                             
+                             </h5>
+                            <div class="comment-footer"> <span class="date">{{\Carbon\Carbon::parse($usercomment->created_at)->diffForHumans()}}</span>
+                              @if (Auth::check())
+                                @if(count((array) $post->comments) > 0)
+                                @if($usercomment->user->id == Auth::user()->id)
+                                {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment','style' => 'position: absolute; right: 0%']) !!}
+                                   <span class="label label-danger deleteComment"><i class="fa fa-trash"></i></span>
+                                   {!! Form::close() !!}
+                                @endif
+                                @endif
+                               @endif
+                            <!-- <span class="action-icons"> <a href="#" data-abc="true"><i class="fa fa-pencil"></i></a> <a href="#" data-abc="true"><i class="fa fa-rotate-right"></i></a> <a href="#" data-abc="true"><i class="fa fa-heart"></i></a> </span> -->
+                          </div>
+                            <p class="m-b-5 m-t-10"style="padding-right: 25px;">{{$usercomment->comment}}</p>
+                        </div>
+                    </div>
+                    @empty
+                  <h5>No comments added yet</hf>
+                  @endforelse
+                    </div>
                   <a href="javascript:void(0)" class="postcommentToggleBtn"><span><i class="ion-compose ion-icons-colors" style="font-size: 18px; position:absolute; right:65%; "></i></span></a>
                   <div class="postcommentContainer" style="display: none;">
                    @if ($errors->any())

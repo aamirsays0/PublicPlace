@@ -190,26 +190,87 @@
                    </div>
 
                   <div class="viewpost"><a class="">{{$userpost->comments->count()}} Comments</a>
-                  <div class="commentContainer" >
-                  @forelse($userpost->comments as $usercomment)
-                    <div class="post-comment">
-                          <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
-                          <p><a href="{{url('profiles/'.$usercomment->user->id)}}" class="profile-link">{{$usercomment->user->name}}</a>
-                          <span class="text-muted">{{\Carbon\Carbon::parse($usercomment->created_at)->diffForHumans()}}</span>
-                          {{$usercomment->comment}}</p>
-                          @if (Auth::check())
-                            @if(count((array) $userpost->comments) > 0)
-                             @if($usercomment->user->id == Auth::user()->id)
-                              {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment','style' => 'position: absolute; right: 0%']) !!}
-                               <button class="btn fa fa-trash deleteComment"style="color: #e23a14;"></button>
-                              {!! Form::close() !!}
-                             @endif
-                            @endif
-                           @endif
-                  </div>
-                  @empty
+                  <div class="comment-widgets m-b-20 commentContainer">
+                   @forelse($userpost->comments as $usercomment)
+                    <div class="d-flex flex-row comment-row"style="padding-left: 0px; cursor: auto;">
+                        <div class="p-2"><span class="round"><img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" class="profile-photo-sm" alt="user" width="50"></span></div>
+                        <div class="comment-text w-100">
+                            <h5>
+                              <div class="profile-link1">
+                               <a href="{{url('profiles/'.$usercomment->user->id)}}" class="profile-link">{{$usercomment->user->profiles?$usercomment->user->profiles->f_name.' '.$usercomment->user->profiles->l_name:$usercomment->user->name}}</a>
+                                    <div class="friend-card1">
+                                        @if (file_exists(public_path('storage/profile/'.$usercomment->user_id.'_cover.jpg')) )
+                                        <img src="{{asset('storage/profile/'.$usercomment->user_id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
+                                        @else
+                                        <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
+                                        @endif
+                                        <div class="card-info">
+                                            @if (file_exists(public_path('storage/profile/'.$usercomment->user_id.'_profile.jpg')) )
+                                            <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile.jpg')}}" alt="user" class="profile-photo-md"/>
+                                            @else
+                                            <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="user">
+                                            @endif
+                                          <div class="friend-info">
+                                                  <h5><a href="{{url('profiles/'.$usercomment->user_id)}}" class="profile-link">
+                                                  {{$usercomment->user->profiles?$usercomment->user->profiles->f_name.' '.$usercomment->user->profiles->l_name:$usercomment->user->name}}</a>
+                                                                    
+                                                      @if(in_array($usercomment->user->id,$req) )
+                                                        @if (Auth::user()->id !== $usercomment->user->id)
+                                                          <span class="pull pull-right">Friends</span>
+                                                        @endif
+                                                      @else
+                                                        @if(array_search($usercomment->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
+                                                        <button class="btn pull pending pull-right" disabled>Pending</button>
+                                                        @else 
+                                                        <button class="btn pull addFrndBtn pull-right" data-uid="{{$usercomment->user->id}}">Add Friend</button>
+                                                        @endif
+                                                      @endif
+                                                    </h5>
+                                                  <h5 style="color: #7f8c8d"><i class="fa fa-envelope"></i>  {{$usercomment->user->email}}</h5>
+                                                  <h5 style="color: #7f8c8d"><i class="fa fa-map-marker" aria-hidden="true"></i>  {{$usercomment->user->profiles?$usercomment->user->profiles->city:"No city details"}}, {{$usercomment->user->profiles?$usercomment->user->profiles->country:"No country details"}}</h5>
+                                                  <h5 style="color: #7f8c8d">{{ $usercomment->user->profiles?$usercomment->user->profiles->description:"No Description" }}</h5>
+                                                <table class="tablecard">
+                                                    <tr>
+                                                        <td>
+                                                          <h5 style="color: #7f8c8d"><b>{{$usercomment->user->posts->count()}}</b></h5>
+                                                          <h5 style="color: #7f8c8d">Posts</h5>
+                                                        </td>
+                                                        <td>
+                                                          <h5 style="color: #7f8c8d"><b>{{$usercomment->user->friends->count()-1}}</b></h5>
+                                                          <h5 style="color: #7f8c8d">Friends</h5>
+                                                        </td>
+                                                        <td>
+                                                          <h5 style="color: #7f8c8d"><b>892</b></h5>
+                                                          <h5 style="color: #7f8c8d">Following</h5>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                        </div>
+                                      </div>
+                                    </div>
+                
+                                  </div> 
+                             
+                             </h5>
+                            <div class="comment-footer"> <span class="date">{{\Carbon\Carbon::parse($usercomment->created_at)->diffForHumans()}}</span>
+                              @if (Auth::check())
+                                @if(count((array) $userpost->comments) > 0)
+                                @if($usercomment->user->id == Auth::user()->id)
+                                {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment','style' => 'position: absolute; right: 0%']) !!}
+                                   <span class="label label-danger deleteComment"><i class="fa fa-trash"></i></span>
+                                   {!! Form::close() !!}
+                                @endif
+                                @endif
+                               @endif
+                            <!-- <span class="action-icons"> <a href="#" data-abc="true"><i class="fa fa-pencil"></i></a> <a href="#" data-abc="true"><i class="fa fa-rotate-right"></i></a> <a href="#" data-abc="true"><i class="fa fa-heart"></i></a> </span> -->
+                          </div>
+                            <p class="m-b-5 m-t-10"style="padding-right: 25px;">{{$usercomment->comment}}</p>
+                        </div>
+                    </div>
+                    @empty
                   <h5>No comments added yet</hf>
                   @endforelse
+
                   </div>
                 </div>
                     </div>
