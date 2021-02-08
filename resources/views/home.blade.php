@@ -88,8 +88,6 @@
       
        @forelse($posts as $post)
 
-            
-
             <!-- Post Content
             ================================================= -->
             <div class="post-content  postid-{{$post->id}}">
@@ -139,7 +137,9 @@
                                           <h5 style="color: #7f8c8d">Posts</h5>
                                         </td>
                                         <td>
-                                          <h5 style="color: #7f8c8d"><b>{{$post->user->friends->count()-1}}</b></h5>
+                                          <h5 style="color: #7f8c8d">
+                                            <b>{{$post->user->friend->count() + $post->user->friends2->count()}}</b>
+                                          </h5>
                                           <h5 style="color: #7f8c8d">Friends</h5>
                                         </td>
                                         <td>

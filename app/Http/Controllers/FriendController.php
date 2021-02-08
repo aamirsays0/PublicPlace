@@ -102,6 +102,14 @@ class FriendController extends Controller
     }
     public function userFriends($id)
     {      
+    {   
+        //  $id = Auth::id();
+         $friendreq = Friend::with('user')
+                ->where("friend_id",$id)
+                 ->where('approved','0')
+                 ->where('blocked', '0')
+                 ->get();
+       
         $user_information = User::with('profiles')->findOrFail($id);
         $allFriends = FriendsList::Friends($id);
          $friends = User::with('profiles')
