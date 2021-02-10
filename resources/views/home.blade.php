@@ -24,8 +24,7 @@
 
         </div>
         <div class="create-post">
-        <div class="row">
-  
+          <div class="row">  
             <form action="{{ route('posts.create') }}" enctype="multipart/form-data" class="postform" id="postform" novalidate>
               @csrf
             	<div class="row">
@@ -80,9 +79,33 @@
                 </div>
 
               </div>
-               </form>
-               </div>
-            </div><!-- Post Create Box End-->
+            </form>
+          </div>
+        </div><!-- Post Create Box End-->
+
+        {{-- Create and see stories from here --}}
+        <div class="row stories-corner">
+            <div class="col-md-2 col-sm-4 text-center">
+              <a href="{{ route('stories.create') }}">
+                <img src="{{asset('images/avatar.jpg')}}" alt="">
+                <small>Your Story</small>
+              </a>
+            </div>
+            @if (isset($stories) && $stories->count() > 0)
+              @foreach ($stories as $story)
+                <div class="col-md-2 col-sm-4 text-center">
+                  <a href="{{ route('stories.friends.show', $story->user->id) }}">
+                    @if (file_exists(public_path('storage/profile/'.$story->user->id.'_profile.jpg')) )
+                      <img src="{{asset('storage/profile/'.$story->user->id.'_profile.jpg')}}" alt="user"/>
+                      @else
+                    <img src="{{ asset('images/noimage.jpg') }}" id="uploadImage" alt="user">
+                      @endif
+                    <small>{{  $story->user->name }}</small>
+                  </a>
+                </div>
+              @endforeach
+            @endif
+         </div>
 
        <div class="scroll scoll-page-content" >
       
@@ -269,7 +292,7 @@
                           <span class="carousel-control-next-icon" aria-hidden="true"></span>
                           <span class="sr-only">Next</span>
                         </a>
-                      </div>
+                </div>
                     @if (isset($post->videos[0]))
                    <video width="320" height="240" controls>
                     <source src="{{ asset('storage/postvideos/'.$post->videos[0]->vidname) }}" type="video/mp4">

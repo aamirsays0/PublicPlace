@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\Picture;
 use App\Friend;
+use App\Story;
 use App\Custom\FriendsList;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use DB;
 class HomeController extends Controller
 {
     /**
@@ -81,9 +83,15 @@ class HomeController extends Controller
      //      ->get();
            ->paginate(10);
            $sentRequest = FriendsList::Friends(Auth::id());
+
+           $stories = Story::with('user')
+           ->where('user_id', '!=', auth()->id())
+           ->where('created_at', '>=', Carbon::now()->subDay())
+           ->select('user_id', DB::raw('count(*) as total'))
+           ->groupBy('user_id')->get();
            //dd($allpost); 
         //return view('home', compact('allpost'));
-        return view('home', compact('his_friends'))
+        return view('home', compact('his_friends', 'stories'))
         ->with('posts', $allpost)
         ->with('requests', $friendreq)
         ->with('friends', $friends)->with('req', $sentRequest);

@@ -28,6 +28,8 @@
     <link href="{{asset('css/emoji.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('css/headerNewStyles.css')}}"/>
 
+    {{-- Custom styles --}}
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     <!--Favicon-->
     <link rel="shortcut icon" type="image/png" href="{{asset('images/fav.png')}}"/>
     @stack('head')

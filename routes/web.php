@@ -68,3 +68,13 @@ Route::post('react','PostController@react');
 Route::get('/public-chats', 'ChatController@publicChats')->name('public.chats');
 Route::get('/user-chats/{id}', 'ChatController@userChats')->name('user.chats');
 Route::get('/user_specific/{hostid}/{receiverid}', 'ChatController@allpublicChats')->name('user.specific.chat');
+
+
+// Stories routes;
+
+Route::get('/stories/create', 'StoryController@create')->name('stories.create');
+Route::post('/stories', 'StoryController@store')->name('stories.store');
+Route::get('/stories/{id}', 'StoryController@show')->name('stories.show');
+Route::post('/comments/{id}', 'StoryCommentController@store')->name('comment.store');
+Route::delete('/comments/{id}', 'StoryCommentController@destroy')->name('comment.destroy');
+Route::get('/stories/{id}/friends', 'StoryController@friendsStory')->name('stories.friends.show');

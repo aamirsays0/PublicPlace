@@ -24,6 +24,7 @@
 		<link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}" />
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}" />
 
+
 </head>
 <body>
     <div id="app">

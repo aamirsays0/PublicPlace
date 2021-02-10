@@ -1,0 +1,47 @@
+.stories-corner {
+    margin: 1rem;
+}
+
+.stories-corner img {
+    height: 50px;
+    border-radius: 100%;
+    padding: 0 1rem;
+    width: 70px;
+}
+
+.upload-proxy {
+    cursor: pointer;
+}
+
+.video-player {
+    width: 100%;
+}
+
+.video-player-wrapper {
+    margin: 2rem 0;
+}
+
+.comment-wrapper {
+    display: flex;
+}
+
+.comment-body {
+    margin-left: 1.5rem;
+    border-radius: 1rem;
+}
+
+.comment-body h5 {
+    color: #000 !important;
+    position: relative;
+}
+
+.commenter-name {
+    font-weight: bold;
+}
+
+.comment-wrapper .actions {
+    position: absolute;
+    left: 95%;
+    color: red;
+    cursor: pointer;
+}

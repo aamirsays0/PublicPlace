@@ -79,4 +79,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function receivesBroadcastNotificationsOn() {
         return 'users.'.$this->id;
     }
+
+    public function stories()
+    {
+        return $this->hasMany('App\Story', 'user_id');
+    }
+
 }
