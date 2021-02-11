@@ -37,7 +37,7 @@
                   <i class="fa fa-bell dropdown-toggle"><span class="count wb-unread-count indicator-badge">0</span></i>
                  
                 </a>
-                <div id="notificationDropdown" class="dropdown-menu dropdown-menu-right navbar-dropdown preview list drop" aria-labelledby="notificationDropdown">
+                <div id="notificationDropdown" class="dropdown-menu dropdown-menu-right navbar-dropdown preview list drop" style="background-color: #044c59;" aria-labelledby="notificationDropdown">
                 <a class="dropdown-item">
                  <p class="mb-0 font-weight-normal float-left text-info">You Have <span class="count" id="notecount">0</span> new notifications<span class="badge badge-pill badge-warning float-right" style="margin-left: 20px;" >Mark all as read</span></p>
                 </a>

@@ -68,7 +68,7 @@
           <!--Timeline Menu for Small Screens-->
           <div class="navbar-mobile hidden-lg hidden-md">
             <div class="profile-info">
-            @if (file_exists(public_path('storage/profile/'.$user_information->id.'_profile.jpg')) )
+                @if (file_exists(public_path('storage/profile/'.$user_information->id.'_profile.jpg')) )
                     <a href="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" data-lightbox="pp">
                     <img src="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo"/>
                     @else

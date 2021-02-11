@@ -10,6 +10,6 @@ class Video extends Model
         'vidname', 'post_id'
     ];
     public function posts(){
-        return $this->belongsTo('App\Post');
+        return $this->belongsTo('App\Post', 'post_id');
     }
 }

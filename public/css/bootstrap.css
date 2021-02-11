@@ -6361,8 +6361,7 @@ button.close {
 }
 
 .carousel-control-next {
-  right: 0;
-}
+  right: 15%;}
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {

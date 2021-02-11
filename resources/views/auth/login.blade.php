@@ -73,6 +73,11 @@
                                         <div class="group"> <label for="pass" class="label">{{ __('Confirm Password') }}</label>
                                             <input id="pass" type="password" class="input" data-type="password" placeholder="Repeat your password" name="password_confirmation" required>
                                         </div>
+                                        <!-- terms and condition start -->
+                                        <div class="group"> <label for="terms"></label>
+                                       <input id="terms" type="checkbox" name="terms" value="terms" required><a style="color: #9ea6a6;" href="{{ url('/terms-conditions') }}"> Terms and Conditions </a>
+                                        </div>
+                                        <!-- terms and condition end -->
                                     <div class="group"> <input type="submit" class="button" value="{{ __('Register') }}"> </div>
                                     <div class="hr"></div>
                                 </form>

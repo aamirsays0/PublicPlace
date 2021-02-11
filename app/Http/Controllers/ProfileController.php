@@ -5,6 +5,7 @@ use App\Custom\FriendsList;
 use App\Profile;
 use App\Post;
 use App\Picture;
+use App\Video;
 use App\User;
 use App\Activity;
 use Illuminate\Http\Request;
@@ -290,18 +291,16 @@ $data[] = $name;
     }
 
        public function userAlbum($id) {
-        $images = DB::table('pictures')
-        ->select(DB::raw('post_id, imgname'))
-        ->where('post_id', '<>', $id)
-        ->orderBy('created_at','DESC')
-        ->get();
-        $videos = DB::table('videos')
-              ->select(DB::raw('post_id, vidname'))
-              ->where('post_id', '<>', $id)
-              ->orderBy('created_at','DESC')
+        $images = Picture::whereHas('posts', function($query) use ($id) {
+            $query->where('user_id', '=', $id);
+            })->orderBy('created_at','DESC')
+              ->get();
+        $videos = Video::whereHas('posts', function($query) use ($id) {
+            $query->where('user_id', '=', $id);
+            })->orderBy('created_at','DESC')
               ->get();
         $user_information = User::with('profiles')->findOrFail($id);
-        $allActivity = Activity::with('post.user')->where('user_id',Auth::id())->orderBy('created_at','desc')->limit(10)->get(); 
+        $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(10)->get(); 
         return view('userAlbum', compact('images', 'videos', 'user_information'))->with('images', $images)->with('videos', $videos)->with('allActivity',$allActivity);
 
     

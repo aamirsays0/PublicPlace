@@ -168,7 +168,7 @@
                     //print_r($imageinfo);
                     ?>
                     <a href="{{url('/storage/postimages/'.$pic->imgname)}}" data-lightbox="imageset-{{$userpost->id}}">
-                    <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" class="d-block w-100">
+                    <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" class="d-block w-80">
                     </a>
                     @empty
 
@@ -215,7 +215,13 @@
                   <div class="comment-widgets m-b-20 commentContainer">
                    @forelse($userpost->comments as $usercomment)
                     <div class="d-flex flex-row comment-row"style="padding-left: 0px; cursor: auto;">
-                        <div class="p-2"><span class="round"><img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" class="profile-photo-sm" alt="user" width="50"></span></div>
+                        <div class="p-2"><span class="round">
+                             @if (file_exists(public_path('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')) )
+                               <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" class="profile-photo-sm" alt="user" width="50">
+                              @else
+                                <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-sm" id="uploadImage" alt="user">
+                              @endif
+                        </span></div>
                         <div class="comment-text w-100">
                             <h5>
                               <div class="profile-link1">
@@ -298,29 +304,15 @@
                     </div>
               </div>
             </div>
-            </div>
 
 
 @endsection
 
 @section('sidebar-right')
 <div class="suggestions" id="sticky-sidebar">
-              <h4 class="grey" style="font-weight: 600;">Friend Requests</h4>
-              <hr>
-              @forelse($requests as $request)
-               <div class="follow-user">
-                <img src="{{asset('storage/profile/'.$request->user_id.'_profile.jpg')}}" alt="" class="profile-photo-sm pull-left" />
-                <div>
-                  <h6><a href="timeline.html">{{$request->user->name}}</a></h6>
-                  <a class="confirmBtn text-green" data-uid="{{$request->user_id}}" href="javascript:void(0)">Confirm</a>
-                  <a class="deleteBtn text-danger" href="javascript:void(0)">Delete</a>
-                </div>
-               </div>
-              @empty
-              <h5>No Friend Requests</h5>
-              @endforelse
-             
-             </div>
+   @include('partials.friendrequests')
+           
+ </div>
 @endsection
 
 @section("script")

@@ -10,6 +10,6 @@ class Picture extends Model
         'imgname', 'post_id'
     ];
     public function posts(){
-        return $this->belongsTo('App\Post');
+        return $this->belongsTo('App\Post', 'post_id');
     }
 }

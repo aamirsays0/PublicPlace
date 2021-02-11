@@ -80,3 +80,7 @@ Route::delete('/comments/{id}', 'StoryCommentController@destroy')->name('comment
 Route::get('/stories/{id}/friends', 'StoryController@friendsStory')->name('stories.friends.show');
 
 Route::get('/Album/{id}', 'ProfileController@userAlbum')->name('user.album.show');
+
+Route::get('/terms-conditions', function () {
+    return view('auth.terms');
+});

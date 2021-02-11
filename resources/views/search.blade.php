@@ -43,7 +43,7 @@
        <div class="nearby-user">
                 <div class="row">
                   <div class="col-md-2 col-sm-2">
-                  @if (file_exists(public_path('storage/profile/'.$user->id.'_profile.jpg')) )
+                   @if (file_exists(public_path('storage/profile/'.$user->id.'_profile.jpg')) )
                     <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}"  alt="user" class="profile-photo-lg" />
                     @else
                     <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-lg" id="uploadImage" alt="">
@@ -143,11 +143,14 @@
             <div class="post-content  postid-{{$post->id}}">
             
               <div class="post-container">
-                <img src="{{asset('storage/profile/'.$post->user_id.'_profile.jpg')}}" alt="user" class=" img-responsive profile-photo-md pull-left" />
+                  @if (file_exists(public_path('storage/profile/'.$post->user_id.'_profile.jpg')) )
+                    <img src="{{asset('storage/profile/'.$post->user_id.'_profile.jpg')}}" alt="user" class=" img-responsive profile-photo-md pull-left" />
+                    @else
+                    <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive profile-photo-md pull-left" id="uploadImage" alt="">
+                   @endif
                 <div class="post-detail">
                   <div class="user-info">
                     <h5>
-
                     <a href="{{url('profiles/'.$post->user->id)}}" class="profile-link">{{$post->user->profiles?$post->user->profiles->f_name.' '.$post->user->profiles->l_name:$post->user->name}}</a> 
                     <span>
                     @if($post->privacy == 'public')
@@ -258,9 +261,13 @@
                   <div class="commentContainer" style="display: none;">
                    @forelse($post->comments as $usercomment)
                     <div class="post-comment">
-                    <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
+                      @if (file_exists(public_path('storage/profile/'.$usercomment->user_id.'_profile.jpg')) )
+                      <img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
+                        @else
+                        <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-sm" id="uploadImage" alt="">
+                       @endif
                     <p><a href="{{url('profiles/'.$usercomment->user->id)}}" class="profile-link">{{$usercomment->user->profiles?$usercomment->user->profiles->f_name.' '.$usercomment->user->profiles->l_name:$usercomment->user->name}}</a>
-                    <i class="em em-laughing"></i>{{$usercomment->comment}}</p>
+                    {{$usercomment->comment}}</p>
                     @if (Auth::check())
                     @if(count((array) $post->comments) > 0)
                     @if($usercomment->user->id == Auth::user()->id)
@@ -279,7 +286,11 @@
                   <a href="javascript:void(0)" class="postcommentToggleBtn"><span><i class="ion-compose ion-icons-colors" style="font-size: 18px; position:absolute; right:65%; "></i></span></a>
                   <div class="postcommentContainer" style="display: none;">
                   <div class="post-comment">
-                    <img src="{{asset('storage/profile/'.Auth::id().'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
+                       @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
+                       <img src="{{asset('storage/profile/'.Auth::id().'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
+                             @else
+                             <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-sm" id="uploadImage" alt="">
+                       @endif
                     {!! Form::open([
                     'route'=> ['posts.comment',$post->id],
                       'class'=>'form']) !!}
