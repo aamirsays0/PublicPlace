@@ -16,7 +16,6 @@ use Pusher\Pusher;
 use App\Custom\FriendsList;
 use Validator;
 use DB;
-use RealRashid\SweetAlert\Facades\Alert;
 //use Illuminate\Http\Response;
 // import the Intervention Image Manager Class
 use Intervention\Image\ImageManagerStatic as Image;
@@ -187,7 +186,7 @@ class PostController extends Controller
           ->with('reactions')
         ->find($id);
         $allFriends = FriendsList::Friends(Auth::id());
-        $his_friends = Friend::where('user_id', $id)->get();
+        $his_friends = Friend::select('user_id', 'friend_id')->whereRaw("( user_id = $id OR friend_id = $id )")->get()->toArray();
         $friends = User::with('profiles')
         ->whereIn('id',$allFriends)
          ->get();
@@ -261,8 +260,7 @@ class PostController extends Controller
                 return redirect()->back()->with('success', 'Post Deleted!!');
             }
             else{
-                return redirect()->route('home')
-                ->with('success', 'Problem Deleting post!');
+                return redirect()->back()->with('success', 'Problem Deleting post!');
             }
         }
     }

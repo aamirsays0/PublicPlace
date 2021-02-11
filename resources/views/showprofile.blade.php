@@ -43,7 +43,7 @@
             <div class="row">
               <div class="col-md-3">
                 <div class="profile-info">
-                @if (file_exists(public_path('storage/profile/'.$user_information->id.'_profile.jpg')) )
+                 @if (file_exists(public_path('storage/profile/'.$user_information->id.'_profile.jpg')) )
                     <a href="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" data-lightbox="pp">
                     <img src="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo"/>
                     @else
@@ -57,7 +57,7 @@
                 <ul class="list-inline profile-menu">
                   <li><a href="{{url('profiles/'.$user_information->id)}}" class="active">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
-                  <li><a href="timeline-album.html">Album</a></li>
+                  <li><a href="{{route('user.album.show',$user_information->id)}}">Album</a></li>
                   <li><a href="{{url('allfriends/'.$user_information->id)}}">Friends</a></li>
                 </ul>
                 
@@ -68,7 +68,7 @@
           <!--Timeline Menu for Small Screens-->
           <div class="navbar-mobile hidden-lg hidden-md">
             <div class="profile-info">
-            @if (file_exists(public_path('storage/profile/'.$user_information->id.'_profile.jpg')) )
+               @if (file_exists(public_path('storage/profile/'.$user_information->id.'_profile.jpg')) )
                     <a href="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" data-lightbox="pp">
                     <img src="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo"/>
                     @else
@@ -165,7 +165,11 @@
             <div class="post-content  postid-{{$userpost->id}}">
             
               <div class="post-container">
+                @if (file_exists(public_path('storage/profile/'.$userpost->user_id.'_profile.jpg')) )
                 <img src="{{asset('storage/profile/'.$userpost->user_id.'_profile.jpg')}}" alt="user" class=" img-responsive profile-photo-md pull-left" />
+                    @else
+                    <img src="{{ asset('images/noimage.jpg') }}" class=" img-responsive profile-photo-md pull-left" id="uploadImage" alt="">
+                   @endif
                 <div class="post-detail">
                   <div class="user-info">
                     <h5>
@@ -175,7 +179,7 @@
                         @if (file_exists(public_path('storage/profile/'.$userpost->user_id.'_cover.jpg')) )
                          <img src="{{asset('storage/profile/'.$userpost->user_id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
                          @else
-                         <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
+                         <img src="{{ asset('images/no-cover.png') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
                          @endif
                         <div class="card-info">
                              @if (file_exists(public_path('storage/profile/'.$userpost->user_id.'_profile.jpg')) )
@@ -209,7 +213,7 @@
                                           <h5 style="color: #7f8c8d">Posts</h5>
                                         </td>
                                         <td>
-                                          <h5 style="color: #7f8c8d"><b>{{$userpost->user->friends->count()-1}}</b></h5>
+                                        <h5 style="color: #7f8c8d"><b>{{$userpost->user->friend->count() + $userpost->user->friends2->count()}}</b></h5>
                                           <h5 style="color: #7f8c8d">Friends</h5>
                                         </td>
                                         <td>
@@ -323,7 +327,7 @@
                                         @if (file_exists(public_path('storage/profile/'.$usercomment->user_id.'_cover.jpg')) )
                                         <img src="{{asset('storage/profile/'.$usercomment->user_id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
                                         @else
-                                        <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
+                                        <img src="{{ asset('images/no-cover.png') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
                                         @endif
                                         <div class="card-info">
                                             @if (file_exists(public_path('storage/profile/'.$usercomment->user_id.'_profile.jpg')) )
@@ -357,7 +361,7 @@
                                                           <h5 style="color: #7f8c8d">Posts</h5>
                                                         </td>
                                                         <td>
-                                                          <h5 style="color: #7f8c8d"><b>{{$usercomment->user->friends->count()-1}}</b></h5>
+                                                          <h5 style="color: #7f8c8d"><b>{{$usercomment->user->friend->count() + $usercomment->user->friends2->count()}}</b></h5>
                                                           <h5 style="color: #7f8c8d">Friends</h5>
                                                         </td>
                                                         <td>
@@ -395,7 +399,11 @@
                   <a href="javascript:void(0)" class="postcommentToggleBtn"><span><i class="ion-compose ion-icons-colors" style="font-size: 18px; position:absolute; right:65%; "></i></span></a>
                   <div class="postcommentContainer" style="display: none;">
                   <div class="post-comment">
+                    @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile_thumb.jpg')) )
                     <img src="{{asset('storage/profile/'.Auth::id().'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
+                    @else
+                    <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-sm" id="uploadImage" alt="">
+                   @endif
                     {!! Form::open([
                     'route'=> ['posts.comment',$userpost->id],
                       'class'=>'form']) !!}
@@ -429,8 +437,12 @@
               <div class="feed-item">
                 <div class="live-activity">
                   <p>
+                  @if($activity->type == "post")
+                  <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> You added a Post</a>
+                  @else
                   <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> You {{ $activity->type }}ed on a Post</a>
-                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->post->user->profiles->f_name) ? $activity->post->user->profiles->f_name : $activity->post->user->name }}</a>
+                  <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->post->user->profiles->f_name) ? $activity->post->user->profiles->f_name : $activity->post->user->name }}</a>
+                  @endif 
                   </p>
                   <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
                 </div>
@@ -442,8 +454,12 @@
               <div class="feed-item">
                 <div class="live-activity">
                   <p>
+                  @if($activity->type == "post")
+                  <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }} added a Post</a>
+                  @else
                   <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }} {{ $activity->type }}ed on a Post</a>
-                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->post->user->profiles->f_name) ? $activity->post->user->profiles->f_name : $activity->post->user->name }}</a>
+                  <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->post->user->profiles->f_name) ? $activity->post->user->profiles->f_name : $activity->post->user->name }}</a>
+                  @endif   
                   </p>
                   <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
                 </div>

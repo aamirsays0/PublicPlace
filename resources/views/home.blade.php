@@ -84,29 +84,42 @@
         </div><!-- Post Create Box End-->
 
         {{-- Create and see stories from here --}}
-        <div class="row stories-corner">
-            <div class="col-md-2 col-sm-4 text-center">
+         <div id="carouselExampleControls" class="carousel slide row stories-corner" data-ride="carousel">
+         <div class="col-md-2 col-sm-4 text-center">
               <a href="{{ route('stories.create') }}">
-                <img src="{{asset('images/avatar.jpg')}}" alt="">
-                <small>Your Story</small>
+                    @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
+                      <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="user"/>
+                    @else
+                      <img src="{{ asset('images/noimage.jpg') }}" id="uploadImage" alt="user">
+                    @endif
+                   <small>Your Story</small>
               </a>
             </div>
+          <div class="carousel-inner  row w-80 mx-auto">
             @if (isset($stories) && $stories->count() > 0)
               @foreach ($stories as $story)
-                <div class="col-md-2 col-sm-4 text-center">
-                  <a href="{{ route('stories.friends.show', $story->user->id) }}">
+               <div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3  {{ $loop->first ? 'active' : '' }} text-center" style="width: 16.6666667%;">
+                <a href="{{ route('stories.friends.show', $story->user->id) }}">
                     @if (file_exists(public_path('storage/profile/'.$story->user->id.'_profile.jpg')) )
                       <img src="{{asset('storage/profile/'.$story->user->id.'_profile.jpg')}}" alt="user"/>
                       @else
                     <img src="{{ asset('images/noimage.jpg') }}" id="uploadImage" alt="user">
                       @endif
-                    <small>{{  $story->user->name }}</small>
+                      <small>{{  $story->user->name }}</small>
                   </a>
-                </div>
-              @endforeach
+               </div>
+    @endforeach
             @endif
-         </div>
-
+  </div>
+  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev" style="background-color: black; width: 3%;">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next" style="background-color: black; width: 3%;">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
        <div class="scroll scoll-page-content" >
       
        @forelse($posts as $post)
@@ -116,7 +129,11 @@
             <div class="post-content  postid-{{$post->id}}">
             
               <div class="post-container">
-                <img src="{{asset('storage/profile/'.$post->user_id.'_profile.jpg')}}" alt="user" class=" img-responsive profile-photo-md pull-left" />
+                      @if (file_exists(public_path('storage/profile/'.$post->user_id.'_profile.jpg')) )
+                      <img src="{{asset('storage/profile/'.$post->user_id.'_profile.jpg')}}" alt="user" class=" img-responsive profile-photo-md pull-left" />
+                         @else
+                          <img src="{{ asset('images/noimage.jpg') }}" class=" img-responsive profile-photo-md pull-left" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
+                       @endif
                 <div class="post-detail">
                   <div class="user-info">
                     <h5>
@@ -126,7 +143,7 @@
                         @if (file_exists(public_path('storage/profile/'.$post->user_id.'_cover.jpg')) )
                          <img src="{{asset('storage/profile/'.$post->user_id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
                          @else
-                         <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
+                         <img src="{{ asset('images/no-cover.png') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
                          @endif
                         <div class="card-info">
                              @if (file_exists(public_path('storage/profile/'.$post->user_id.'_profile.jpg')) )
@@ -161,7 +178,7 @@
                                         </td>
                                         <td>
                                           <h5 style="color: #7f8c8d">
-                                            <b>{{$post->user->friend->count() + $post->user->friends2->count()}}</b>
+                                          <h5 style="color: #7f8c8d"><b>{{$post->user->friend->count() + $post->user->friends2->count()}}</b></h5>
                                           </h5>
                                           <h5 style="color: #7f8c8d">Friends</h5>
                                         </td>
@@ -260,11 +277,11 @@
                   <div class="post-text">
                     <p>{{$post->content}}</p>
                     <hr>
-                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                    <div id="carouselControls" class="carousel slide" data-ride="carousel">
  
                         <ol class="carousel-indicators">
                          @foreach($post->pictures as $pic)
-                            <li data-target="#carouselExampleIndicators" data-slide-to="{{ $loop->index }}" class="{{ $loop->first ? 'active' : '' }}"></li>
+                            <li data-target="#carouselIndicators" data-slide-to="{{ $loop->index }}" class="{{ $loop->first ? 'active' : '' }}"></li>
                          @endforeach
                         </ol>
                        
@@ -276,7 +293,7 @@
                     //print_r($imageinfo);
                     ?>
                     <a href="{{url('/storage/postimages/'.$pic->imgname)}}" data-lightbox="imageset-{{$post->id}}">
-                    <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" width="400px">
+                    <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" class="d-block w-100">
                     </a>
                     </div>
 
@@ -284,11 +301,11 @@
 
                     @endforelse
                     </div>
-                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                    <a class="carousel-control-prev" href="#carouselControls" role="button" data-slide="prev">
                           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                           <span class="sr-only">Previous</span>
                         </a>
-                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                        <a class="carousel-control-next" href="#carouselControls" role="button" data-slide="next">
                           <span class="carousel-control-next-icon" aria-hidden="true"></span>
                           <span class="sr-only">Next</span>
                         </a>
@@ -330,7 +347,13 @@
                   <div class="comment-widgets m-b-20 commentContainer" style="display: none;">
                   @forelse($post->comments as $usercomment)
                     <div class="d-flex flex-row comment-row"style="padding-left: 0px; cursor: auto;">
-                        <div class="p-2"><span class="round"><img src="{{asset('storage/profile/'.$usercomment->user_id.'_profile_thumb.jpg')}}" class="profile-photo-sm" alt="user" width="50"></span></div>
+                        <div class="p-2"><span class="round">
+                              @if (file_exists(public_path('storage/profile/'.$usercomment->user->id.'_profile_thumb.jpg')) )
+                              <img src="{{asset('storage/profile/'.$usercomment->user->id.'_profile_thumb.jpg')}}" class="profile-photo-sm" alt="user" width="50">
+                                @else
+                                <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-sm" id="uploadImage" alt="user">
+                                @endif
+                        </span></div>
                         <div class="comment-text w-100">
                             <h5>
                               <div class="profile-link1">
@@ -339,7 +362,7 @@
                                         @if (file_exists(public_path('storage/profile/'.$usercomment->user_id.'_cover.jpg')) )
                                         <img src="{{asset('storage/profile/'.$usercomment->user_id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
                                         @else
-                                        <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
+                                        <img src="{{ asset('images/no-cover.png') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
                                         @endif
                                         <div class="card-info">
                                             @if (file_exists(public_path('storage/profile/'.$usercomment->user_id.'_profile.jpg')) )
@@ -373,7 +396,7 @@
                                                           <h5 style="color: #7f8c8d">Posts</h5>
                                                         </td>
                                                         <td>
-                                                          <h5 style="color: #7f8c8d"><b>{{$usercomment->user->friends->count()-1}}</b></h5>
+                                                        <h5 style="color: #7f8c8d"><b>{{$usercomment->user->friend->count() + $usercomment->user->friends2->count()}}</b></h5>
                                                           <h5 style="color: #7f8c8d">Friends</h5>
                                                         </td>
                                                         <td>
@@ -421,7 +444,11 @@
                    @endif
 
                   <div class="post-comment">
+                  @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile_thumb.jpg')) )
                     <img src="{{asset('storage/profile/'.Auth::id().'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
+                    @else
+                       <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-sm" id="uploadImage" alt="">
+                    @endif
                     {!! Form::open([
                     'route'=> ['posts.comment',$post->id],
                       'class'=>'form']) !!}
@@ -500,7 +527,7 @@ $.ajaxSetup({
     }
       });
       // ADD FRIEND START//
-$(".post-detail").on("click",".addFrndBtn",function(){
+$(".user-info").on("click",".addFrndBtn",function(){
    var url = '{{URL::to('/')}}' +"/addfriend/" +$(this).data('uid');
    swal({
           title: "Are you sure?",

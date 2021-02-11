@@ -10,7 +10,7 @@ use App\Custom\FriendsList;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\Auth;
 class StoryController extends Controller
 {
     /**
@@ -92,13 +92,20 @@ class StoryController extends Controller
      */
     public function show(Story $story, $id)
     {
+        $friendreq = Friend::with('user')
+        ->where("friend_id",Auth::id())
+         ->where('approved','0')
+         ->where('blocked', '0')
+         ->get();
+        $sentRequest = FriendsList::Friends(Auth::id());
         $allFriends = FriendsList::Friends($id);
 
         $friends = User::with('profiles')
         ->whereIn('id',$allFriends)
          ->get();
         $story_data = $story->where('id', $id)->with('comments', 'user')->first();
-        return view('stories.show', compact('story_data', 'friends'));
+        return view('stories.show', compact('story_data', 'friends'))->with('req', $sentRequest)
+        ->with('requests', $friendreq);
     }
 
     /**

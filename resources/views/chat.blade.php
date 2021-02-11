@@ -22,14 +22,14 @@
                     <li class="chat_lists active_chat" data-userid ="{{$user->id}}">
                       <a href="#contact-1" data-toggle="tab">
                         <div class="contact">
-                        @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
+                        @if (file_exists(public_path('storage/profile/'.$user->id.'_profile.jpg')) )
                         <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt="" class="profile-photo-sm pull-left"style="position: absolute; top: 15%;">
                            @else
                               <img src="{{ asset('images/noimage.jpg') }}" alt="" class="profile-photo-sm pull-left"style="position: absolute; top: 15%;">
                            @endif
                         	<div class="msg-preview">
                           <h5>{{isset($user->profiles->f_name, $user->profiles->l_name)? $user->profiles->f_name.' '. $user->profiles->l_name: $user->name}}
-                            <small class="text-muted">a min ago</small></h5>
+                          <small class="text-muted"><i class="ion ion-chevron-right"></i></small></h5>
                         	</div>
                         </div>
                       </a>
@@ -255,7 +255,7 @@
           date = `${date.getDate()} ${month[date.getMonth()]} ${date.getFullYear()} ${ date.getHours() }:${ date.getMinutes() }`
                   if(data[d].user_id == '{{Auth::id()}}'){
                     
-                $t += '<li class="right pull-right" style="padding-left: 150px;padding-top: 15px;""><img src="'+baseurl+'storage/profile/'+data[d].user_id+'_icon.jpg'+'" alt="'+data[d].user_name+'" class="profile-photo-sm pull-right"><div class="chat-item"><p style="font-size: 13px;">'+data[d].message+'</p><small class="text-muted">' + date + '</small></div></li>';
+                $t += '<li class="right pull-right" style="padding-left: 150px;padding-top: 15px;""><img src="'+baseurl+'storage/profile/'+data[d].user_id+'_profile.jpg'+'" alt="'+data[d].user_name+'" class="profile-photo-sm pull-right"><div class="chat-item"><p style="font-size: 13px;">'+data[d].message+'</p><small class="text-muted">' + date + '</small></div></li>';
               }
               else {
                 $t += '<li class="left" style="padding-right: 150px;padding-top: 15px;""><img src="'+baseurl+'storage/profile/'+data[d].user_id+'_icon.jpg'+'" alt="'+data[d].user_name+'" class="profile-photo-sm pull-left"><div class="chat-item"><p style="font-size: 13px;">'+data[d].message+'</p><small class="text-muted">' + date + '</small></div></li>';

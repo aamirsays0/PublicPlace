@@ -49,8 +49,8 @@
                                           <span class="pull pull-right">Friends</span>
                                         @endif
                                       @else
-                                        @if(array_search($userpost->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
-                                        <button class="btn pull pending pull-right" disabled>Pending</button>
+                                      @if(array_search($userpost->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
+                                      <button class="btn pull pending pull-right" disabled>Pending</button>
                                         @else 
                                         <button class="btn pull addFrndBtn pull-right" data-uid="{{$userpost->user->id}}">Add Friend</button>
                                         @endif
@@ -66,7 +66,7 @@
                                           <h5 style="color: #7f8c8d">Posts</h5>
                                         </td>
                                         <td>
-                                          <h5 style="color: #7f8c8d"><b>{{$userpost->user->friends->count()-1}}</b></h5>
+                                        <h5 style="color: #7f8c8d"><b>{{$userpost->user->friend->count() + $userpost->user->friends2->count()}}</b></h5>
                                           <h5 style="color: #7f8c8d">Friends</h5>
                                         </td>
                                         <td>
@@ -92,7 +92,7 @@
                         <span class="pull">Friends</span>
                       @endif
                     @else
-                      @if($his_friends->where('friend_id', $userpost->user->id)->where('approved', 0)->where('blocked', 0)->first())
+                    @if(array_search($userpost->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
                       <button class="btn pull pending" disabled>Pending</button>
                       @else 
                       <button class="btn pull addFrndBtn" data-uid="{{$userpost->user->id}}">Add Friend</button>
@@ -154,17 +154,35 @@
                   <div class="post-text">
                     <p>{{$userpost->content}}</p>
                     <hr>
+                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                       @foreach($userpost->pictures as $pic)
+                            <li data-target="#carouselExampleIndicators" data-slide-to="{{ $loop->index }}" class="{{ $loop->first ? 'active' : '' }}"></li>
+                         @endforeach
+                        </ol> 
+                 <div class="carousel-inner" role="listbox">
                     @forelse($userpost->pictures as $pic)
+                    <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
                     <?php
                     $imageinfo = pathinfo(url('/storage/postimages/'.$pic->imgname));
                     //print_r($imageinfo);
                     ?>
                     <a href="{{url('/storage/postimages/'.$pic->imgname)}}" data-lightbox="imageset-{{$userpost->id}}">
-                    <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" width="120px">
+                    <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" class="d-block w-100">
                     </a>
                     @empty
 
                     @endforelse
+                  </div>
+                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+               </div>
                     @if (isset($userpost->videos[0]))
                    <video width="320" height="240" controls>
                     <source src="{{ asset('storage/postvideos/'.$userpost->videos[0]->vidname) }}" type="video/mp4">
@@ -177,8 +195,12 @@
                   <div class="line-divider"></div>
                   <div class="postcommentContainer">
                   <div class="post-comment">
-                    <img src="{{asset('storage/profile/'.Auth::id().'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
-                    {!! Form::open([
+                     @if (file_exists(public_path('storage/profile/'.Auth::id().'_cover.jpg')) )
+                         <img src="{{asset('storage/profile/'.Auth::id().'_profile_thumb.jpg')}}" alt="" class="profile-photo-sm" />
+                         @else
+                         <img src="{{ asset('images/noimage.jpg') }}"  class="profile-photo-sm" id="uploadImage"  alt="" />
+                         @endif                    
+                  {!! Form::open([
                     'route'=> ['posts.comment',$userpost->id],
                       'class'=>'form']) !!}
                     <div class="form-group">
@@ -219,7 +241,7 @@
                                                           <span class="pull pull-right">Friends</span>
                                                         @endif
                                                       @else
-                                                        @if(array_search($usercomment->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
+                                                      @if(array_search($usercomment->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
                                                         <button class="btn pull pending pull-right" disabled>Pending</button>
                                                         @else 
                                                         <button class="btn pull addFrndBtn pull-right" data-uid="{{$usercomment->user->id}}">Add Friend</button>
@@ -236,7 +258,7 @@
                                                           <h5 style="color: #7f8c8d">Posts</h5>
                                                         </td>
                                                         <td>
-                                                          <h5 style="color: #7f8c8d"><b>{{$usercomment->user->friends->count()-1}}</b></h5>
+                                                        <h5 style="color: #7f8c8d"><b>{{$usercomment->user->friend->count() + $usercomment->user->friends2->count()}}</b></h5>
                                                           <h5 style="color: #7f8c8d">Friends</h5>
                                                         </td>
                                                         <td>
@@ -276,7 +298,8 @@
                     </div>
               </div>
             </div>
-      
+            </div>
+
 
 @endsection
 

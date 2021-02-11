@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Pusher\Pusher;
 use App\Friend;
+use DB;
 // import the Intervention Image Manager Class
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -143,17 +144,11 @@ $data[] = $name;
 
         $editPro_basic->save();
         if($editPro_basic->id){
-            return response()->json([
-                'success' => true,
-                'message' => 'Successfully updated'
-            ]);
-
+            return redirect()->back()->with('success', 'Successfully updated!!');
         }
         else{
-            return response()->json([
-                'success' => false,
-                'message' => 'Something is wrong'
-            ]);
+            return redirect()->back()->with('success', 'Problem Deleting post!');
+
     }
 }
 
@@ -293,5 +288,22 @@ $data[] = $name;
             }
         }
     }
-   
+
+       public function userAlbum($id) {
+        $images = DB::table('pictures')
+        ->select(DB::raw('post_id, imgname'))
+        ->where('post_id', '<>', $id)
+        ->orderBy('created_at','DESC')
+        ->get();
+        $videos = DB::table('videos')
+              ->select(DB::raw('post_id, vidname'))
+              ->where('post_id', '<>', $id)
+              ->orderBy('created_at','DESC')
+              ->get();
+        $user_information = User::with('profiles')->findOrFail($id);
+        $allActivity = Activity::with('post.user')->where('user_id',Auth::id())->orderBy('created_at','desc')->limit(10)->get(); 
+        return view('userAlbum', compact('images', 'videos', 'user_information'))->with('images', $images)->with('videos', $videos)->with('allActivity',$allActivity);
+
+    
+    }
 }

@@ -78,3 +78,5 @@ Route::get('/stories/{id}', 'StoryController@show')->name('stories.show');
 Route::post('/comments/{id}', 'StoryCommentController@store')->name('comment.store');
 Route::delete('/comments/{id}', 'StoryCommentController@destroy')->name('comment.destroy');
 Route::get('/stories/{id}/friends', 'StoryController@friendsStory')->name('stories.friends.show');
+
+Route::get('/Album/{id}', 'ProfileController@userAlbum')->name('user.album.show');

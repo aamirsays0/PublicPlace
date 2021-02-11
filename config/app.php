@@ -163,7 +163,6 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
-        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
 
 
 
@@ -231,7 +230,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
-        'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
     ],
 
 ];

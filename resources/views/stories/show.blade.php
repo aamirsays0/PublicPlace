@@ -28,9 +28,71 @@
         
         @foreach ($story_data->comments as $comment)
             <div class="comment-wrapper" id="{{ $comment->id }}">
-                <img src="{{asset('storage/profile/'.$comment->user->id.'_profile.png')}}" alt="user" class="profile-photo-md"/>
+                  @if (file_exists(public_path('storage/profile/'.$comment->user->id.'_profile.jpg')) )
+                  <img src="{{asset('storage/profile/'.$comment->user->id.'_profile.jpg')}}" alt="user" class="profile-photo-md"/>
+                         @else
+                          <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
+                       @endif
                 <div class="comment-body">
-                    <h5 class="commenter-name">{{ $comment->user->name }}</h5>
+                    <h5 class="commenter-name">
+                    <div class="profile-link1">
+                    <a href="{{url('profiles/'.$comment->user->id)}}" class="profile-link commenter-name">{{$comment->user->profiles?$comment->user->profiles->f_name.' '.$comment->user->profiles->l_name: $comment->user->name }}</a>
+                    <div class="friend-card1">
+                        @if (file_exists(public_path('storage/profile/'.$comment->user_id.'_cover.jpg')) )
+                         <img src="{{asset('storage/profile/'.$comment->user_id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
+                         @else
+                         <img src="{{ asset('images/no-cover.png') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
+                         @endif
+                        <div class="card-info">
+                             @if (file_exists(public_path('storage/profile/'.$comment->user_id.'_profile.jpg')) )
+                             <img src="{{asset('storage/profile/'.$comment->user_id.'_profile.jpg')}}" alt="user" class="profile-photo-md"/>
+                             @else
+                            <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="user">
+                             @endif
+                           <div class="friend-info">
+                                  <h5><a href="{{url('profiles/'.$comment->user_id)}}" class="profile-link">
+                                   {{$comment->user->profiles?$comment->user->profiles->f_name.' '.$comment->user->profiles->l_name:$comment->user->name}}</a>
+                                                     
+                                      @if(in_array($comment->user->id,$req) )
+                                        @if (Auth::user()->id !== $comment->user->id)
+                                          <span class="pull pull-right">Friends</span>
+                                        @endif
+                                      @else
+                                        @if(array_search($comment->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
+                                        <button class="btn pull pending pull-right" disabled>Pending</button>
+                                        @else 
+                                        <button class="btn pull addFrndBtn pull-right" data-uid="{{$comment->user->id}}">Add Friend</button>
+                                        @endif
+                                      @endif
+                                    </h5>
+                                  <h5 style="color: #7f8c8d"><i class="fa fa-envelope"></i>  {{$comment->user->email}}</h5>
+                                  <h5 style="color: #7f8c8d"><i class="fa fa-map-marker" aria-hidden="true"></i>  {{$comment->user->profiles?$comment->user->profiles->city:"No city details"}}, {{$comment->user->profiles?$comment->user->profiles->country:"No country details"}}</h5>
+                                  <h5 style="color: #7f8c8d">{{ $comment->user->profiles?$comment->user->profiles->description:"No Description" }}</h5>
+                                <table class="tablecard">
+                                    <tr>
+                                        <td>
+                                          <h5 style="color: #7f8c8d"><b>{{$comment->user->posts->count()}}</b></h5>
+                                          <h5 style="color: #7f8c8d">Posts</h5>
+                                        </td>
+                                        <td>
+                                          <h5 style="color: #7f8c8d">
+                                          <h5 style="color: #7f8c8d"><b>{{$comment->user->friend->count() + $comment->user->friends2->count()}}</b></h5>
+                                          </h5>
+                                          <h5 style="color: #7f8c8d">Friends</h5>
+                                        </td>
+                                        <td>
+                                          <h5 style="color: #7f8c8d"><b>892</b></h5>
+                                          <h5 style="color: #7f8c8d">Following</h5>
+                                        </td>
+                                    </tr>
+                                </table>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div> 
+
+                    </h5>
                     <h5>{{ $comment->comments }}</h5>
                 </div>
                 @if ($comment->user->id === auth()->id())
@@ -140,7 +202,7 @@ $(document).on('click', '.deleteComment', function() {
 
     swal({
         title: "Are you sure?",
-        text: "Once added, Request will be sent",
+        text: "Once deleted, comment will not recover",
         icon: "warning",
         buttons: [
         'No, cancel it!',

@@ -43,9 +43,13 @@
             <div class="row">
               <div class="col-md-3">
                 <div class="profile-info">
+                @if (file_exists(public_path('storage/profile/'.$user_information->id.'_profile.jpg')) )
                 <a href="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" data-lightbox="pp">
                 <img src="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" alt="" class="img-fluid profile-photo"/>
                  </a>
+                 @else
+                    <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo" id="uploadImage" alt="">
+                 @endif
                  <h4>{{isset($user_information->profiles->f_name , $user_information->profiles->l_name) ? $user_information->profiles->f_name.' '.$user_information->profiles->l_name : $user_information->name}}</h4>
                 </div>
               </div>
@@ -53,7 +57,7 @@
                 <ul class="list-inline profile-menu">
                   <li><a href="{{url('profiles/'.$user_information->id)}}">Timeline</a></li>
                   <li><a href="{{url('profiles/about')}}">About</a></li>
-                  <li><a href="timeline-album.html">Album</a></li>
+                  <li><a href="{{route('user.album.show',$user_information->id)}}">Album</a></li>
                   <li><a href="{{url('friends/'.$user_information->id)}}">Friends</a></li>
                 </ul>
               </div>
@@ -62,9 +66,9 @@
           <!--Timeline Menu for Small Screens-->
           <div class="navbar-mobile hidden-lg hidden-md">
             <div class="profile-info">
-            @if (file_exists(public_path('storage/profile/'.$user_information->profiles->id.'_profile.jpg')) )
-                    <a href="{{asset('storage/profile/'.$user_information->profiles->id.'_profile.jpg')}}" data-lightbox="pp">
-                    <img src="{{asset('storage/profile/'.$user_information->profiles->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo"/>
+            @if (file_exists(public_path('storage/profile/'.$user_information->id.'_profile.jpg')) )
+                    <a href="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" data-lightbox="pp">
+                    <img src="{{asset('storage/profile/'.$user_information->id.'_profile.jpg')}}" alt="" class="img-responsive profile-photo"/>
                     @else
                     <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive profile-photo" id="uploadImage" alt="">
                    @endif
@@ -73,10 +77,10 @@
             </div>
             <div class="mobile-menu">
               <ul class="list-inline">
-                  <li><a href="{{url('profiles/'.$user_information->profiles->id)}}" class="active">Timeline</a></li>
+                  <li><a href="{{url('profiles/'.$user_information->id)}}" class="active">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
-                  <li><a href="timeline-album.html">Album</a></li>
-                  <li><a href="{{url('friends/'.$user_information->profiles->id)}}">Friends</a></li>
+                  <li><a href="{{route('user.album.show',$user_information->id)}}">Album</a></li>
+                  <li><a href="{{url('friends/'.$user_information->id)}}">Friends</a></li>
               </ul>
             </div>
           </div><!--Timeline Menu for Small Screens End-->
@@ -175,8 +179,12 @@
               <div class="feed-item">
                 <div class="live-activity">
                   <p>
+                    @if($activity->type == "post")
+                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> You added a Post</a>
+                    @else
                     <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize">You {{ $activity->type }}ed on a Post</a>
                     <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ $activity->post->user->name }}</a>
+                    @endif   
                   </p>
                   <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
                 </div>
@@ -189,8 +197,12 @@
               <div class="feed-item">
                 <div class="live-activity">
                   <p>
-                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }} {{ $activity->type }}ed on a Post</a>
-                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ $activity->post->user->name }}</a>
+                    @if($activity->type == "post")
+                     <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }} added a Post</a>
+                    @else
+                     <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }} {{ $activity->type }}ed on a Post</a>
+                     <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ $activity->post->user->name }}</a>
+                    @endif   
                   </p>
                   <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
                 </div>

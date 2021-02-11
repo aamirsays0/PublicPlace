@@ -27,7 +27,6 @@
 </div>
 
 {{-- His Stories --}}
-
 <div class="row">
     @foreach ($stories as $story)
     <div class="col-sm-12 col-md-6">
