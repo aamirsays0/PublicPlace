@@ -242,11 +242,8 @@
                     <div class="row">
                           <div class="form-group col-xs-12">
                             <label for="my-info">About me</label>
-                            <textarea id="my-info" name="description" class="form-control" placeholder="Some texts about me" rows="4" cols="400">
-                            @if($user->profiles)
-                              {{$user->profiles->description}}
-                              @endif
-                            </textarea>
+                            <textarea id="my-info" name="description" class="form-control" placeholder="Some texts about me" rows="4" cols="400"
+                            >@if($user->profiles){{$user->profiles->description}}@endif</textarea>
                           </div>
                      </div>
 

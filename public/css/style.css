@@ -2045,7 +2045,7 @@ font-style: #bb3636;}
 
 .friend--trash_icon {
   position: absolute; 
-  top: 5%; 
+  top: 2%; 
   right: 0; 
   left: 90%;
   color: #bb3636;
@@ -2054,7 +2054,7 @@ font-style: #bb3636;}
 
 .friend--trash_icon:hover {
   position: absolute; 
-  top: 5%; 
+  top: 2%; 
   right: 0; 
   left: 90%;
   color:red;

@@ -100,19 +100,18 @@ class FriendController extends Controller
   
     }
     public function userFriends($id)
-    {   
-        //  $id = Auth::id();
-         $friendreq = Friend::with('user')
-                ->where("friend_id",$id)
-                 ->where('approved','0')
-                 ->where('blocked', '0')
-                 ->get();
-       
+    {         
         $user_information = User::with('profiles')->findOrFail($id);
-        $allFriends = FriendsList::Friends($id);
-         $friends = User::with('profiles')
-        ->whereIn('id',$allFriends)
-        ->get();
+        // $allFriends = FriendsList::Friends($id);
+        //  $friends = User::with('profiles')
+        // ->whereIn('id',$allFriends)
+        // ->get();
+
+        $friends =  Friend::whereRaw("( user_id = $id OR friend_id = $id )")
+                ->where(['approved' => 1, 'blocked' => 0])
+                ->get();
+
+
         $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(4)->get(); 
         return view('userFriends', compact('user_information'))->with('allActivity',$allActivity)->with('friends', $friends);
     }

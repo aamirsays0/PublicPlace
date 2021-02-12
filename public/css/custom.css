@@ -45,3 +45,8 @@
     color: red;
     cursor: pointer;
 }
+
+.friends-list-img {
+    height: 150px;
+    width: 100%;
+}

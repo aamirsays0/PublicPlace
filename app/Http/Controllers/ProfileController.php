@@ -293,11 +293,12 @@ $data[] = $name;
        public function userAlbum($id) {
         $images = Picture::whereHas('posts', function($query) use ($id) {
             $query->where('user_id', '=', $id);
-            })->orderBy('created_at','DESC')
-              ->get();
-        $videos = Video::whereHas('posts', function($query) use ($id) {
-            $query->where('user_id', '=', $id);
-            })->orderBy('created_at','DESC')
+        })->get();
+        
+        $videos = DB::table('videos')
+              ->select(DB::raw('post_id, vidname'))
+              ->where('post_id', '<>', $id)
+              ->orderBy('created_at','DESC')
               ->get();
         $user_information = User::with('profiles')->findOrFail($id);
         $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(10)->get(); 

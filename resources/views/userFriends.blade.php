@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/headerNewStyles.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/lightbox.min.css')}}" />
-
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     
     <!--Favicon-->
     <link rel="shortcut icon" type="image/png" href="{{asset('images/fav.png')}}">
@@ -35,9 +35,6 @@
       ================================================= -->
        <div class="timeline">
       <div class="timeline-cover" style="background-image: url('{{asset('storage/profile/'.$user_information->id.'_cover.jpg')}} ')" data-lightbox="cp">
-      <div id="showcpbtncontainer">
-      <span><i class ="fa fa-expand text-dark"></i></span>
-     </div>
           <!--Timeline Menu for Large Screens-->
           <div class="timeline-nav-bar hidden-sm hidden-xs">
             <div class="row">
@@ -142,38 +139,41 @@
               ================================================= -->
               <div class="friend-list">
                 <div class="row">
-                @forelse($friends as $friend)
-                  @if($friend->id == Auth::id())
-                   @continue
-                   @endif
-                  <div class="col-md-6 col-sm-6" id="{{ $friend->id }}">
-                    <div class="friend-card">
+                @foreach($friends as $friend)
+                @php
+                    $friends_data = $friend->user_id == auth()->id() ? $friend->friendInfo : $friend->user;
+                @endphp
+                  <div class="col-md-4 col-sm-6" id="{{ $friend->id }}">
+                    <div class="friend-card" style="border: none">
                         <a href="#" class="unfriend_it friend--trash_icon" data-friend_id="{{ $friend->id }}"><i class="fa fa-trash fa-lg"></i></a>
-                        @if (file_exists(public_path('storage/profile/'.$friend->id.'_cover.jpg')) )
-                         <img src="{{asset('storage/profile/'.$friend->id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
+                        @if (file_exists(public_path('storage/profile/'.$friends_data->id.'_cover.jpg')) )
+                        <a href="{{url('profiles/'.$friends_data->id)}}">
+                         <img src="{{asset('storage/profile/'.$friends_data->id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover friends-list-img" />
+                        </a>
                          @else
-                         <img src="{{ asset('images/no-cover.png') }}" class="img-responsive cover" id="uploadImage" alt="">
+                        <a href="{{url('profiles/'.$friends_data->id)}}">
+                         <img src="{{ asset('images/no-cover.png') }}" class="img-responsive cover friends-list-img" id="uploadImage" alt="">
+                        </a> 
                          @endif
                         <div class="card-info">
-                        @if (file_exists(public_path('storage/profile/'.$friend->id.'_profile.jpg')) )
-                        <img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="user" class="profile-photo-lg"/>
+                        @if (file_exists(public_path('storage/profile/'.$friends_data->id.'_profile.jpg')) )
+                        <a href="{{url('profiles/'.$friends_data->id)}}">
+                           <img src="{{asset('storage/profile/'.$friends_data->id.'_profile.jpg')}}" alt="user" class="profile-photo-lg"/>
+                        </a>
                         @else
-                       <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-lg" id="uploadImage" alt="">
+                        <a href="{{url('profiles/'.$friends_data->id)}}">
+                          <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-lg" id="uploadImage" alt="">
+                        </a>
                         @endif
                       <div class="friend-info">
-                         <a href="#" class="pull-right text-green">My Friend</a>
-                          <h5><a href="{{url('profiles/'.$friend->id)}}" class="profile-link">
-                          {{$friend->profiles?$friend->profiles->f_name.' '.$friend->profiles->l_name : $friend->name}}</a></h5>
-                          <p>{{$friend->email}}</p>
+                          <h5><a href="{{url('profiles/'.$friends_data->id)}}" class="profile-link">
+                          {{$friends_data->profiles?$friends_data->profiles->f_name.' '.$friends_data->profiles->l_name : $friends_data->name}}</a></h5>
                         </div>
                       </div>
                     </div>
                   </div>
-                  @empty
-                  <div class="col-md-12 col-sm-12 mt-5 text-center">
-                    <h2 class="text-info">No Friends</h2>
-                  </div>
-                  @endforelse
+
+                  @endforeach
                   
                 </div>
               </div>
