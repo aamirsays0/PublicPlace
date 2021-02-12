@@ -27,12 +27,9 @@ class ActivityController extends Controller
                  ->where('approved','0')
                  ->where('blocked', '0')
                  ->get();
-    
-        $allFriends = FriendsList::Friends(Auth::id());
-
-        $friends = User::with('profiles')
-        ->whereIn('id',$allFriends)
-         ->get();
+        $friends =  Friend::whereRaw("( user_id = $id OR friend_id = $id )")
+                 ->where(['approved' => 1, 'blocked' => 0])
+                 ->get();
         $allActivity = Activity::with('post.user')->where('user_id',Auth::id())->orderBy('created_at','desc')->simplePaginate(15);
     //    dd($allActivity);
        return view ('activity')->with('allActivity',$allActivity)->with ('friends', $friends)->with ('requests', $friendreq) ;

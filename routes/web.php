@@ -53,14 +53,14 @@ Route::post('react','PostController@react');
  Route::delete('/friend/unfriend_it/{friend_id}', 'FriendController@unfriend')->name('friend.unfriend');
  Route::get('/activity', 'ActivityController@index')->name('activity');
  Route::resource('notification', 'NotificationController')->middleware('auth');
- Route::get('/myimages', 'PostController@images')->name('my.images'); 
+ Route::get('/public-images', 'PostController@images')->name('my.images'); 
  Route::get('change-password', 'ChangePasswordController@index');
  Route::post('change-password', 'ChangePasswordController@store')->name('change.password');
  Route::delete('deleteComment/{comment}', 'PostController@deleteComment')->name('delete.comment');
  Route::delete('deleteEducation/{id}', 'EducationController@deleteEducation')->name('delete.education');
  Route::delete('deleteWork/{id}', 'WorkController@deleteWork')->name('delete.work');
  Route::get('/nearby', 'HomeController@nearby')->name('people.nearby');
- Route::get('/myvideos', 'VideoController@index')->name('my.videos');
+ Route::get('/public-videos', 'VideoController@index')->name('my.videos');
 
  Route::get('allfriends/{id}', 'FriendController@userFriends')->name('user.friends'); 
 

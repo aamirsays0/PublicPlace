@@ -22,7 +22,11 @@
             ================================================= -->
             <div class="post-content  postid-{{$userpost->id}}">            
               <div class="post-container">
-                <img src="{{asset('storage/profile/'.$userpost->user_id.'_profile.jpg')}}" alt="user" class=" img-responsive profile-photo-md pull-left" />
+                   @if (file_exists(public_path('storage/profile/'.$userpost->user_id.'_profile.jpg')) )
+                   <img src="{{asset('storage/profile/'.$userpost->user_id.'_profile.jpg')}}" alt="user" class=" img-responsive profile-photo-md pull-left" />
+                    @else
+                    <img src="{{ asset('images/noimage.jpg') }}" class=" img-responsive profile-photo-md pull-left" id="uploadImage" alt="user">
+                    @endif
                 <div class="post-detail">
                   <div class="user-info">
                     <h5>
@@ -32,13 +36,13 @@
                         @if (file_exists(public_path('storage/profile/'.$userpost->user_id.'_cover.jpg')) )
                          <img src="{{asset('storage/profile/'.$userpost->user_id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
                          @else
-                         <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
+                         <img src="{{ asset('images/no-cover.png') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
                          @endif
                         <div class="card-info">
                              @if (file_exists(public_path('storage/profile/'.$userpost->user_id.'_profile.jpg')) )
                              <img src="{{asset('storage/profile/'.$userpost->user_id.'_profile.jpg')}}" alt="user" class="profile-photo-md"/>
                              @else
-                            <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-lg" id="uploadImage" alt="">
+                            <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
                              @endif
                            <div class="friend-info">
                                   <h5><a href="{{url('profiles/'.$userpost->user_id)}}" class="profile-link">
@@ -57,8 +61,8 @@
                                       @endif
                                     </h5>
                                   <h5 style="color: #7f8c8d"><i class="fa fa-envelope"></i>  {{$userpost->user->email}}</h5>
-                                  <h5 style="color: #7f8c8d"><i class="fa fa-map-marker" aria-hidden="true"></i>  {{ $userpost->user->profiles->city}}, {{ $userpost->user->profiles->country}}</h5>
-                                  <h5 style="color: #7f8c8d">{{ $userpost->user->profiles->description }}</h5>
+                                  <h5 style="color: #7f8c8d"><i class="fa fa-map-marker" aria-hidden="true"></i>  {{$userpost->user->profiles?$userpost->user->profiles->city:"No city details"}}, {{$userpost->user->profiles?$userpost->user->profiles->country:"No country details"}}</h5>
+                                  <h5 style="color: #7f8c8d">{{ $userpost->user->profiles?$userpost->user->profiles->description:"No Description" }}</h5>
                                 <table class="tablecard">
                                     <tr>
                                         <td>
@@ -170,6 +174,7 @@
                     <a href="{{url('/storage/postimages/'.$pic->imgname)}}" data-lightbox="imageset-{{$userpost->id}}">
                     <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" class="d-block w-80">
                     </a>
+                    </div>
                     @empty
 
                     @endforelse
@@ -230,7 +235,7 @@
                                         @if (file_exists(public_path('storage/profile/'.$usercomment->user_id.'_cover.jpg')) )
                                         <img src="{{asset('storage/profile/'.$usercomment->user_id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
                                         @else
-                                        <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
+                                        <img src="{{ asset('images/no-cover.png') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
                                         @endif
                                         <div class="card-info">
                                             @if (file_exists(public_path('storage/profile/'.$usercomment->user_id.'_profile.jpg')) )
@@ -302,8 +307,8 @@
                   </div>
                 </div>
                     </div>
+                    </div>
               </div>
-            </div>
 
 
 @endsection
@@ -406,58 +411,6 @@ $.ajaxSetup({
 
 // ADD FRIEND END//
 
-      /* WHEN YOU UPLOAD ONE OR MULTIPLE FILES*/
-    $(document).on('change', '#post-images',function(){
-      $('.preview').html("");
-      len_files = $("#post-images").prop("files").length;
-      var construc = "<div class='row'>";
-      for (var i = 0; i < len_files; i++){
-        var file_data = $("#post-images").prop("files")[i];
-        form_data.append("photos[]", file_data);
-        construc += '<div class="col-3"><span class="btn btn-sm btn-danger imageremove">&times;</span><img width="120px" height="120px" src="' + window.URL.createObjectURL(file_data) + '"alt="' + file_data.name + '"/></div>';
-
-      }
-      construc += "</div>";
-      $('.preview').append(construc);
-
-
-    });
-    $(".preview").on('click','span.imageremove',function(){
-      console.log($(this).next("img"));
-
-    }
-    )
-
-
-
-      $("#publishpost").click(function(){
-        var url = '{{URL::to('/')}}' +"/post";
-        form_data.append("content", $("#contentpost").val());
-        form_data.append("privacy", $("#privacy").val());
-
-
-        //alert(url);
-        $.ajax({
-          method: "POST",
-          url:url,
-          cache: false,
-          contentType: false,
-          processData: false,
-          data:form_data
-        }).done(function(data){
-          if(data.success){
-            alert(data.message);
-            location.reload();
-            
-        //RESET FORM AFTER POST
-            //$('postform').trigger("reset");
-            //$(".preview").html("");
-          }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
-        });
-      });
 //CONFIRM FRIEND REQUEST
            $(".confirmBtn").click(function(e){
              var t = $(this);
@@ -491,6 +444,37 @@ $.ajaxSetup({
            });
 
 //DELETE FRIEND REQUEST
+//DELETE FRIEND REQUEST
+$(".deleteBtn").click(function(e){
+             var t = $(this);
+             e.preventDefault();
+             var f= $(this).data('uid');
+             var url = '{{URL::to('/')}}' +"/deletefriend/"+f;
+             $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    alert(data.message);
+                    t.parent().parent().remove();
+
+                  // location.reload();
+                    
+                //RESET FORM AFTER POST
+                    //$('postform').trigger("reset");
+                    //$(".preview").html("");
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+           });
 
 //reaction start
      $(".reaction").on("click",".reactionBtn", function(){

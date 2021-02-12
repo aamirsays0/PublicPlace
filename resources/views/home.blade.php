@@ -293,7 +293,7 @@
                     //print_r($imageinfo);
                     ?>
                     <a href="{{url('/storage/postimages/'.$pic->imgname)}}" data-lightbox="imageset-{{$post->id}}">
-                    <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" class="d-block w-100">
+                    <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" class="d-block w-80">
                     </a>
                     </div>
 
@@ -594,7 +594,7 @@ $(".user-info").on("click",".addFrndBtn",function(){
       for (var i = 0; i < len_files; i++){
         var file_data = $("#post-images").prop("files")[i];
         form_data.append("photos[]", file_data);
-        construc += '<div class="col-3"><span class="btn btn-sm btn-danger imageremove">&times;</span><img width="120px" height="120px" src="' + window.URL.createObjectURL(file_data) + '"alt="' + file_data.name + '"/></div>';
+        construc += '<div class="col-3"><span class="btn btn-sm btn-danger imageremove">&times;</span><img width="120px" height="120px" src="' + window.URL.createObjectURL(file_data) + '"alt="' + file_data.name + '"class="img-responsive"/></div>';
 
       }
       construc += "</div>";

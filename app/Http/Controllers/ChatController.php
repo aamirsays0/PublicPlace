@@ -45,10 +45,10 @@ class ChatController extends Controller
                  ->where('approved','0')
                  ->where('blocked', '0')
                  ->get();
-        $allFriends = FriendsList::Friends($id);
-        //friends 
-        $friends = User::with(['profiles'])->whereIn('id', $allFriends)->get();
-        return view('chat')->with('friends',$friends)->with('requests', $friendreq);
+          $friends =  Friend::whereRaw("( user_id = $id OR friend_id = $id )")
+                 ->where(['approved' => 1, 'blocked' => 0])
+                 ->get();
+           return view('chat')->with('friends',$friends)->with('requests', $friendreq);
         // $friends = User::with('profiles')
         // ->whereIn('id',$friends)
         //  ->get();
@@ -163,9 +163,17 @@ class ChatController extends Controller
     }
 
     public function publicChats() {
-        $friendreq = Friend::with('user')->get();        //friends 
-        $friends = User::with(['profiles'])->get();
-        return view('publicchats')->with('friends',$friends)->with('requests', $friendreq);
+        $id = Auth::id();
+        $friends =  Friend::whereRaw("( user_id = $id OR friend_id = $id )")
+        ->where(['approved' => 1, 'blocked' => 0])
+        ->get();
+        $friendreq = Friend::with('user')
+                ->where("friend_id",$id)
+                 ->where('approved','0')
+                 ->where('blocked', '0')
+                 ->get();
+        $users = User::with(['profiles'])->get();
+        return view('publicchats')->with('users',$users)->with('friends',$friends)->with('requests', $friendreq);
     }
 
     public function userChats($id) {

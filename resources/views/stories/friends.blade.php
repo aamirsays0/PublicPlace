@@ -28,6 +28,12 @@
 {{-- His Stories ends here --}}
     
 @endsection
+@section('sidebar-right')
+          <div class="suggestions" id="sticky-sidebar">
+          @include('partials.friendrequests')
+           
+             </div>
+@endsection
 
 @section("script")
 <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
@@ -70,6 +76,78 @@
     $('#selection-indicator').show()
  })
 
+</script>
+<script>
+ $(document).ready(function(e){
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+      });
+//CONFIRM FRIEND REQUEST
+$(".confirmBtn").click(function(e){
+             var t = $(this);
+             e.preventDefault();
+             var f= $(this).data('uid');
+             var url = '{{URL::to('/')}}' +"/confirmfriend/"+f;
+             $.ajax({
+          method: "POST",
+          url:url,
+          cache: false,
+          contentType: false,
+          processData: false,
+          data:{r:Math.random()}
+        }).done(function(data){
+         // console.log(data);
+         // return;
+          if(data.success){
+            alert(data.message);
+            t.parent().parent().remove();
+
+           // location.reload();
+            
+        //RESET FORM AFTER POST
+            //$('postform').trigger("reset");
+            //$(".preview").html("");
+          }
+          //console.log(data);
+        }).fail(function(data){
+          alert(data.message);
+        });
+           });
+
+//DELETE FRIEND REQUEST
+$(".deleteBtn").click(function(e){
+             var t = $(this);
+             e.preventDefault();
+             var f= $(this).data('uid');
+             var url = '{{URL::to('/')}}' +"/deletefriend/"+f;
+             $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    alert(data.message);
+                    t.parent().parent().remove();
+
+                  // location.reload();
+                    
+                //RESET FORM AFTER POST
+                    //$('postform').trigger("reset");
+                    //$(".preview").html("");
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+           });
+ });
 </script>
 
 @endsection

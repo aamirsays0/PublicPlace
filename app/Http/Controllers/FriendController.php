@@ -79,10 +79,8 @@ class FriendController extends Controller
                 ->where('approved','0')
                 ->where('blocked', '0')
                 ->get();
-
-        $allFriends = FriendsList::Friends($id);
-         $friends = User::with('profiles')
-        ->whereIn('id',$allFriends)
+        $friends =  Friend::whereRaw("( user_id = $id OR friend_id = $id )")
+        ->where(['approved' => 1, 'blocked' => 0])
         ->get();
 
 

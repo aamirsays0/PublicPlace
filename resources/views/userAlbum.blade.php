@@ -55,10 +55,10 @@
               </div>
               <div class="col-md-9">
                 <ul class="list-inline profile-menu">
-                  <li><a href="{{url('profiles/'.$user_information->id)}}" class="active">Timeline</a></li>
+                  <li><a href="{{url('profiles/'.$user_information->id)}}">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
-                  <li><a href="{{route('user.album.show',$user_information->id)}}">Album</a></li>
-                  <li><a href="{{url('allfriends/'.$user_information->id)}}">Friends</a></li>
+                  <li><a href="{{route('user.album.show',$user_information->id)}}" class="active">Album</a></li>
+                  <li><a href="{{route('user.friends',$user_information->id)}}">Friends</a></li>
                 </ul>
                 
               </div>
@@ -79,10 +79,10 @@
             </div>
             <div class="mobile-menu">
               <ul class="list-inline">
-                  <li><a href="{{url('profiles/'.$user_information->id)}}" class="active">Timeline</a></li>
+                  <li><a href="{{url('profiles/'.$user_information->id)}}">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
-                  <li><a href="timeline-album.html">Album</a></li>
-                  <li><a href="{{url('friends/'.$user_information->id)}}">Friends</a></li>
+                  <li><a href="{{route('user.album.show',$user_information->id)}}" class="active">Album</a></li>
+                  <li><a href="{{route('user.friends',$user_information->id)}}">Friends</a></li>
               </ul>
             </div>
           </div><!--Timeline Menu for Small Screens End-->
@@ -98,7 +98,7 @@
            </button>
         </div>
         <div class="modal-body">
-           <img class="img-fluid" id="modal_image_container" src="" alt="">
+           <img class="img-fluid img-responsive" id="modal_image_container" src="" alt="">
          </div>
      </div>
   </div>
@@ -109,37 +109,38 @@
               
       
         <!--Edit Profile Menu-->
-        <ul class="edit-menu " style="margin-top: 80px">
-    <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
-      <i class="icon ion-ios-information-outline"></i>
-      @if ( isset($user_information) && $user_information->id === Auth::id())
-      <a href="{{url('profiles')}}">Edit Basic Information</a>
-      @else
-      <a href="{{ route('view.friends.profile', $user_information->id) }}">  Basic Information</a>
-      @endif
-    </li><br>
-    <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
-      @if ( isset($user_information) && $user_information->id === Auth::id())
-      <i class="icon ion-ios-information-outline"></i>
-      <a href="{{ route('view.friends.profile', $user_information->id) }}">Basic Information</a>
-       @endif
-    </li><br>
-      <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i>
-      @if ( isset($user_information) && $user_information->id === Auth::id())
-      <a href="{{url('education')}}"> Education & Work</a>
-      @else
-      <a href="{{ route('view.friends.education', $user_information->id) }}">  Education & Work</a>
-      @endif  
-            </li><br>
-
-      <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
-      @if ( isset($user_information) && $user_information->id === Auth::id())
-      <i class="icon ion-ios-locked-outline"></i>
-        <a href="{{url('change-password')}}">  Change Password</a>
-        @endif
-        </li>
-
-  </ul>            </div>
+        <ul class="edit-menu " style="margin-top: 80px; display: grid;">
+           <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+             <i class="icon ion-ios-information-outline"></i>
+             @if ( isset($user_information) && $user_information->id === Auth::id())
+             <a href="{{url('profiles')}}">Edit Basic Information</a>
+             @else
+             <a href="{{ route('view.friends.profile', $user_information->id) }}">  Basic Information</a>
+             @endif
+           </li>
+           @if ( isset($user_information) && $user_information->id === Auth::id())
+           <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+             <i class="icon ion-ios-information-outline"></i>
+             <a href="{{ route('view.friends.profile', $user_information->id) }}">Basic Information</a>
+           </li>
+           @endif
+             <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i>
+             @if ( isset($user_information) && $user_information->id === Auth::id())
+             <a href="{{url('education')}}"> Education & Work</a>
+             @else
+             <a href="{{ route('view.friends.education', $user_information->id) }}">  Education & Work</a>
+             @endif  
+                   </li>
+       
+             <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
+             @if ( isset($user_information) && $user_information->id === Auth::id())
+             <i class="icon ion-ios-locked-outline"></i>
+               <a href="{{url('change-password')}}">  Change Password</a>
+               @endif
+               </li>
+       
+      </ul> 
+    </div>
             <div class="col-md-7" style="padding-right: 30px;">
 
             
@@ -147,10 +148,10 @@
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
-      <a class="nav-link active" data-toggle="tab" href="#home">People</a>
+      <a class="nav-link active" data-toggle="tab" href="#home">Images</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#menu1">Posts</a>
+      <a class="nav-link" data-toggle="tab" href="#menu1">Videos</a>
     </li>
   </ul>
 
@@ -182,11 +183,13 @@
   <div class="row">
     @foreach($videos as $vid)
       <div class="col-sm-12 col-md-6">
+      <a href="{{ route('posts.show', $vid->post_id) }}">
         <video style="width: 100%;height: 150px;border-radius: 15px;" controls>
           <!-- {{$vid->vidname}} -->
           <source src="{{ asset('storage/postvideos/'.$vid->vidname) }}" type="video/mp4">
            Your browser does not support the video tag.
         </video>
+       </a>
       </div>
     @endforeach  
   </div>
@@ -236,36 +239,6 @@
         </div>
 </div>
 </div>
-                
-
-
-<?php
-// $olddate = "";
-// $newdate = "";
-// $first = true;
-// $content = "";
-// foreach($allActivity as $singleActivity){
-//   $newdate = $singleActivity->created_at->format('Y-m-d');
-//   if($first){
-//       $olddate = $singleActivity->created_at->format('Y-m-d');
-//   }
-//   if($olddate === $newdate){
-//       if($first == true){
-//           $first = false;
-//           $content .="<p class='text-muted'>".$newdate."</p>";
-//       }
-//       $content .= \App\Custom\Activity::getview($singleActivity);
-//   }
-//   else{
-//       $content .="";
-//       $content .="<p class='text-muted'>".$newdate."</p>";
-//       $content .= \App\Custom\Activity::getview($singleActivity);
-//   }
-//   $olddate = $newdate;
-// }
-// echo $content;
-?>
-
     <!-- Footer
     ================================================= -->
     @include('partials.footer')
@@ -335,224 +308,6 @@
   $("#noteItemContainer").prepend(template);
  });
 </script>
-<script>
-    var form_data = new FormData();
- 
-var storedFiles = [];
-    $(document).ready(function(e){
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-      });
- 
-//JSCROLL
-            //  $("ul.pagination").hide();
-            //  $('.scroll').jscroll({
-            //    autoTrigger: true,
-            //    nextSelector : '.pagination li.active + li a',
-            //    contentSelector: 'div.scroll',
-            //    callback: function(){
-            //      $('ul.pagination:visible:first').hide();
-            //    }
-
-            //  });
-//SCROLL ends
-
-      /* WHEN YOU UPLOAD ONE OR MULTIPLE FILES*/
-    $(document).on('change', '#post-images',function(){
-      $('.preview').html("");
-      len_files = $("#post-images").prop("files").length;
-      var construc = "<div class='row'>";
-      for (var i = 0; i < len_files; i++){
-        var file_data = $("#post-images").prop("files")[i];
-        form_data.append("photos[]", file_data);
-        construc += '<div class="col-3"><span class="btn btn-sm btn-danger imageremove">&times;</span><img width="120px" height="120px" src="' + window.URL.createObjectURL(file_data) + '"alt="' + file_data.name + '"/></div>';
-
-      }
-      construc += "</div>";
-      $('.preview').append(construc);
-
-
-    });
-    $(".preview").on('click','span.imageremove',function(){
-      //console.log($(this).next("img"));
-      var trash = $(this).data("file");
-      for(var i=0; i<storedFiles.length; i++){
-       if(storedFiles[i].name === trash){
-        storedFiles.splice(i,1);
-        break;
-       } 
-      }
-      $(this).parent().remove();
-
-    }
-    );
-
-
-
-      $("#publishpost").click(function(){
-        var url = '{{URL::to('/')}}' +"/post";
-        form_data.append("content", $("#contentpost").val());
-        form_data.append("privacy", $("#privacy").val());
-
-
-        //alert(url);
-        $.ajax({
-          method: "POST",
-          url:url,
-          cache: false,
-          contentType: false,
-          processData: false,
-          data:form_data
-        }).done(function(data){
-          if(data.success){
-            form_data = new FormData();
-            storedFiles=[];
-            alert(data.message);
-            location.reload();
-            
-        //RESET FORM AFTER POST
-            $('postform').trigger("reset");
-            $(".preview").html("");
-          }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
-        });
-      });
-
-//reaction start
-$(".reaction").on("click",".reactionBtn", function(){
-      var url = '{{URL::to('/')}}' +"/react";
-      //alert(url);
-       //$postid = $(this).data('postid');
-      // $reactionid = $(this).data('reaction');
-      // alert($postid + ":" + $reactionid);
-//ajax start
-$.ajax({
-          method: "POST",
-          url:url,
-          /* cache: false,
-          contentType: false,
-          processData: false, */
-          data:{
-            'postid': $(this).data('postid'),
-            'react': $(this).data('reaction'),
-            r:Math.random()},
-        success: (data) =>  {
-          console.log($(this).data('postid'), "INSIDE AJHAX")
-        }
-        }
-        ).done((data) => {
-        //  console.log(data);
-         // return;
-          if(data.success){
-            //alert(data.message);
-            $(this).parent().find('.like').html(data.liked);
-            $(this).parent().find('.smiled').html(data.smiled) ;
-            $(this).parent().find('.heart').html(data.loved);
-            $(this).parent().find('.dislike').html(data.disliked)
-            if (data.liked <= 0) {
-              $(this).parent().find('.like').parent().removeClass('text-primary')
-              // $('#like').parent().removeClass('text-primary')
-              $(this).parent().find('.like').parent().addClass('text-secondary')
-            }else {
-              $(this).parent().find('.like').parent().removeClass('text-secondary')
-              $(this).parent().find('.like').parent().addClass('text-primary')
-            }
-            //
-            if (data.smiled <= 0) {
-              $(this).parent().find('.smiled').parent().removeClass('text-primary')
-              $(this).parent().find('.smiled').parent().addClass('text-secondary')
-            }else {
-              $(this).parent().find('.smiled').parent().removeClass('text-secondary')
-              $(this).parent().find('.smiled').parent().addClass('text-primary')
-            }
-            //
-            if (data.loved <= 0) {
-              $(this).parent().find('.heart').parent().removeClass('text-primary')
-              $(this).parent().find('.heart').parent().addClass('text-secondary')
-            }else {
-              $(this).parent().find('.heart').parent().removeClass('text-secondary')
-              $(this).parent().find('.heart').parent().addClass('text-primary')
-            }
-            //
-            if (data.disliked <= 0) {
-              $(this).parent().find('.dislike').parent().removeClass('text-primary')
-              $(this).parent().find('.dislike').parent().addClass('text-secondary')
-            }else {
-              $(this).parent().find('.dislike').parent().removeClass('text-secondary')
-              $(this).parent().find('.dislike').parent().addClass('text-primary')
-            }
-
-
-            // location.reload();
-            
-        //RESET FORM AFTER POST
-            //$('postform').trigger("reset");
-            //$(".preview").html("");
-          }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
-        });
- //ajax end
-
-     });  
-//reaction ends
-//comment container show hide start
-          $(".viewpost").on("click",".commentToggleBtn", function(){
-            $(this).next(".commentContainer").toggle(250);
-
-          });
-//comment container show hide end
-//post comment container show hide start
-$(".viewpost").on("click",".postcommentToggleBtn", function(){
-            $(this).next(".postcommentContainer").toggle(250);
-
-          });
-//post comment container show hide end
-
-    });
-          document.querySelector('#delete-button').addEventListener('submit', function(e) {
-            var form = this;
-            
-            e.preventDefault();
-            
-            swal({
-                title: "Are you sure?",
-                text: "Once deleted, post cannot be recovered",
-                icon: "warning",
-                buttons: [
-                  'No, cancel it!',
-                  'Yes, I am sure!'
-                ],
-                dangerMode: true,
-              }).then(function(isConfirm) {
-                if (isConfirm) {
-                  form.submit();
-      
-                }
-              });
-          });
-          $('.deleteComment').click(function (e){
-              e.preventDefault();
-              let form = $(this).parents('form');
-              swal({
-                  title: 'Are you sure?',
-                  text: 'Once deleted, Comment cannot be recovered',
-                  icon: 'warning',
-                  buttons: ["Cancel it", "Yes, sure"],
-                  dangerMode: true,
-              }).then(function(value) {
-                  if(value){
-                      form.submit();
-                  }
-              });
-          })
-          
-    </script>
 
 
   </body>

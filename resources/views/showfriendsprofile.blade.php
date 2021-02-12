@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<!-- Copied from http://mythemestore.com/friend-finder/edit-profile-basic.html by Cyotek WebCopy 1.7.0.600, Thursday, September 5, 2019, 12:34:06 AM -->
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -58,7 +57,7 @@
                   <li><a href="{{url('profiles/'.$user_information->id)}}">Timeline</a></li>
                   <li><a href="{{url('profiles/about')}}">About</a></li>
                   <li><a href="{{route('user.album.show',$user_information->id)}}">Album</a></li>
-                  <li><a href="{{url('friends/'.$user_information->id)}}">Friends</a></li>
+                  <li><a href="{{route('user.friends',$user_information->id)}}">Friends</a></li>
                 </ul>
               </div>
             </div>
@@ -80,7 +79,7 @@
                   <li><a href="{{url('profiles/'.$user_information->id)}}" class="active">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
                   <li><a href="{{route('user.album.show',$user_information->id)}}">Album</a></li>
-                  <li><a href="{{url('friends/'.$user_information->id)}}">Friends</a></li>
+                  <li><a href="{{route('user.friends',$user_information->id)}}">Friends</a></li>
               </ul>
             </div>
           </div><!--Timeline Menu for Small Screens End-->
@@ -95,7 +94,7 @@
            </button>
         </div>
         <div class="modal-body">
-           <img class="img-fluid" id="modal_image_container" src="" alt="">
+           <img class="img-fluid img-responsive" id="modal_image_container" src="" alt="">
          </div>
      </div>
   </div>
@@ -106,7 +105,7 @@
               
       
 <!--Edit Profile Menu-->
-            <ul class="edit-menu " style="margin-top: 80px">
+            <ul class="edit-menu " style="margin-top: 80px; display: grid;">
                 <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
                     <i class="icon ion-ios-information-outline"></i>
                     @if ( isset($user_information) && $user_information->id === Auth::id())
@@ -114,13 +113,13 @@
                     @else
                     <a href="{{ route('view.friends.profile', $user_information->id) }}"> Basic Information</a>
                     @endif
-                </li><br>
+                </li>
+                @if ( isset($user_information) && $user_information->id === Auth::id())
                 <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
-                      @if ( isset($user_information) && $user_information->id === Auth::id())
                       <i class="icon ion-ios-information-outline"></i>
                       <a href="{{ route('view.friends.profile', $user_information->id) }}">Basic Information</a>
-                      @endif
-                </li><br>
+                </li>
+                @endif
                   <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i>
                       @if ( isset($user_information) && $user_information->id === Auth::id())
                       <a href="{{url('education')}}">  Education & Work</a>
@@ -233,19 +232,54 @@
     <script src="http://unpkg.com/ionicons@4.4.2/dist/ionicons.js"></script>
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script> 
 <script>
-      $(document).ready(function(){
-        $("#showcpbtncontainer").click(function(){
-          var url = ($(".timeline-cover").css('background-image'));
-          var start_quot = url.indexOf("\"") + 1;
-          var end_quot = url.lastIndexOf("\"");
-          url=(url.substring(start_quot,end_quot));
-          $('#modal_image_container').attr("src",url);
-          $('#cpmodal').modal();
-          //location.reload();
-        });
-      })
-      
-    </script>
-    
+                $(document).ready(function(){
+                  $("#showcpbtncontainer").click(function(){
+                    var url = ($(".timeline-cover").css('background-image'));
+                    var start_quot = url.indexOf("\"") + 1;
+                    var end_quot = url.lastIndexOf("\"");
+                    url=(url.substring(start_quot,end_quot));
+                    $('#modal_image_container').attr("src",url);
+                    $('#cpmodal').modal();
+                    //location.reload();
+                  });
+                })
+                
+              </script>
+                      <script>
+          Pusher.logToConsole = true;
+          var pusher = new Pusher ('0e8a23a77d5e825ac0fc', {
+            cluster: 'ap2',
+            useTLS: true
+            
+          }
+          );
+          /* var channel = pusher.subscribe('Public-Place'); */
+          var channel = pusher.subscribe('user-{{Auth::id()}}');
+          
+          channel.bind('new-post', function(data){
+            if (data.sender_id === {{ Auth::id() }}) return;
+            //alert(data.message);
+            if (data.type == "post"){
+            var template = '<a href="{{url('posts/')}}/'+data.pid+'" class="dropdown-item preview-item"><div class="preview-thumbnail"><div class="preview-icon bg-success"><i class="mdi mdi-alert-circle-outline mx-0"></i>\n' +
+                      '</div></div><div class="preview-item-content"><h5 class="preview-subject font-weight-medium text-dark">'+ data.message +'</h5><p class="small-text text-success">\n' +
+                        'Just Now</p></div></a><div class="dropdown-divider"></div>';
+                        }
+            else if(data.type == "reaction"){
+              var template = '<a class="dropdown-item preview-item"><div class="preview-thumbnail"><div class="preview-icon bg-success"><i class="mdi mdi-alert-circle-outline mx-0"></i>\n' +
+                      '</div></div><div class="preview-item-content"><h5 class="preview-subject font-weight-medium text-dark">'+ data.message +'</h5><p class="small-text text-success">\n' +
+                        'Just Now</p></div></a><div class="dropdown-divider"></div>';
+            }
+
+
+                  
+            $("#notificationDropdown span.count").text(
+              parseInt($("#notificationDropdown span.count").text())
+              +1);
+
+            
+            $("#noteItemContainer").prepend(template);
+          });
+</script>
+
   </body>
 </html>

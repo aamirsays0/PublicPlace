@@ -14,7 +14,7 @@
 
                   <!-- Contact List in Left-->
                   <ul class="nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer">
-                  @forelse($friends as $user)
+                  @forelse($users as $user)
                     @if($user->id == Auth::id())
                          @continue
                     @endif

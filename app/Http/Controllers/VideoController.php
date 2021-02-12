@@ -18,12 +18,11 @@ class VideoController extends Controller
                 ->where("friend_id",$id)
                  ->where('approved','0')
                  ->where('blocked', '0')
+                 ->get();  
+        $friends =  Friend::whereRaw("( user_id = $id OR friend_id = $id )")
+                 ->where(['approved' => 1, 'blocked' => 0])
                  ->get();
-        $allFriends = FriendsList::Friends($id);
-              $friends = User::with('profiles')
-              ->whereIn('id',$allFriends)
-              ->get();
-
+   
               
               $videos = DB::table('videos')
               ->select(DB::raw('post_id, vidname'))

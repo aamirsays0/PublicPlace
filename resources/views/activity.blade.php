@@ -95,72 +95,6 @@ $.ajaxSetup({
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
       });
-
-//JSCROLL
-            // $("ul.pagination").hide();
-             $('.scroll').jscroll({
-               autoTrigger: true,
-               nextSelector : '.pagination li.active + li a',
-               contentSelector: 'div.scroll',
-               callback: function(){
-                 $('ul.pagination:visible:first').hide();
-               }
-
-             });
-//SCROLL ends
-
-      /* WHEN YOU UPLOAD ONE OR MULTIPLE FILES*/
-    $(document).on('change', '#post-images',function(){
-      $('.preview').html("");
-      len_files = $("#post-images").prop("files").length;
-      var construc = "<div class='row'>";
-      for (var i = 0; i < len_files; i++){
-        var file_data = $("#post-images").prop("files")[i];
-        form_data.append("photos[]", file_data);
-        construc += '<div class="col-3"><span class="btn btn-sm btn-danger imageremove">&times;</span><img width="120px" height="120px" src="' + window.URL.createObjectURL(file_data) + '"alt="' + file_data.name + '"/></div>';
-
-      }
-      construc += "</div>";
-      $('.preview').append(construc);
-
-
-    });
-    $(".preview").on('click','span.imageremove',function(){
-      console.log($(this).next("img"));
-
-    }
-    )
-
-
-
-      $("#publishpost").click(function(){
-        var url = '{{URL::to('/')}}' +"/post";
-        form_data.append("content", $("#contentpost").val());
-        form_data.append("privacy", $("#privacy").val());
-
-
-        //alert(url);
-        $.ajax({
-          method: "POST",
-          url:url,
-          cache: false,
-          contentType: false,
-          processData: false,
-          data:form_data
-        }).done(function(data){
-          if(data.success){
-            alert(data.message);
-            location.reload();
-            
-        //RESET FORM AFTER POST
-            //$('postform').trigger("reset");
-            //$(".preview").html("");
-          }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
-        });
-      });
 //CONFIRM FRIEND REQUEST
            $(".confirmBtn").click(function(e){
              var t = $(this);
@@ -194,45 +128,37 @@ $.ajaxSetup({
            });
 
 //DELETE FRIEND REQUEST
+//DELETE FRIEND REQUEST
+$(".deleteBtn").click(function(e){
+             var t = $(this);
+             e.preventDefault();
+             var f= $(this).data('uid');
+             var url = '{{URL::to('/')}}' +"/deletefriend/"+f;
+             $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    alert(data.message);
+                    t.parent().parent().remove();
 
-//reaction start
-     $("#contentpostContainer").on("click",".reactionBtn", function(){
-      var url = '{{URL::to('/')}}' +"/react";
-      //alert(url);
-       //$postid = $(this).data('postid');
-      // $reactionid = $(this).data('reaction');
-      // alert($postid + ":" + $reactionid);
-//ajax start
-$.ajax({
-          method: "POST",
-          url:url,
-          /* cache: false,
-          contentType: false,
-          processData: false, */
-          data:{
-            'postid': $(this).data('postid'),
-            'react': $(this).data('reaction'),
-            r:Math.random()}
-        }).done(function(data){
-         console.log(data);
-         // return;
-          if(data.success){
-            //alert(data.message);
-
-            location.reload();
-            
-        //RESET FORM AFTER POST
-            //$('postform').trigger("reset");
-            //$(".preview").html("");
-          }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
-        });
- //ajax end
-
-     });  
-//reaction ends
+                  // location.reload();
+                    
+                //RESET FORM AFTER POST
+                    //$('postform').trigger("reset");
+                    //$(".preview").html("");
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+           });
     });
     </script>
 

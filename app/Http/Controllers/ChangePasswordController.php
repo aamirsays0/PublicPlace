@@ -34,12 +34,9 @@ class ChangePasswordController extends Controller
                  ->where('blocked', '0')
                  ->get();
 
-
-        $allFriends = FriendsList::Friends(Auth::id());
-
-        $friends = User::with('profiles')
-        ->whereIn('id',$allFriends)
-         ->get();
+          $friends =  Friend::whereRaw("( user_id = $id OR friend_id = $id )")
+                 ->where(['approved' => 1, 'blocked' => 0])
+                 ->get();
    
         return view('changePassword')->with ('friends', $friends)->with('requests', $friendreq);
     } 

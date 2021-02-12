@@ -6,7 +6,7 @@
                        <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo" id="uploadImage" alt="">
                     @endif
              	  <h5><a class="text-white">{{ isset(Auth::user()->profiles->f_name) ? Auth::user()->profiles->f_name.' '.Auth::user()->profiles->l_name: Auth::user()->name}}</a></h5>
-            	   <a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()-1}} Friends"><i class="ion ion-android-person-add"></i>{{$friends->count()-1}} Friends</a>
+            	   <a href="{{url('friends/'.Auth::id())}}" class="text-white" title="{{$friends->count()}} Friends"><i class="ion ion-android-person-add"></i> {{$friends->count()}} Friends</a>
           </div>
 <!--profile card ends-->
         <ul class="nav-news-feed">
@@ -24,10 +24,13 @@
               <hr>
               <ul class="online-users list-inline list-unstyled">
               @forelse($friends as $friend)
-                @if($friend->id != Auth::id())
-                <li class="list-inline-item"><a href="{{url('profiles/'.$friend->id)}}" title="{{$friend->name}}">
-                @if (file_exists(public_path('storage/profile/'.$friend->id.'_profile.jpg')) )
-                    <img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="" class="profile-photo-md " />
+              @php
+                    $friends_data = $friend->user_id == auth()->id() ? $friend->friendInfo : $friend->user;
+                @endphp
+                @if($friends_data->id != Auth::id())
+                <li class="list-inline-item"><a href="{{url('profiles/'.$friends_data->id)}}" title="{{$friends_data->name}}">
+                @if (file_exists(public_path('storage/profile/'.$friends_data->id.'_profile.jpg')) )
+                    <img src="{{asset('storage/profile/'.$friends_data->id.'_profile.jpg')}}" alt="" class="profile-photo-md " />
                     @else
                     <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="">
                    @endif

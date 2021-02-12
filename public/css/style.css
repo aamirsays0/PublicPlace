@@ -2015,8 +2015,7 @@ h4.grey{
   text-align: center;
 }
 img#modal_image_container {
-  width: 870px;
-  height: 500px;
+  width: 100%;
 }
 #showcpbtncontainer{
   position: absolute;
@@ -2164,4 +2163,10 @@ ul li .card3 a:hover{
 }
 .comment-text p{
 font-size: 1.5rem; 
+}
+.w-80{
+  width: 80%;
+}
+.form-group .preview .row{
+  display: flex;
 }

@@ -7,45 +7,47 @@
 @section('sidebar-left')
   @include('partials.leftSidebar')
 @endsection
-
+<link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 @section('content')
      
               <!-- Friend List
               ================================================= -->
               <div class="friend-list">
                 <div class="row">
-                @forelse($friends as $friend)
-                  @if($friend->id == Auth::id())
-                   @continue
-                   @endif
-                  <div class="col-md-6 col-sm-6" id="{{ $friend->id }}">
-                    <div class="friend-card">
-                        <a href="#" class="unfriend_it friend--trash_icon" data-friend_id="{{ $friend->id }}"><i class="fa fa-trash fa-lg"></i></a>
-                        @if (file_exists(public_path('storage/profile/'.$friend->id.'_cover.jpg')) )
-                         <img src="{{asset('storage/profile/'.$friend->id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
+                @foreach($friends as $friend)
+                @php
+                    $friends_data = $friend->user_id == auth()->id() ? $friend->friendInfo : $friend->user;
+                @endphp
+                  <div class="col-md-4 col-sm-6" id="{{ $friend->id }}">
+                    <div class="friend-card" style="border: none">
+                    <a href="#" class="unfriend_it friend--trash_icon" data-friend_id="{{ $friend->id }}"><i class="fa fa-trash fa-lg"></i></a>
+                        @if (file_exists(public_path('storage/profile/'.$friends_data->id.'_cover.jpg')) )
+                        <a href="{{url('profiles/'.$friends_data->id)}}">
+                         <img src="{{asset('storage/profile/'.$friends_data->id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover friends-list-img" />
+                        </a>
                          @else
-                         <img src="{{ asset('images/no-cover.png') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
+                        <a href="{{url('profiles/'.$friends_data->id)}}">
+                         <img src="{{ asset('images/no-cover.png') }}" class="img-responsive cover friends-list-img" id="uploadImage" alt="">
+                        </a> 
                          @endif
-                        <div class="card-info">
-                        @if (file_exists(public_path('storage/profile/'.$friend->id.'_profile.jpg')) )
-                        <img src="{{asset('storage/profile/'.$friend->id.'_profile.jpg')}}" alt="user" class="profile-photo-lg"/>
+                         <div class="card-info">
+                        @if (file_exists(public_path('storage/profile/'.$friends_data->id.'_profile.jpg')) )
+                        <a href="{{url('profiles/'.$friends_data->id)}}">
+                           <img src="{{asset('storage/profile/'.$friends_data->id.'_profile.jpg')}}" alt="user" class="profile-photo-lg"/>
+                        </a>
                         @else
-                       <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-lg" id="uploadImage" alt="">
+                        <a href="{{url('profiles/'.$friends_data->id)}}">
+                          <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-lg" id="uploadImage" alt="">
+                        </a>
                         @endif
                       <div class="friend-info">
-                         <a href="#" class="pull-right text-green">My Friend</a>
-                          <h5><a href="{{url('profiles/'.$friend->id)}}" class="profile-link">
-                          {{$friend->profiles?$friend->profiles->f_name.' '.$friend->profiles->l_name : $friend->name}}</a></h5>
-                          <p>{{$friend->email}}</p>
+                          <h5><a href="{{url('profiles/'.$friends_data->id)}}" class="profile-link">
+                          {{$friends_data->profiles?$friends_data->profiles->f_name.' '.$friends_data->profiles->l_name : $friends_data->name}}</a></h5>
                         </div>
                       </div>
                     </div>
                   </div>
-                  @empty
-                  <div class="col-md-12 col-sm-12 mt-5 text-center">
-                    <h2 class="text-info">No Friends</h2>
-                  </div>
-                  @endforelse
+                  @endforeach
                   
               </div>
             </div>
@@ -184,42 +186,38 @@ $.ajaxSetup({
         });
            });
 //DELETE FRIEND REQUEST
-//reaction start
-     $("#contentpostContainer").on("click",".reactionBtn", function(){
-      var url = '{{URL::to('/')}}' +"/react";
-      //alert(url);
-       //$postid = $(this).data('postid');
-      // $reactionid = $(this).data('reaction');
-      // alert($postid + ":" + $reactionid);
-//ajax start
-$.ajax({
-          method: "POST",
-          url:url,
-          /* cache: false,
-          contentType: false,
-          processData: false, */
-          data:{
-            'postid': $(this).data('postid'),
-            'react': $(this).data('reaction'),
-            r:Math.random()}
-        }).done(function(data){
-         console.log(data);
-         // return;
-          if(data.success){
-            //alert(data.message);
-            location.reload();
-            
-        //RESET FORM AFTER POST
-            //$('postform').trigger("reset");
-            //$(".preview").html("");
-          }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
-        });
- //ajax end
-     });  
-//reaction ends
+//DELETE FRIEND REQUEST
+$(".deleteBtn").click(function(e){
+             var t = $(this);
+             e.preventDefault();
+             var f= $(this).data('uid');
+             var url = '{{URL::to('/')}}' +"/deletefriend/"+f;
+             $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    alert(data.message);
+                    t.parent().parent().remove();
+
+                  // location.reload();
+                    
+                //RESET FORM AFTER POST
+                    //$('postform').trigger("reset");
+                    //$(".preview").html("");
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+           });
+
     $('.unfriend_it').on('click', function(e) {
         let friend_id = $(this).data('friend_id');
         

@@ -14,6 +14,7 @@
     <!-- Stylesheets
     ================================================= -->
 		<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}"/>
+		<link rel="stylesheet" href="{{asset('css/bootstrap.css')}}"/>
 		<link rel="stylesheet" href="{{asset('css/style.css')}}"/>
 		<link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}"/>
@@ -58,7 +59,7 @@
                   <li><a href="{{url('profiles/'.$user_information->id)}}" class="active">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
                   <li><a href="{{route('user.album.show',$user_information->id)}}">Album</a></li>
-                  <li><a href="{{url('allfriends/'.$user_information->id)}}">Friends</a></li>
+                  <li><a href="{{route('user.friends',$user_information->id)}}">Friends</a></li>
                 </ul>
                 
               </div>
@@ -81,8 +82,8 @@
               <ul class="list-inline">
                   <li><a href="{{url('profiles/'.$user_information->id)}}" class="active">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
-                  <li><a href="timeline-album.html">Album</a></li>
-                  <li><a href="{{url('friends/'.$user_information->id)}}">Friends</a></li>
+                  <li><a href="{{route('user.album.show',$user_information->id)}}">Album</a></li>
+                  <li><a href="{{route('user.friends',$user_information->id)}}">Friends</a></li>
               </ul>
             </div>
           </div><!--Timeline Menu for Small Screens End-->
@@ -98,7 +99,7 @@
            </button>
         </div>
         <div class="modal-body">
-           <img class="img-fluid" id="modal_image_container" src="" alt="">
+           <img class="img-fluid img-responsive" id="modal_image_container" src="" alt="">
          </div>
      </div>
   </div>
@@ -109,38 +110,39 @@
               
       
         <!--Edit Profile Menu-->
-        <ul class="edit-menu " style="margin-top: 80px">
-    <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
-      <i class="icon ion-ios-information-outline"></i>
-      @if ( isset($user_information) && $user_information->id === Auth::id())
-      <a href="{{url('profiles')}}">Edit Basic Information</a>
-      @else
-      <a href="{{ route('view.friends.profile', $user_information->id) }}">  Basic Information</a>
-      @endif
-    </li><br>
-    <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
-      @if ( isset($user_information) && $user_information->id === Auth::id())
-      <i class="icon ion-ios-information-outline"></i>
-      <a href="{{ route('view.friends.profile', $user_information->id) }}">Basic Information</a>
-       @endif
-    </li><br>
-      <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i>
-      @if ( isset($user_information) && $user_information->id === Auth::id())
-      <a href="{{url('education')}}"> Education & Work</a>
-      @else
-      <a href="{{ route('view.friends.education', $user_information->id) }}">  Education & Work</a>
-      @endif  
-            </li><br>
-
-      <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
-      @if ( isset($user_information) && $user_information->id === Auth::id())
-      <i class="icon ion-ios-locked-outline"></i>
-        <a href="{{url('change-password')}}">  Change Password</a>
-        @endif
-        </li>
-
-  </ul>            </div>
-            <div class="col-md-7" style="padding-right: 30px;">
+        <ul class="edit-menu " style="margin-top: 80px; display: grid;">
+         <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+           <i class="icon ion-ios-information-outline"></i>
+           @if ( isset($user_information) && $user_information->id === Auth::id())
+           <a href="{{url('profiles')}}">Edit Basic Information</a>
+           @else
+           <a href="{{ route('view.friends.profile', $user_information->id) }}">  Basic Information</a>
+           @endif
+         </li>
+         @if ( isset($user_information) && $user_information->id === Auth::id())
+         <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+           <i class="icon ion-ios-information-outline"></i>
+           <a href="{{ route('view.friends.profile', $user_information->id) }}">Basic Information</a>
+         </li>
+         @endif
+           <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i>
+           @if ( isset($user_information) && $user_information->id === Auth::id())
+           <a href="{{url('education')}}"> Education & Work</a>
+           @else
+           <a href="{{ route('view.friends.education', $user_information->id) }}">  Education & Work</a>
+           @endif  
+                 </li>
+     
+           <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
+           @if ( isset($user_information) && $user_information->id === Auth::id())
+           <i class="icon ion-ios-locked-outline"></i>
+             <a href="{{url('change-password')}}">  Change Password</a>
+             @endif
+             </li>
+     
+      </ul>          
+    </div>
+   <div class="col-md-7" style="padding-right: 30px;">
 
             
 <!-- tabs start-->
@@ -295,17 +297,40 @@
                   <div class="post-text">
                     <p>{{$userpost->content}}</p>
                     <hr>
+                    <div id="carouselControls" class="carousel slide" data-ride="carousel">
+ 
+                        <ol class="carousel-indicators">
+                         @foreach($userpost->pictures as $pic)
+                            <li data-target="#carouselIndicators" data-slide-to="{{ $loop->index }}" class="{{ $loop->first ? 'active' : '' }}"></li>
+                         @endforeach
+                        </ol>
+                       
+                 <div class="carousel-inner" role="listbox">
                     @forelse($userpost->pictures as $pic)
+                    <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
                     <?php
                     $imageinfo = pathinfo(url('/storage/postimages/'.$pic->imgname));
                     //print_r($imageinfo);
                     ?>
                     <a href="{{url('/storage/postimages/'.$pic->imgname)}}" data-lightbox="imageset-{{$userpost->id}}">
-                    <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" width="120px">
+                    <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" class="d-block w-80">
                     </a>
+                    </div>
+
                     @empty
 
                     @endforelse
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselControls" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselControls" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                </div>
+
                     @if (isset($userpost->videos[0]))
                    <video width="320" height="240" controls>
                     <source src="{{ asset('storage/postvideos/'.$userpost->videos[0]->vidname) }}" type="video/mp4">
@@ -471,36 +496,6 @@
         </div>
 </div>
 </div>
-                
-
-
-<?php
-// $olddate = "";
-// $newdate = "";
-// $first = true;
-// $content = "";
-// foreach($allActivity as $singleActivity){
-//   $newdate = $singleActivity->created_at->format('Y-m-d');
-//   if($first){
-//       $olddate = $singleActivity->created_at->format('Y-m-d');
-//   }
-//   if($olddate === $newdate){
-//       if($first == true){
-//           $first = false;
-//           $content .="<p class='text-muted'>".$newdate."</p>";
-//       }
-//       $content .= \App\Custom\Activity::getview($singleActivity);
-//   }
-//   else{
-//       $content .="";
-//       $content .="<p class='text-muted'>".$newdate."</p>";
-//       $content .= \App\Custom\Activity::getview($singleActivity);
-//   }
-//   $olddate = $newdate;
-// }
-// echo $content;
-?>
-
     <!-- Footer
     ================================================= -->
     @include('partials.footer')
@@ -581,82 +576,6 @@ $.ajaxSetup({
     }
       });
  
-//JSCROLL
-            //  $("ul.pagination").hide();
-            //  $('.scroll').jscroll({
-            //    autoTrigger: true,
-            //    nextSelector : '.pagination li.active + li a',
-            //    contentSelector: 'div.scroll',
-            //    callback: function(){
-            //      $('ul.pagination:visible:first').hide();
-            //    }
-
-            //  });
-//SCROLL ends
-
-      /* WHEN YOU UPLOAD ONE OR MULTIPLE FILES*/
-    $(document).on('change', '#post-images',function(){
-      $('.preview').html("");
-      len_files = $("#post-images").prop("files").length;
-      var construc = "<div class='row'>";
-      for (var i = 0; i < len_files; i++){
-        var file_data = $("#post-images").prop("files")[i];
-        form_data.append("photos[]", file_data);
-        construc += '<div class="col-3"><span class="btn btn-sm btn-danger imageremove">&times;</span><img width="120px" height="120px" src="' + window.URL.createObjectURL(file_data) + '"alt="' + file_data.name + '"/></div>';
-
-      }
-      construc += "</div>";
-      $('.preview').append(construc);
-
-
-    });
-    $(".preview").on('click','span.imageremove',function(){
-      //console.log($(this).next("img"));
-      var trash = $(this).data("file");
-      for(var i=0; i<storedFiles.length; i++){
-       if(storedFiles[i].name === trash){
-        storedFiles.splice(i,1);
-        break;
-       } 
-      }
-      $(this).parent().remove();
-
-    }
-    );
-
-
-
-      $("#publishpost").click(function(){
-        var url = '{{URL::to('/')}}' +"/post";
-        form_data.append("content", $("#contentpost").val());
-        form_data.append("privacy", $("#privacy").val());
-
-
-        //alert(url);
-        $.ajax({
-          method: "POST",
-          url:url,
-          cache: false,
-          contentType: false,
-          processData: false,
-          data:form_data
-        }).done(function(data){
-          if(data.success){
-            form_data = new FormData();
-            storedFiles=[];
-            alert(data.message);
-            location.reload();
-            
-        //RESET FORM AFTER POST
-            $('postform').trigger("reset");
-            $(".preview").html("");
-          }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
-        });
-      });
-
 //reaction start
 $(".reaction").on("click",".reactionBtn", function(){
       var url = '{{URL::to('/')}}' +"/react";
@@ -721,12 +640,6 @@ $.ajax({
               $(this).parent().find('.dislike').parent().addClass('text-primary')
             }
 
-
-            // location.reload();
-            
-        //RESET FORM AFTER POST
-            //$('postform').trigger("reset");
-            //$(".preview").html("");
           }
           //console.log(data);
         }).fail(function(data){
