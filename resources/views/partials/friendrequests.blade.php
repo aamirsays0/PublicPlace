@@ -10,7 +10,7 @@
                 <div>
                   <h6><a href="{{url('profiles/'.$req->user->id)}}">{{isset($req->user->profiles->f_name, $req->user->profiles->l_name)? $req->user->profiles->f_name.' '. $req->user->profiles->l_name: $req->user->name}}</a></h6>
                   <a class="confirmBtn text-green" data-uid="{{$req->user_id}}" href="javascript:void(0)">Confirm</a>
-                  <a class="deleteBtn text-danger" data-uid="{{$req->id}}"  href="javascript:void(0)">Delete</a>
+                  <a class="deleteBtn text-danger" data-uid="{{$req->user_id}}"  href="javascript:void(0)">Delete</a>
                 </div>
                </div>
               @empty

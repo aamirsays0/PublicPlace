@@ -695,9 +695,9 @@ $(".user-info").on("click",".addFrndBtn",function(){
              e.preventDefault();
              var f= $(this).data('uid');
              var url = '{{URL::to('/')}}' +"/confirmfriend/"+f;
-             swal({
+         swal({
           title: "Are you sure?",
-          text: "Once added, Request will be sent",
+          text: "Once confirmed, This user will be your friend",
           icon: "warning",
           buttons: [
             'No, cancel it!',
@@ -717,7 +717,7 @@ $(".user-info").on("click",".addFrndBtn",function(){
                 // console.log(data);
                 // return;
                   if(data.success){
-                    swal("Cancelled", data.message, "error");
+                    swal("Successful", data.message, "success");
                     t.parent().parent().remove();
 
                   // location.reload();
@@ -748,7 +748,18 @@ $(".user-info").on("click",".addFrndBtn",function(){
              e.preventDefault();
              var f= $(this).data('uid');
              var url = '{{URL::to('/')}}' +"/deletefriend/"+f;
-             $.ajax({
+             swal({
+          title: "Are you sure?",
+          text: "Once deleted, Friend request will be rejected",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            $.ajax({
                   method: "POST",
                   url:url,
                   cache: false,
@@ -759,19 +770,25 @@ $(".user-info").on("click",".addFrndBtn",function(){
                 // console.log(data);
                 // return;
                   if(data.success){
-                    alert(data.message);
+                    swal("Deleted", data.message, "success");
                     t.parent().parent().remove();
 
                   // location.reload();
-                    
-                //RESET FORM AFTER POST
-                    //$('postform').trigger("reset");
-                    //$(".preview").html("");
                   }
                   //console.log(data);
                 }).fail(function(data){
                   alert(data.message);
                 });
+    
+
+          } else {
+             swal("Cancelled", "You have no new friend :)", "error");
+          }
+        });
+
+
+
+
            });
 //reaction start
 $(".reaction").on("click",".reactionBtn", function(){

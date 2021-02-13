@@ -59,7 +59,7 @@ class FriendController extends Controller
     } 
 
     public function deleteFriend($id){
-        $f = Friend::findOrFail($id)
+        $f = Friend::where('user_id',$id)
             ->where('friend_id',Auth::id())
             ->where('approved', '0')
             ->where('blocked', '0')
