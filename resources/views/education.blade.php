@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<!-- Copied from http://mythemestore.com/friend-finder/edit-profile-work-edu.html by Cyotek WebCopy 1.7.0.600, Thursday, September 5, 2019, 12:34:06 AM -->
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -60,7 +59,7 @@
                   <li><a href="{{url('profiles/'.$userinfo->id)}}">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
                   <li><a href="{{route('user.album.show',$userinfo->id)}}">Album</a></li>
-                  <li><a href="{{url('friends/'.$userinfo->id)}}">Friends</a></li>
+                  <li><a href="{{route('user.friends',$userinfo->id)}}">Friends</a></li>
                 </ul>
               </div>
             </div>
@@ -79,10 +78,10 @@
             </div>
             <div class="mobile-menu">
               <ul class="list-inline">
-                  <li><a href="{{url('profiles/'.Auth::id())}}" class="active">Timeline</a></li>
+                  <li><a href="{{url('profiles/'.Auth::id())}}">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
                   <li><a href="{{route('user.album.show',Auth::id())}}">Album</a></li>
-                  <li><a href="{{url('friends/'.Auth::id())}}">Friends</a></li>
+                  <li><a href="{{route('user.friends',Auth::id())}}">Friends</a></li>
               </ul>
             </div>
           </div><!--Timeline Menu for Small Screens End-->
@@ -97,7 +96,7 @@
            </button>
         </div>
         <div class="modal-body">
-           <img class="img-fluid" id="modal_image_container" src="" alt="">
+           <img class="img-fluid img-responsive" id="modal_image_container" src="" alt="">
          </div>
      </div>
   </div>
@@ -106,19 +105,19 @@
           <div class="row">
             <div class="col-md-3">
               
-            <ul class="edit-menu " style="margin-top: 80px">
+            <ul class="edit-menu " style="margin-top: 80px; display: grid;">
                <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
                   <i class="icon ion-ios-information-outline"></i>
                   <a href="{{url('profiles')}}"> Edit Basic Information</a>
-                </li><br>
+                </li>
                 <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
                   <i class="icon ion-ios-information-outline"></i>
                   <a href="{{ route('view.friends.profile', Auth::id()) }}"> Basic Information</a>
-                </li><br>
+                </li>
                   <li class='{{Route::current()->uri == 'education'?'active': ''}}'>
                   <i class="icon ion-ios-briefcase-outline"></i>
                   <a href="{{url('education')}}">  Education & Work</a>
-                  </li><br>
+                  </li>
                   <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
                   <i class="icon ion-ios-locked-outline"></i>
                   <a href="{{url('change-password')}}">  Change Password</a>
@@ -161,7 +160,7 @@
                        </div>
                  <div class="row">
                       <div class="form-group col-xs-6">
-                        <label for="date-from">Sess</label>
+                        <label for="date-from">Session</label>
                         <input id="date-from" class="form-control input-group-lg" type="text" name="sess" title="Enter a Date" placeholder="year-year" value="2012-2016">
                       </div>
                       
@@ -224,7 +223,7 @@
         <td>{{$education->level}}</td>
         <td>{{$education->major}}</td>
         <td>{{$education->graduate}}</td>
-        <td><a href="#"><span class="fa fa-edit"></span> </a>
+        <td>
             @if (Auth::check())
                     @if(count((array) $userinfo->education) > 0)
                     @if($education->user->id == Auth::user()->id)
@@ -291,7 +290,7 @@
                     <div class="row">
                       <div class="form-group col-xs-12">
                         <label for="work-description">Description</label>
-                        <textarea id="work-description" name="description" class="form-control" placeholder="Some texts about my work" rows="4" cols="400">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate</textarea>
+                        <textarea id="work-description" name="description" class="form-control" placeholder="Some texts about my work" rows="4" cols="400"></textarea>
                       </div>
                     </div>
                     <div class="row">
@@ -327,7 +326,7 @@
                    <td>{{$works->workto}}</td>
                    <td>{{$works->city}}</td>
                    <td>{{$works->working}}</td>
-                   <td><a href="#"><span class="fa fa-edit"></span> </a>
+                   <td>
                    @if (Auth::check())
                                @if(count((array) $userinfo->works) > 0)
                                @if($works->user->id == Auth::user()->id)
@@ -359,7 +358,7 @@
                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> You added a Post</a>
                    @else
                     <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link">You {{ $activity->type }}ed on a Post</a>
-                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ $activity->post->user->name }}</a>
+                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->post->user->profiles->f_name) ? ucfirst($activity->post->user->profiles->f_name) : ucfirst($activity->post->user->name) }}</a>
                     @endif   
                   </p>
                   <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
@@ -493,6 +492,41 @@
                 
     </script>
 
+<script>
+ Pusher.logToConsole = true;
+ var pusher = new Pusher ('0e8a23a77d5e825ac0fc', {
+   cluster: 'ap2',
+   useTLS: true
+   
+ }
+ );
+ /* var channel = pusher.subscribe('Public-Place'); */
+ var channel = pusher.subscribe('user-{{Auth::id()}}');
+ 
+ channel.bind('new-post', function(data){
+   if (data.sender_id === {{ Auth::id() }}) return;
+   //alert(data.message);
+   if (data.type == "post"){
+  var template = '<a href="{{url('posts/')}}/'+data.pid+'" class="dropdown-item preview-item"><div class="preview-thumbnail"><div class="preview-icon bg-success"><i class="mdi mdi-alert-circle-outline mx-0"></i>\n' +
+            '</div></div><div class="preview-item-content"><h5 class="preview-subject font-weight-medium text-dark">'+ data.message +'</h5><p class="small-text text-success">\n' +
+               'Just Now</p></div></a><div class="dropdown-divider"></div>';
+              }
+  else if(data.type == "reaction"){
+    var template = '<a class="dropdown-item preview-item"><div class="preview-thumbnail"><div class="preview-icon bg-success"><i class="mdi mdi-alert-circle-outline mx-0"></i>\n' +
+            '</div></div><div class="preview-item-content"><h5 class="preview-subject font-weight-medium text-dark">'+ data.message +'</h5><p class="small-text text-success">\n' +
+               'Just Now</p></div></a><div class="dropdown-divider"></div>';
+  }
+
+
+         
+  $("#notificationDropdown span.count").text(
+    parseInt($("#notificationDropdown span.count").text())
+    +1);
+
+  
+  $("#noteItemContainer").prepend(template);
+ });
+</script>
     
     
   </body>

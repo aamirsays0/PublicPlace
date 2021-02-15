@@ -185,15 +185,14 @@ class PostController extends Controller
           ->with('comments')
           ->with('reactions')
         ->find($id);
-        $allFriends = FriendsList::Friends(Auth::id());
+        $ids = Auth::id();
         $his_friends = Friend::select('user_id', 'friend_id')->whereRaw("( user_id = $id OR friend_id = $id )")->get()->toArray();
-        $friends = User::with('profiles')
-        ->whereIn('id',$allFriends)
-         ->get();
+        $friends =  Friend::whereRaw("( user_id = $ids OR friend_id = $ids )")
+        ->where(['approved' => 1, 'blocked' => 0])
+        ->get();
          $sentRequest = FriendsList::Friends(Auth::id());
-         $id = Auth::id();
         $friendreq = Friend::with('user')
-                ->where("friend_id",$id)
+                ->where("friend_id",Auth::id())
                  ->where('approved','0')->get();
         /* 
 
@@ -359,10 +358,10 @@ class PostController extends Controller
                  ->where('approved','0')
                  ->where('blocked', '0')
                  ->get();
-        $allFriends = FriendsList::Friends($id);
-              $friends = User::with('profiles')
-              ->whereIn('id',$allFriends)
-              ->get();
+        $friends =  Friend::whereRaw("( user_id = $id OR friend_id = $id )")
+                 ->where(['approved' => 1, 'blocked' => 0])
+                 ->get();
+         
               $images = DB::table('pictures')
               ->select(DB::raw('post_id, imgname'))
               ->where('post_id', '<>', Auth::id())

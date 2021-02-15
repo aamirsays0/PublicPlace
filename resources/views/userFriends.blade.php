@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<!-- Copied from http://mythemestore.com/friend-finder/edit-profile-basic.html by Cyotek WebCopy 1.7.0.600, Thursday, September 5, 2019, 12:34:06 AM -->
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,6 +34,9 @@
       ================================================= -->
        <div class="timeline">
       <div class="timeline-cover" style="background-image: url('{{asset('storage/profile/'.$user_information->id.'_cover.jpg')}} ')" data-lightbox="cp">
+      <div id="showcpbtncontainer">
+         <span><i class ="fa fa-expand text-dark"></i></span>
+        </div>
           <!--Timeline Menu for Large Screens-->
           <div class="timeline-nav-bar hidden-sm hidden-xs">
             <div class="row">
@@ -55,7 +57,7 @@
                   <li><a href="{{url('profiles/'.$user_information->id)}}">Timeline</a></li>
                   <li><a href="{{url('profiles/about')}}">About</a></li>
                   <li><a href="{{route('user.album.show',$user_information->id)}}">Album</a></li>
-                  <li><a href="{{url('friends/'.$user_information->id)}}">Friends</a></li>
+                  <li><a href="{{route('user.friends',$user_information->id)}}">Friends</a></li>
                 </ul>
               </div>
             </div>
@@ -77,7 +79,7 @@
                   <li><a href="{{url('profiles/'.$user_information->id)}}">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
                   <li><a href="{{route('user.album.show',$user_information->id)}}">Album</a></li>
-                  <li><a href="{{url('friends/'.$user_information->id)}}">Friends</a></li>
+                  <li><a href="{{route('user.friends',$user_information->id)}}" class="active">Friends</a></li>
               </ul>
             </div>
           </div><!--Timeline Menu for Small Screens End-->
@@ -92,7 +94,7 @@
            </button>
         </div>
         <div class="modal-body">
-           <img class="img-fluid" id="modal_image_container" src="" alt="">
+           <img class="img-fluid img-responsive" id="modal_image_container" src="" alt="">
          </div>
      </div>
   </div>
@@ -103,21 +105,24 @@
                               
                       
                 <!--Edit Profile Menu-->
-                <ul class="edit-menu " style="margin-top: 80px">
-                    <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
-                      <i class="icon ion-ios-information-outline"></i>
+                <ul class="edit-menu " style="margin-top: 80px; display: grid;">
                       @if ( isset($user_information) && $user_information->id === Auth::id())
+
+                      <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+                      <i class="icon ion-ios-information-outline"></i>
                       <a href="{{url('profiles')}}"> Edit Basic Information</a>
                       @else
+                      <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
+                      <i class="icon ion-ios-information-outline"></i>
                       <a href="{{ route('view.friends.profile', $user_information->id) }}"> Basic Information</a>
-                      @endif
-                    </li><br>
+                    </li>
+                    @endif
+                    @if ( isset($user_information) && $user_information->id === Auth::id())
                     <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
-                      @if ( isset($user_information) && $user_information->id === Auth::id())
                       <i class="icon ion-ios-information-outline"></i>
                       <a href="{{ route('view.friends.profile', $user_information->id) }}">Basic Information</a>
-                       @endif
                     </li>
+                    @endif
                       <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i>
                       @if ( isset($user_information) && $user_information->id === Auth::id())
                       <a href="{{url('education')}}">  Education & Work</a>
@@ -243,6 +248,19 @@
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script src="http://unpkg.com/ionicons@4.4.2/dist/ionicons.js"></script>
   	<script src="{{asset('js/jquery.validate.min.js')}}"></script>
+    <script>
+      $(document).ready(function(){
+        $("#showcpbtncontainer").click(function(){
+          var url = ($(".timeline-cover").css('background-image'));
+          var start_quot = url.indexOf("\"") + 1;
+          var end_quot = url.lastIndexOf("\"");
+          url=(url.substring(start_quot,end_quot));
+          $('#modal_image_container').attr("src",url);
+          $('#cpmodal').modal();
+          //location.reload();
+        });
+      })
+    </script>
 <script>
  Pusher.logToConsole = true;
  var pusher = new Pusher ('0e8a23a77d5e825ac0fc', {
@@ -282,127 +300,7 @@ $.ajaxSetup({
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
       });
-//JSCROLL
-             $("ul.pagination").hide();
-             $('.scroll').jscroll({
-               autoTrigger: true,
-               nextSelector : '.pagination li.active + li a',
-               contentSelector: 'div.scroll',
-               callback: function(){
-                 $('ul.pagination:visible:first').hide();
-               }
-             });
-//SCROLL ends
-      /* WHEN YOU UPLOAD ONE OR MULTIPLE FILES*/
-    $(document).on('change', '#post-images',function(){
-      $('.preview').html("");
-      len_files = $("#post-images").prop("files").length;
-      var construc = "<div class='row'>";
-      for (var i = 0; i < len_files; i++){
-        var file_data = $("#post-images").prop("files")[i];
-        form_data.append("photos[]", file_data);
-        construc += '<div class="col-3"><span class="btn btn-sm btn-danger imageremove">&times;</span><img width="120px" height="120px" src="' + window.URL.createObjectURL(file_data) + '"alt="' + file_data.name + '"/></div>';
-      }
-      construc += "</div>";
-      $('.preview').append(construc);
-    });
-    $(".preview").on('click','span.imageremove',function(){
-      console.log($(this).next("img"));
-    }
-    )
-      $("#publishpost").click(function(){
-        var url = '{{URL::to('/')}}' +"/post";
-        form_data.append("content", $("#contentpost").val());
-        form_data.append("privacy", $("#privacy").val());
-        //alert(url);
-        $.ajax({
-          method: "POST",
-          url:url,
-          cache: false,
-          contentType: false,
-          processData: false,
-          data:form_data
-        }).done(function(data){
-          if(data.success){
-            alert(data.message);
-            location.reload();
-            
-        //RESET FORM AFTER POST
-            //$('postform').trigger("reset");
-            //$(".preview").html("");
-          }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
-        });
-      });
-//CONFIRM FRIEND REQUEST
-           $(".confirmBtn").click(function(e){
-             var t = $(this);
-             e.preventDefault();
-             var f= $(this).data('uid');
-             var url = '{{URL::to('/')}}' +"/confirmfriend/"+f;
-             $.ajax({
-          method: "POST",
-          url:url,
-          cache: false,
-          contentType: false,
-          processData: false,
-          data:{r:Math.random()}
-        }).done(function(data){
-         // console.log(data);
-         // return;
-          if(data.success){
-            alert(data.message);
-            t.parent().parent().remove();
-           // location.reload();
-            
-        //RESET FORM AFTER POST
-            //$('postform').trigger("reset");
-            //$(".preview").html("");
-          }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
-        });
-           });
-//DELETE FRIEND REQUEST
-//reaction start
-     $("#contentpostContainer").on("click",".reactionBtn", function(){
-      var url = '{{URL::to('/')}}' +"/react";
-      //alert(url);
-       //$postid = $(this).data('postid');
-      // $reactionid = $(this).data('reaction');
-      // alert($postid + ":" + $reactionid);
-//ajax start
-$.ajax({
-          method: "POST",
-          url:url,
-          /* cache: false,
-          contentType: false,
-          processData: false, */
-          data:{
-            'postid': $(this).data('postid'),
-            'react': $(this).data('reaction'),
-            r:Math.random()}
-        }).done(function(data){
-         console.log(data);
-         // return;
-          if(data.success){
-            //alert(data.message);
-            location.reload();
-            
-        //RESET FORM AFTER POST
-            //$('postform').trigger("reset");
-            //$(".preview").html("");
-          }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
-        });
- //ajax end
-     });  
-//reaction ends
+      
     $('.unfriend_it').on('click', function(e) {
         let friend_id = $(this).data('friend_id');
         

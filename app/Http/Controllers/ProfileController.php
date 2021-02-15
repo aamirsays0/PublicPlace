@@ -45,7 +45,7 @@ class ProfileController extends Controller
          ->get();
         $userinfo = User::with('profiles')->find(Auth::id());
          $countryList = config('country.list');
-         $allActivity = Activity::with('post.user')->where('user_id',Auth::id())->orderBy('created_at','desc')->limit(10)->get(); 
+         $allActivity = Activity::with('post.user')->where('user_id',Auth::id())->orderBy('created_at','desc')->limit(4)->get(); 
          return view('profiles')
          ->with('user',$userinfo)
          ->with('country',$countryList)->with('allActivity',$allActivity)->with ('friends', $friends) ;
@@ -161,11 +161,11 @@ $data[] = $name;
      */
     public function show($id)
     {
-        $allFriends = FriendsList::Friends(Auth::id());
+        $ids = Auth::id();
+        $friends =  Friend::whereRaw("( user_id = $ids OR friend_id = $ids )")
+        ->where(['approved' => 1, 'blocked' => 0])
+        ->get();
 
-        $friends = User::with('profiles')
-        ->whereIn('id',$allFriends)
-         ->get();
         // $userinfo = FriendsList::Friends(Auth::id());
         $sentRequest = FriendsList::Friends(Auth::id());
         $userinfo = User::with('profiles')->where('id', $id)->first();
@@ -174,7 +174,7 @@ $data[] = $name;
                     ->with('videos')
                     ->with('comments.user')
                     ->with('reactions')
-                    ->where('user_id', $id)
+                    ->where('user_id', $id)->orderBy('created_at','DESC')
                     ->paginate(10);
         $user_information = User::with('profiles')->findOrFail($id);
         $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(4)->get();
@@ -293,13 +293,12 @@ $data[] = $name;
        public function userAlbum($id) {
         $images = Picture::whereHas('posts', function($query) use ($id) {
             $query->where('user_id', '=', $id);
-        })->get();
+        })->orderBy('created_at','DESC')->get();
         
-        $videos = DB::table('videos')
-              ->select(DB::raw('post_id, vidname'))
-              ->where('post_id', '<>', $id)
-              ->orderBy('created_at','DESC')
-              ->get();
+        $videos = Video::whereHas('posts', function($query) use ($id) {
+            $query->where('user_id', '=', $id);
+        })->orderBy('created_at','DESC')->get();
+
         $user_information = User::with('profiles')->findOrFail($id);
         $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(10)->get(); 
         return view('userAlbum', compact('images', 'videos', 'user_information'))->with('images', $images)->with('videos', $videos)->with('allActivity',$allActivity);

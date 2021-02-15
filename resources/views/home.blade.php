@@ -298,7 +298,7 @@
                     //print_r($imageinfo);
                     ?>
                     <a href="{{url('/storage/postimages/'.$pic->imgname)}}" data-lightbox="imageset-{{$post->id}}">
-                    <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" class="d-block w-100">
+                    <img src=" {{url('/storage/postimages/'.$imageinfo['filename'].".".$imageinfo['extension'])}}" alt="" class="d-block w-80">
                     </a>
                     </div>
 
@@ -599,7 +599,7 @@ $(".user-info").on("click",".addFrndBtn",function(){
       for (var i = 0; i < len_files; i++){
         var file_data = $("#post-images").prop("files")[i];
         form_data.append("photos[]", file_data);
-        construc += '<div class="col-3"><span class="btn btn-sm btn-danger imageremove">&times;</span><img width="120px" height="120px" src="' + window.URL.createObjectURL(file_data) + '"alt="' + file_data.name + '"/></div>';
+        construc += '<div class="col-3"><span class="btn btn-sm btn-danger imageremove">&times;</span><img width="120px" height="120px" src="' + window.URL.createObjectURL(file_data) + '"alt="' + file_data.name + '"class="img-responsive"/></div>';
 
       }
       construc += "</div>";
@@ -700,9 +700,9 @@ $(".user-info").on("click",".addFrndBtn",function(){
              e.preventDefault();
              var f= $(this).data('uid');
              var url = '{{URL::to('/')}}' +"/confirmfriend/"+f;
-             swal({
+         swal({
           title: "Are you sure?",
-          text: "Once added, Request will be sent",
+          text: "Once confirmed, This user will be your friend",
           icon: "warning",
           buttons: [
             'No, cancel it!',
@@ -722,7 +722,7 @@ $(".user-info").on("click",".addFrndBtn",function(){
                 // console.log(data);
                 // return;
                   if(data.success){
-                    swal("Cancelled", data.message, "error");
+                    swal("Successful", data.message, "success");
                     t.parent().parent().remove();
 
                   // location.reload();
@@ -753,7 +753,18 @@ $(".user-info").on("click",".addFrndBtn",function(){
              e.preventDefault();
              var f= $(this).data('uid');
              var url = '{{URL::to('/')}}' +"/deletefriend/"+f;
-             $.ajax({
+             swal({
+          title: "Are you sure?",
+          text: "Once deleted, Friend request will be rejected",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            $.ajax({
                   method: "POST",
                   url:url,
                   cache: false,
@@ -764,19 +775,25 @@ $(".user-info").on("click",".addFrndBtn",function(){
                 // console.log(data);
                 // return;
                   if(data.success){
-                    alert(data.message);
+                    swal("Deleted", data.message, "success");
                     t.parent().parent().remove();
 
                   // location.reload();
-                    
-                //RESET FORM AFTER POST
-                    //$('postform').trigger("reset");
-                    //$(".preview").html("");
                   }
                   //console.log(data);
                 }).fail(function(data){
                   alert(data.message);
                 });
+    
+
+          } else {
+             swal("Cancelled", "You have no new friend :)", "error");
+          }
+        });
+
+
+
+
            });
 //reaction start
 $(".reaction").on("click",".reactionBtn", function(){

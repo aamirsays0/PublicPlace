@@ -26,11 +26,13 @@
   <div class="row">
     @foreach($videos as $vid)
       <div class="col-sm-12 col-md-6">
+       <a href="{{ route('posts.show', $vid->post_id) }}">
         <video style="width: 100%;height: 150px;border-radius: 15px;" controls>
           <!-- {{$vid->vidname}} -->
           <source src="{{ asset('storage/postvideos/'.$vid->vidname) }}" type="video/mp4">
            Your browser does not support the video tag.
         </video>
+       </a>
       </div>
     @endforeach  
   </div>
@@ -189,39 +191,107 @@ $.ajaxSetup({
         });
       });
 //CONFIRM FRIEND REQUEST
-           $(".confirmBtn").click(function(e){
+//CONFIRM FRIEND 
+$(".confirmBtn").click(function(e){
              var t = $(this);
              e.preventDefault();
              var f= $(this).data('uid');
              var url = '{{URL::to('/')}}' +"/confirmfriend/"+f;
-             $.ajax({
-          method: "POST",
-          url:url,
-          cache: false,
-          contentType: false,
-          processData: false,
-          data:{r:Math.random()}
-        }).done(function(data){
-         // console.log(data);
-         // return;
-          if(data.success){
-            alert(data.message);
-            t.parent().parent().remove();
+             swal({
+          title: "Are you sure?",
+          text: "Once confirmed, This user will be your friend",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    swal("Successful", data.message, "success");
+                    t.parent().parent().remove();
 
-           // location.reload();
-            
-        //RESET FORM AFTER POST
-            //$('postform').trigger("reset");
-            //$(".preview").html("");
+                  // location.reload();
+                    
+                //RESET FORM AFTER POST
+                    //$('postform').trigger("reset");
+                    //$(".preview").html("");
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+    
+
+          } else {
+             swal("Cancelled", "You have no new friend :)", "error");
           }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
         });
+
+
+
+
            });
-
+//confirm friend end
 //DELETE FRIEND REQUEST
+$(".deleteBtn").click(function(e){
+             var t = $(this);
+             e.preventDefault();
+             var f= $(this).data('uid');
+             var url = '{{URL::to('/')}}' +"/deletefriend/"+f;
+             swal({
+          title: "Are you sure?",
+          text: "Once deleted, Friend request will be rejected",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    swal("Deleted", data.message, "success");
+                    t.parent().parent().remove();
 
+                  // location.reload();
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+    
+
+          } else {
+             swal("Cancelled", "You have no new friend :)", "error");
+          }
+        });
+
+
+
+
+           });
 //reaction start
      $("#contentpostContainer").on("click",".reactionBtn", function(){
       var url = '{{URL::to('/')}}' +"/react";

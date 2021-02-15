@@ -96,180 +96,108 @@ $.ajaxSetup({
     }
       });
 
-//JSCROLL
-             $("ul.pagination").hide();
-             $('.scroll').jscroll({
-               autoTrigger: true,
-               nextSelector : '.pagination li.active + li a',
-               contentSelector: 'div.scroll',
-               callback: function(){
-                 $('ul.pagination:visible:first').hide();
-               }
-
-             });
-//SCROLL ends
-
-      /* WHEN YOU UPLOAD ONE OR MULTIPLE FILES*/
-    $(document).on('change', '#post-images',function(){
-      $('.preview').html("");
-      len_files = $("#post-images").prop("files").length;
-      var construc = "<div class='row'>";
-      for (var i = 0; i < len_files; i++){
-        var file_data = $("#post-images").prop("files")[i];
-        form_data.append("photos[]", file_data);
-        construc += '<div class="col-3"><span class="btn btn-sm btn-danger imageremove">&times;</span><img width="120px" height="120px" src="' + window.URL.createObjectURL(file_data) + '"alt="' + file_data.name + '"/></div>';
-
-      }
-      construc += "</div>";
-      $('.preview').append(construc);
-
-
-    });
-    $(document).on('change', '#post-videos',function(){
-      $('.preview').html("");
-      len_files = $("#post-videos").prop("files").length;
-      var construc = "<div class='row'>";
-      for (var i = 0; i < len_files; i++){
-        var file_data = $("#post-videos").prop("files")[i];
-        form_data.append("videos[]", file_data);
-        construc += '<div class="col-3"><span class="btn btn-sm btn-danger vidremove">&times;</span><img width="120px" height="120px" src="' + window.URL.createObjectURL(file_data) + '"alt="' + file_data.name + '"/></div>';
-
-      }
-      construc += "</div>";
-      $('.preview').append(construc);
-
-
-    });
-    $(".preview").on('click','span.imageremove',function(){
-      //console.log($(this).next("img"));
-      var trash = $(this).data("file");
-      for(var i=0; i<storedFiles.length; i++){
-       if(storedFiles[i].name === trash){
-        storedFiles.splice(i,1);
-        break;
-       } 
-      }
-      $(this).parent().remove();
-
-    }
-    );
-    $(".preview").on('click','span.vidremove',function(){
-      //console.log($(this).next("img"));
-      var trash = $(this).data("file");
-      for(var i=0; i<storedFiles.length; i++){
-       if(storedFiles[i].name === trash){
-        storedFiles.splice(i,1);
-        break;
-       } 
-      }
-      $(this).parent().remove();
-
-    }
-    );
-
-
-      $("#publishpost").click(function(){
-        var url = '{{URL::to('/')}}' +"/post";
-        form_data.append("content", $("#contentpost").val());
-        form_data.append("privacy", $("#privacy").val());
-
-
-        //alert(url);
-        $.ajax({
-          method: "POST",
-          url:url,
-          cache: false,
-          contentType: false,
-          processData: false,
-          data:form_data
-        }).done(function(data){
-          if(data.success){
-            form_data = new FormData();
-            storedFiles=[];
-            alert(data.message);
-            location.reload();
-            
-        //RESET FORM AFTER POST
-            $('postform').trigger("reset");
-            $(".preview").html("");
-          }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
-        });
-      });
 //CONFIRM FRIEND REQUEST
-           $(".confirmBtn").click(function(e){
+//CONFIRM FRIEND 
+$(".confirmBtn").click(function(e){
              var t = $(this);
              e.preventDefault();
              var f= $(this).data('uid');
              var url = '{{URL::to('/')}}' +"/confirmfriend/"+f;
-             $.ajax({
-          method: "POST",
-          url:url,
-          cache: false,
-          contentType: false,
-          processData: false,
-          data:{r:Math.random()}
-        }).done(function(data){
-         // console.log(data);
-         // return;
-          if(data.success){
-            alert(data.message);
-            t.parent().parent().remove();
+             swal({
+          title: "Are you sure?",
+          text: "Once confirmed, This user will be your friend",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    swal("Successful", data.message, "success");
+                    t.parent().parent().remove();
 
-           // location.reload();
-            
-        //RESET FORM AFTER POST
-            //$('postform').trigger("reset");
-            //$(".preview").html("");
+                  // location.reload();
+                    
+                //RESET FORM AFTER POST
+                    //$('postform').trigger("reset");
+                    //$(".preview").html("");
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+    
+
+          } else {
+             swal("Cancelled", "You have no new friend :)", "error");
           }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
         });
+
+
+
+
            });
-
+//confirm friend end
 //DELETE FRIEND REQUEST
+$(".deleteBtn").click(function(e){
+             var t = $(this);
+             e.preventDefault();
+             var f= $(this).data('uid');
+             var url = '{{URL::to('/')}}' +"/deletefriend/"+f;
+             swal({
+          title: "Are you sure?",
+          text: "Once deleted, Friend request will be rejected",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    swal("Deleted", data.message, "success");
+                    t.parent().parent().remove();
 
-//reaction start
-     $("#contentpostContainer").on("click",".reactionBtn", function(){
-      var url = '{{URL::to('/')}}' +"/react";
-      //alert(url);
-       //$postid = $(this).data('postid');
-      // $reactionid = $(this).data('reaction');
-      // alert($postid + ":" + $reactionid);
-//ajax start
-$.ajax({
-          method: "POST",
-          url:url,
-          /* cache: false,
-          contentType: false,
-          processData: false, */
-          data:{
-            'postid': $(this).data('postid'),
-            'react': $(this).data('reaction'),
-            r:Math.random()}
-        }).done(function(data){
-         console.log(data);
-         // return;
-          if(data.success){
-            //alert(data.message);
+                  // location.reload();
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+    
 
-            location.reload();
-            
-        //RESET FORM AFTER POST
-            //$('postform').trigger("reset");
-            //$(".preview").html("");
+          } else {
+             swal("Cancelled", "You have no new friend :)", "error");
           }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
         });
- //ajax end
 
-     });  
-//reaction ends
+
+
+
+           });
 //comment container show hide start
           $("#contentpostContainer").on("click",".commentToggleBtn", function(){
             $(this).next(".commentContainer").toggle(250);

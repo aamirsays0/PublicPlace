@@ -115,6 +115,12 @@
 
     
 @endsection
+@section('sidebar-right')
+          <div class="suggestions" id="sticky-sidebar">
+          @include('partials.friendrequests')
+           
+             </div>
+@endsection
 
 @section("script")
 <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
@@ -230,6 +236,118 @@ $(document).on('click', '.deleteComment', function() {
     });
 });
 
+</script>
+<script>
+ $(document).ready(function(e){
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+      });
+//CONFIRM FRIEND REQUEST
+//CONFIRM FRIEND 
+$(".confirmBtn").click(function(e){
+             var t = $(this);
+             e.preventDefault();
+             var f= $(this).data('uid');
+             var url = '{{URL::to('/')}}' +"/confirmfriend/"+f;
+             swal({
+          title: "Are you sure?",
+          text: "Once confirmed, This user will be your friend",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    swal("Successful", data.message, "success");
+                    t.parent().parent().remove();
+
+                  // location.reload();
+                    
+                //RESET FORM AFTER POST
+                    //$('postform').trigger("reset");
+                    //$(".preview").html("");
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+    
+
+          } else {
+             swal("Cancelled", "You have no new friend :)", "error");
+          }
+        });
+
+
+
+
+           });
+//confirm friend end
+//DELETE FRIEND REQUEST
+$(".deleteBtn").click(function(e){
+             var t = $(this);
+             e.preventDefault();
+             var f= $(this).data('uid');
+             var url = '{{URL::to('/')}}' +"/deletefriend/"+f;
+             swal({
+          title: "Are you sure?",
+          text: "Once deleted, Friend request will be rejected",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    swal("Deleted", data.message, "success");
+                    t.parent().parent().remove();
+
+                  // location.reload();
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+    
+
+          } else {
+             swal("Cancelled", "You have no new friend :)", "error");
+          }
+        });
+
+
+
+
+           });
+//Delete requests end
+ });
 </script>
 
 @endsection

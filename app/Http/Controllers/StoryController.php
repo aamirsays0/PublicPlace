@@ -36,18 +36,17 @@ class StoryController extends Controller
                  ->where('approved','0')
                  ->where('blocked', '0')
                  ->get();
-    
-        $allFriends = FriendsList::Friends($id);
 
-        $friends = User::with('profiles')
-        ->whereIn('id',$allFriends)
-         ->get();
+        $friends =  Friend::whereRaw("( user_id = $id OR friend_id = $id )")
+        ->where(['approved' => 1, 'blocked' => 0])
+        ->get();
+
         $stories = Story::with('comments')
         ->where('created_at', '>=', Carbon::now()->subDay())
         ->where('user_id', $id)->get();
 
 
-        return view('stories.form', compact('stories', 'friends'));
+        return view('stories.form', compact('stories', 'friends'))->with('requests', $friendreq);
     }
 
     /**
@@ -98,11 +97,11 @@ class StoryController extends Controller
          ->where('blocked', '0')
          ->get();
         $sentRequest = FriendsList::Friends(Auth::id());
-        $allFriends = FriendsList::Friends($id);
+        $ids = auth()->id();
+        $friends =  Friend::whereRaw("( user_id = $ids OR friend_id = $ids )")
+        ->where(['approved' => 1, 'blocked' => 0])
+        ->get();
 
-        $friends = User::with('profiles')
-        ->whereIn('id',$allFriends)
-         ->get();
         $story_data = $story->where('id', $id)->with('comments', 'user')->first();
         return view('stories.show', compact('story_data', 'friends'))->with('req', $sentRequest)
         ->with('requests', $friendreq);
@@ -144,14 +143,18 @@ class StoryController extends Controller
     
     public function friendsStory(User $user, $id)
     {
-        $allFriends = FriendsList::Friends($id);
-
-        $friends = User::with('profiles')
-        ->whereIn('id',$allFriends)
+        $friendreq = Friend::with('user')
+        ->where("friend_id",Auth::id())
+         ->where('approved','0')
+         ->where('blocked', '0')
          ->get();
-
+         $ids = auth()->id();
+         $friends =  Friend::whereRaw("( user_id = $ids OR friend_id = $ids )")
+         ->where(['approved' => 1, 'blocked' => 0])
+         ->get();
+ 
         $stories = $user->with('stories')->where('id', $id)->first();
 
-        return view('stories.friends', compact('stories', 'friends'));
+        return view('stories.friends', compact('stories', 'friends'))->with('requests', $friendreq);
     }
 }

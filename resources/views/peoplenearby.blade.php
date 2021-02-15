@@ -92,110 +92,150 @@
  
  $("#home").on("click",".addFrndBtn",function(){
    var url = '{{URL::to('/')}}' +"/addfriend/" +$(this).data('uid');
-   $.ajax({
-          method: "POST",
-          url:url,
-          cache: false,
-          data:{r:Math.random()}
-        }).done(function(data){
-          console.log(data);
-          if(data.success){
-            alert(data.message);
-            location.reload();
-        //RESET FORM AFTER POST
-           // $('postform').trigger("reset");
-            //$(".preview").html("");
+   swal({
+          title: "Are you sure?",
+          text: "Once added, Request will be sent",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+                         
+             $.ajax({
+                   method: "POST",
+                   url:url,
+                   cache: false,
+                   data:{r:Math.random()}
+                 }).done(function(data){
+                   console.log(data);
+                   if(data.success){
+                     swal("Request sent", data.message, 'success');
+                     location.reload();
+                 //RESET FORM AFTER POST
+                    // $('postform').trigger("reset");
+                     //$(".preview").html("");
+                   }
+                   //console.log(data);
+                 }).fail(function(data){
+                   console.log(data);
+                   alert(data.message);
+                 });
+         
+          } else {
+            swal("Cancelled", "User in not added as friend", "error");
           }
-          //console.log(data);
-        }).fail(function(data){
-          console.log(data);
-          alert(data.message);
         });
+
 
 
 
  });
- 
-//reaction start
-$(".reaction").on("click",".reactionBtn", function(){
-      var url = '{{URL::to('/')}}' +"/react";
-      //alert(url);
-       //$postid = $(this).data('postid');
-      // $reactionid = $(this).data('reaction');
-      // alert($postid + ":" + $reactionid);
-//ajax start
-$.ajax({
-          method: "POST",
-          url:url,
-          /* cache: false,
-          contentType: false,
-          processData: false, */
-          data:{
-            'postid': $(this).data('postid'),
-            'react': $(this).data('reaction'),
-            r:Math.random()},
-        success: (data) =>  {
-          console.log($(this).data('postid'), "INSIDE AJHAX")
-        }
-        }
-        ).done((data) => {
-        //  console.log(data);
-         // return;
-          if(data.success){
-            //alert(data.message);
-            $(this).parent().find('.like').html(data.liked);
-            $(this).parent().find('.smiled').html(data.smiled) ;
-            $(this).parent().find('.heart').html(data.loved);
-            $(this).parent().find('.dislike').html(data.disliked)
-            if (data.liked <= 0) {
-              $(this).parent().find('.like').parent().removeClass('text-primary')
-              // $('#like').parent().removeClass('text-primary')
-              $(this).parent().find('.like').parent().addClass('text-secondary')
-            }else {
-              $(this).parent().find('.like').parent().removeClass('text-secondary')
-              $(this).parent().find('.like').parent().addClass('text-primary')
-            }
-            //
-            if (data.smiled <= 0) {
-              $(this).parent().find('.smiled').parent().removeClass('text-primary')
-              $(this).parent().find('.smiled').parent().addClass('text-secondary')
-            }else {
-              $(this).parent().find('.smiled').parent().removeClass('text-secondary')
-              $(this).parent().find('.smiled').parent().addClass('text-primary')
-            }
-            //
-            if (data.loved <= 0) {
-              $(this).parent().find('.heart').parent().removeClass('text-primary')
-              $(this).parent().find('.heart').parent().addClass('text-secondary')
-            }else {
-              $(this).parent().find('.heart').parent().removeClass('text-secondary')
-              $(this).parent().find('.heart').parent().addClass('text-primary')
-            }
-            //
-            if (data.disliked <= 0) {
-              $(this).parent().find('.dislike').parent().removeClass('text-primary')
-              $(this).parent().find('.dislike').parent().addClass('text-secondary')
-            }else {
-              $(this).parent().find('.dislike').parent().removeClass('text-secondary')
-              $(this).parent().find('.dislike').parent().addClass('text-primary')
-            }
+ //CONFIRM FRIEND REQUEST
+ //CONFIRM FRIEND REQUEST
+ $(".confirmBtn").click(function(e){
+             var t = $(this);
+             e.preventDefault();
+             var f= $(this).data('uid');
+             var url = '{{URL::to('/')}}' +"/confirmfriend/"+f;
+             swal({
+          title: "Are you sure?",
+          text: "Once confirmed, This user will be your friend",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    swal("Successful", data.message, "success");
+                    t.parent().parent().remove();
 
+                  // location.reload();
+                    
+                //RESET FORM AFTER POST
+                    //$('postform').trigger("reset");
+                    //$(".preview").html("");
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+    
 
-            // location.reload();
-            
-        //RESET FORM AFTER POST
-            //$('postform').trigger("reset");
-            //$(".preview").html("");
+          } else {
+             swal("Cancelled", "You have no new friend :)", "error");
           }
-          //console.log(data);
-        }).fail(function(data){
-          alert(data.message);
         });
- //ajax end
 
-     });  
-//reaction ends
-//comment container show hide start
+
+
+
+           });
+
+//DELETE FRIEND REQUEST
+$(".deleteBtn").click(function(e){
+             var t = $(this);
+             e.preventDefault();
+             var f= $(this).data('uid');
+             var url = '{{URL::to('/')}}' +"/deletefriend/"+f;
+             swal({
+          title: "Are you sure?",
+          text: "Once deleted, Friend request will be rejected",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    swal("Deleted", data.message, "success");
+                    t.parent().parent().remove();
+
+                  // location.reload();
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+    
+
+          } else {
+             swal("Cancelled", "You have no new friend :)", "error");
+          }
+        });
+
+
+
+
+           });
+  //comment container show hide start
           $(".viewpost").on("click",".commentToggleBtn", function(){
             $(this).next(".commentContainer").toggle(250);
 

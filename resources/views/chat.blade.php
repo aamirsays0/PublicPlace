@@ -14,21 +14,21 @@
 
                   <!-- Contact List in Left-->
                   <ul class="nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer">
-                  @forelse($friends as $user)
-                    @if($user->id == Auth::id())
-                         @continue
-                    @endif
+                  @forelse($friends as $friend)
+                  @php
+                    $friends_data = $friend->user_id == auth()->id() ? $friend->friendInfo : $friend->user;
+                @endphp
       
-                    <li class="chat_lists active_chat" data-userid ="{{$user->id}}">
+                    <li class="chat_lists active_chat" data-userid ="{{$friends_data->id}}">
                       <a href="#contact-1" data-toggle="tab">
                         <div class="contact">
-                        @if (file_exists(public_path('storage/profile/'.$user->id.'_profile.jpg')) )
-                        <img src="{{asset('storage/profile/'.$user->id.'_profile.jpg')}}" alt="" class="profile-photo-sm pull-left"style="position: absolute; top: 15%;">
+                        @if (file_exists(public_path('storage/profile/'.$friends_data->id.'_profile.jpg')) )
+                        <img src="{{asset('storage/profile/'.$friends_data->id.'_profile.jpg')}}" alt="" class="profile-photo-sm pull-left"style="position: absolute; top: 15%;">
                            @else
                               <img src="{{ asset('images/noimage.jpg') }}" alt="" class="profile-photo-sm pull-left"style="position: absolute; top: 15%;">
                            @endif
                         	<div class="msg-preview">
-                          <h5>{{isset($user->profiles->f_name, $user->profiles->l_name)? $user->profiles->f_name.' '. $user->profiles->l_name: $user->name}}
+                          <h5>{{isset($friends_data->profiles->f_name, $friends_data->profiles->l_name)? $friends_data->profiles->f_name.' '. $friends_data->profiles->l_name: $friends_data->name}}
                           <small class="text-muted"><i class="ion ion-chevron-right"></i></small></h5>
                         	</div>
                         </div>
@@ -97,6 +97,7 @@
 @endsection
 
 @section('script')
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
     $(document).ready(function(){
       var baseurl = '{{URL::to('/')}}' +"/";
@@ -190,6 +191,108 @@
           }); 
             
       });
+
+  //CONFIRM FRIEND REQUEST
+  $(".confirmBtn").click(function(e){
+             var t = $(this);
+             e.preventDefault();
+             var f= $(this).data('uid');
+             var url = '{{URL::to('/')}}' +"/confirmfriend/"+f;
+             swal({
+          title: "Are you sure?",
+          text: "Once confirmed, This user will be your friend",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    swal("Successful", data.message, "success");
+                    t.parent().parent().remove();
+
+                  // location.reload();
+                    
+                //RESET FORM AFTER POST
+                    //$('postform').trigger("reset");
+                    //$(".preview").html("");
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+    
+
+          } else {
+             swal("Cancelled", "You have no new friend :)", "error");
+          }
+        });
+
+
+
+
+           });
+
+//DELETE FRIEND REQUEST
+$(".deleteBtn").click(function(e){
+             var t = $(this);
+             e.preventDefault();
+             var f= $(this).data('uid');
+             var url = '{{URL::to('/')}}' +"/deletefriend/"+f;
+             swal({
+          title: "Are you sure?",
+          text: "Once deleted, Friend request will be rejected",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            $.ajax({
+                  method: "POST",
+                  url:url,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data:{r:Math.random()}
+                }).done(function(data){
+                // console.log(data);
+                // return;
+                  if(data.success){
+                    swal("Deleted", data.message, "success");
+                    t.parent().parent().remove();
+
+                  // location.reload();
+                  }
+                  //console.log(data);
+                }).fail(function(data){
+                  alert(data.message);
+                });
+    
+
+          } else {
+             swal("Cancelled", "You have no new friend :)", "error");
+          }
+        });
+
+
+
+
+           });
   //select user
          //send chat
         $("#write_msgs").keypress(function(e){
@@ -210,16 +313,7 @@
           }
         }).done(function(data){
           $("#write_msgs").val("");
-          //console.log(data);
-          /* if(data.status){
-           // alert(data.message);
-            //location.reload();
-            
-        //RESET FORM AFTER POST
-            //$('postform').trigger("reset");
-            //$(".preview").html("");
-          } */
-          //console.log(data);
+
         }).fail(function(data){
           alert(data.message);
         });

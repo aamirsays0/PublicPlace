@@ -59,7 +59,7 @@
                   <li><a href="{{url('profiles/'.$user->id)}}">Timeline</a></li>
                   <li><a href="{{url('profiles/about')}}">About</a></li>
                   <li><a href="{{route('user.album.show',$user->id)}}">Album</a></li>
-                  <li><a href="{{url('friends/'.$user->id)}}">Friends</a></li>
+                  <li><a href="{{route('user.friends',$user->id)}}">Friends</a></li>
                 </ul>
               </div>
             </div>
@@ -82,7 +82,7 @@
                   <li><a href="{{url('profiles/'.$user->id)}}" class="active">Timeline</a></li>
                   <li><a href="timeline-about.html">About</a></li>
                   <li><a href="{{route('user.album.show',$user->id)}}">Album</a></li>
-                  <li><a href="{{url('friends/'.$user->id)}}">Friends</a></li>
+                  <li><a href="{{route('user.friends',$user->id)}}">Friends</a></li>
               </ul>
             </div>
           </div><!--Timeline Menu for Small Screens End-->
@@ -97,7 +97,7 @@
            </button>
         </div>
         <div class="modal-body">
-           <img class="img-fluid" id="modal_image_container" src="" alt="">
+           <img class="img-fluid img-responsive" id="modal_image_container" src="" alt="">
          </div>
      </div>
   </div>
@@ -107,7 +107,7 @@
             <div class="col-md-3">
               
       
-              <ul class="edit-menu " style="margin-top: 80px">
+              <ul class="edit-menu " style="margin-top: 80px; display: grid;">
                 <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
                   <i class="icon ion-ios-information-outline"></i>
                   @if ( isset($user) && $user->id === Auth::id())
@@ -115,19 +115,19 @@
                   @else
                   <a href="{{ route('view.friends.profile', $user->id) }}">  Basic Information</a>
                   @endif
-                </li><br>
+                </li>
                 <li class='{{Route::current()->uri == 'profiles'?'active': ''}}'>
                 @if ( isset($user) && $user->id === Auth::id())
                   <i class="icon ion-ios-information-outline"></i>
                   <a href="{{ route('view.friends.profile', $user->id) }}">Basic Information</a>
                    @endif
-                </li><br>
+                </li>
                   <li class='{{Route::current()->uri == 'education'?'active': ''}}'><i class="icon ion-ios-briefcase-outline"></i>
                   @if ( isset($user) && $user->id === Auth::id())
                   <a href="{{url('education')}}">  Education & Work</a>
                   @else
                   <a href="{{ route('view.friends.education', $user->id) }}">  Education & Work</a>
-                  @endif        </li><br>
+                  @endif        </li>
                   <li class='{{Route::current()->uri == 'update'?'active': ''}}'>
                   @if ( isset($user) && $user->id === Auth::id())
                   <i class="icon ion-ios-locked-outline"></i>
@@ -274,7 +274,7 @@
                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> You added a Post</a>
                   @else
                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize">You {{ $activity->type }}ed on a Post</a>
-                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }}</a>
+                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->post->user->profiles->f_name) ? ucfirst($activity->post->user->profiles->f_name) : ucfirst($activity->post->user->name) }}</a>
                   @endif   
                   </p>
                   <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
@@ -283,6 +283,7 @@
             @endforeach          
           </div>
         </div>
+      </div>
       </div>
    
 
@@ -338,6 +339,40 @@
           })
 
     </script>
-    
+        <script>
+ Pusher.logToConsole = true;
+ var pusher = new Pusher ('0e8a23a77d5e825ac0fc', {
+   cluster: 'ap2',
+   useTLS: true
+   
+ }
+ );
+ /* var channel = pusher.subscribe('Public-Place'); */
+ var channel = pusher.subscribe('user-{{Auth::id()}}');
+ 
+ channel.bind('new-post', function(data){
+   if (data.sender_id === {{ Auth::id() }}) return;
+   //alert(data.message);
+   if (data.type == "post"){
+  var template = '<a href="{{url('posts/')}}/'+data.pid+'" class="dropdown-item preview-item"><div class="preview-thumbnail"><div class="preview-icon bg-success"><i class="mdi mdi-alert-circle-outline mx-0"></i>\n' +
+            '</div></div><div class="preview-item-content"><h5 class="preview-subject font-weight-medium text-dark">'+ data.message +'</h5><p class="small-text text-success">\n' +
+               'Just Now</p></div></a><div class="dropdown-divider"></div>';
+              }
+  else if(data.type == "reaction"){
+    var template = '<a class="dropdown-item preview-item"><div class="preview-thumbnail"><div class="preview-icon bg-success"><i class="mdi mdi-alert-circle-outline mx-0"></i>\n' +
+            '</div></div><div class="preview-item-content"><h5 class="preview-subject font-weight-medium text-dark">'+ data.message +'</h5><p class="small-text text-success">\n' +
+               'Just Now</p></div></a><div class="dropdown-divider"></div>';
+  }
+
+
+         
+  $("#notificationDropdown span.count").text(
+    parseInt($("#notificationDropdown span.count").text())
+    +1);
+
+  
+  $("#noteItemContainer").prepend(template);
+ });
+</script>
   </body>
 </html>
