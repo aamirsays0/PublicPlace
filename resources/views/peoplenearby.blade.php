@@ -46,13 +46,15 @@
                   <div class="col-md-3 col-sm-3">
                     @if(in_array($user->id,$req))
                     @if (Auth::user()->id !== $user->id)
-                        <span class="pull">Friends</span>
+                        <span class="pull pull-right">Friends</span>
                       @endif
                     @else
-                      @if($his_friends->where('friend_id', $user->id)->where('approved', 0)->where('blocked', 0)->first())
-                      <button class="btn pull pending" disabled>Pending</button>
+                      {{-- @if(array_search($user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
+                          @if((array_search($user->id, array_column($his_friends, 'user_id')) !== false) || 
+                            (array_search($user->id, array_column($his_friends, 'friend_id')) !== false))                     
+                        <button class="btn pull pending pull-right" disabled>Pending</button>
                       @else 
-                      <button class="btn pull addFrndBtn" data-uid="{{$user->id}}">Add Friend</button>
+                      <button class="btn pull pull-right addFrndBtn" data-uid="{{$user->id}}">Add Friend</button>
                       @endif
                     @endif
              

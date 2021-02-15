@@ -186,7 +186,9 @@ class PostController extends Controller
           ->with('reactions')
         ->find($id);
         $ids = Auth::id();
-        $his_friends = Friend::select('user_id', 'friend_id')->whereRaw("( user_id = $id OR friend_id = $id )")->get()->toArray();
+        $his_friends = Friend::select('user_id', 'friend_id')->whereRaw("( user_id = $ids OR friend_id = $ids )")
+        ->where('blocked', 0)
+        ->get()->toArray();
         $friends =  Friend::whereRaw("( user_id = $ids OR friend_id = $ids )")
         ->where(['approved' => 1, 'blocked' => 0])
         ->get();

@@ -384,8 +384,10 @@
                                                           <span class="pull pull-right">Friends</span>
                                                         @endif
                                                       @else
-                                                        @if(array_search($usercomment->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
-                                                        <button class="btn pull pending pull-right" disabled>Pending</button>
+                                                      {{-- @if(array_search($usercomment->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
+                                                        @if((array_search($usercomment->user->id, array_column($his_friends, 'user_id')) !== false) || 
+                                                         (array_search($usercomment->user->id, array_column($his_friends, 'friend_id')) !== false))
+                                                          <button class="btn pull pending pull-right" disabled>Pending</button>
                                                         @else 
                                                         <button class="btn pull addFrndBtn pull-right" data-uid="{{$usercomment->user->id}}">Add Friend</button>
                                                         @endif

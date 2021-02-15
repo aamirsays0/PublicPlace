@@ -59,7 +59,7 @@
                         @if (file_exists(public_path('storage/profile/'.$user->id.'_cover.jpg')) )
                          <img src="{{asset('storage/profile/'.$user->id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover" />
                          @else
-                         <img src="{{ asset('images/noimage.jpg') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
+                         <img src="{{ asset('images/no-cover.png') }}" class="img-responsive cover" id="uploadImage"  alt="profile-cover" class="img-responsive cover" />
                          @endif
                         <div class="card-info">
                              @if (file_exists(public_path('storage/profile/'.$user->id.'_profile.jpg')) )
@@ -76,7 +76,9 @@
                                          <span class="pull">Friends</span>
                                         @endif
                                       @else
-                                        @if($his_friends->where('friend_id', $user->id)->where('approved', 0)->where('blocked', 0)->first())
+                                      {{-- @if(array_search($user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
+                                        @if((array_search($user->id, array_column($his_friends, 'user_id')) !== false) || 
+                                          (array_search($user->id, array_column($his_friends, 'friend_id')) !== false))
                                          <button class="btn pull pending" disabled>Pending</button>
                                         @else 
                                         <button class="btn pull addFrndBtn" data-uid="{{$user->id}}">Add Friend</button>
@@ -116,7 +118,9 @@
                         <span class="pull">Friends</span>
                       @endif
                     @else
-                      @if($his_friends->where('friend_id', $user->id)->where('approved', 0)->where('blocked', 0)->first())
+                    {{-- @if(array_search($user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
+                                        @if((array_search($user->id, array_column($his_friends, 'user_id')) !== false) || 
+                                          (array_search($user->id, array_column($his_friends, 'friend_id')) !== false))
                       <button class="btn pull pending" disabled>Pending</button>
                       @else 
                       <button class="btn pull addFrndBtn" data-uid="{{$user->id}}">Add Friend</button>
@@ -419,14 +423,15 @@
          
           });
   //CONFIRM FRIEND REQUEST
- $(".confirmBtn").click(function(e){
+//CONFIRM FRIEND 
+$(".confirmBtn").click(function(e){
              var t = $(this);
              e.preventDefault();
              var f= $(this).data('uid');
              var url = '{{URL::to('/')}}' +"/confirmfriend/"+f;
              swal({
           title: "Are you sure?",
-          text: "Once added, Request will be sent",
+          text: "Once confirmed, This user will be your friend",
           icon: "warning",
           buttons: [
             'No, cancel it!',
@@ -446,7 +451,7 @@
                 // console.log(data);
                 // return;
                   if(data.success){
-                    swal("Cancelled", data.message, "error");
+                    swal("Successful", data.message, "success");
                     t.parent().parent().remove();
 
                   // location.reload();
@@ -470,15 +475,25 @@
 
 
            });
-  
-
+//confirm friend end
 //DELETE FRIEND REQUEST
-          $(".deleteBtn").click(function(e){
+$(".deleteBtn").click(function(e){
              var t = $(this);
              e.preventDefault();
              var f= $(this).data('uid');
              var url = '{{URL::to('/')}}' +"/deletefriend/"+f;
-             $.ajax({
+             swal({
+          title: "Are you sure?",
+          text: "Once deleted, Friend request will be rejected",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+            $.ajax({
                   method: "POST",
                   url:url,
                   cache: false,
@@ -489,21 +504,27 @@
                 // console.log(data);
                 // return;
                   if(data.success){
-                    alert(data.message);
+                    swal("Deleted", data.message, "success");
                     t.parent().parent().remove();
 
                   // location.reload();
-                    
-                //RESET FORM AFTER POST
-                    //$('postform').trigger("reset");
-                    //$(".preview").html("");
                   }
                   //console.log(data);
                 }).fail(function(data){
                   alert(data.message);
                 });
-           });
+    
 
+          } else {
+             swal("Cancelled", "You have no new friend :)", "error");
+          }
+        });
+
+
+
+
+           });
+//Delete requests end
 //reaction start
 $(".reaction").on("click",".reactionBtn", function(){
       var url = '{{URL::to('/')}}' +"/react";

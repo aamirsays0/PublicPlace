@@ -38,6 +38,8 @@ class ProfileController extends Controller
     }
      public function index()
      {
+
+        $sentRequest = FriendsList::Friends(Auth::id());
         $allFriends = FriendsList::Friends(Auth::id());
 
         $friends = User::with('profiles')
@@ -48,7 +50,7 @@ class ProfileController extends Controller
          $allActivity = Activity::with('post.user')->where('user_id',Auth::id())->orderBy('created_at','desc')->limit(4)->get(); 
          return view('profiles')
          ->with('user',$userinfo)
-         ->with('country',$countryList)->with('allActivity',$allActivity)->with ('friends', $friends) ;
+         ->with('country',$countryList)->with('allActivity',$allActivity)->with('req', $sentRequest)->with ('friends', $friends) ;
 
     //    dd($allActivity);
     }
@@ -169,7 +171,9 @@ $data[] = $name;
         // $userinfo = FriendsList::Friends(Auth::id());
         $sentRequest = FriendsList::Friends(Auth::id());
         $userinfo = User::with('profiles')->where('id', $id)->first();
-        $his_friends = Friend::select('user_id', 'friend_id')->whereRaw("( user_id = $id OR friend_id = $id )")->get()->toArray();
+        $his_friends = Friend::select('user_id', 'friend_id')->whereRaw("( user_id = $ids OR friend_id = $ids )")
+        ->where('blocked', 0)
+        ->get()->toArray();
         $posts    = Post::with('pictures')
                     ->with('videos')
                     ->with('comments.user')
@@ -277,12 +281,13 @@ $data[] = $name;
             $friends = User::with('profiles')
             ->where('id',$id)
             ->get();
+            $sentRequest = FriendsList::Friends(Auth::id());
             $user_information = User::with('profiles')->findOrFail($id);
             $userinfo = User::with('profiles')->find($id);
             $countryList = config('country.list');
             $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(4)->get(); 
             return view('showfriendsprofile', compact('user_information'))
-            ->with('country',$countryList)->with('allActivity',$allActivity)->with ('friends', $friends) ;;
+            ->with('country',$countryList)->with('req', $sentRequest)->with('allActivity',$allActivity)->with ('friends', $friends) ;;
 
             if(!empty($user)) {
                 return view();
@@ -298,10 +303,10 @@ $data[] = $name;
         $videos = Video::whereHas('posts', function($query) use ($id) {
             $query->where('user_id', '=', $id);
         })->orderBy('created_at','DESC')->get();
-
+        $sentRequest = FriendsList::Friends(Auth::id());
         $user_information = User::with('profiles')->findOrFail($id);
         $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(10)->get(); 
-        return view('userAlbum', compact('images', 'videos', 'user_information'))->with('images', $images)->with('videos', $videos)->with('allActivity',$allActivity);
+        return view('userAlbum', compact('images', 'videos', 'user_information'))->with('images', $images)->with('videos', $videos)->with('req', $sentRequest)->with('allActivity',$allActivity);
 
     
     }

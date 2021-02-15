@@ -57,7 +57,6 @@
               <div class="col-md-9">
                 <ul class="list-inline profile-menu">
                   <li><a href="{{url('profiles/'.$userinfo->id)}}">Timeline</a></li>
-                  <li><a href="timeline-about.html">About</a></li>
                   <li><a href="{{route('user.album.show',$userinfo->id)}}">Album</a></li>
                   <li><a href="{{route('user.friends',$userinfo->id)}}">Friends</a></li>
                 </ul>
@@ -79,7 +78,6 @@
             <div class="mobile-menu">
               <ul class="list-inline">
                   <li><a href="{{url('profiles/'.Auth::id())}}">Timeline</a></li>
-                  <li><a href="timeline-about.html">About</a></li>
                   <li><a href="{{route('user.album.show',Auth::id())}}">Album</a></li>
                   <li><a href="{{route('user.friends',Auth::id())}}">Friends</a></li>
               </ul>
@@ -357,9 +355,13 @@
                    @if($activity->type == "post")
                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> You added a Post</a>
                    @else
-                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link">You {{ $activity->type }}ed on a Post</a>
-                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->post->user->profiles->f_name) ? ucfirst($activity->post->user->profiles->f_name) : ucfirst($activity->post->user->name) }}</a>
-                    @endif   
+                       @if($activity->user->id == $activity->post->user->id)
+                        <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> You {{ $activity->type }}ed on your Post</a>
+                        @else
+                        <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link">You {{ $activity->type }}ed on a Post</a>
+                        <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->post->user->profiles->f_name) ? ucfirst($activity->post->user->profiles->f_name) : ucfirst($activity->post->user->name) }}</a>
+                       @endif   
+                   @endif   
                   </p>
                   <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
                 </div>
@@ -527,7 +529,56 @@
   $("#noteItemContainer").prepend(template);
  });
 </script>
-    
-    
+<script> 
+    $(document).ready(function(e){
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+      });
+        // ADD FRIEND ON BAR//
+        $(".follow-me").on("click",".addFrndBtn",function(){
+   var url = '{{URL::to('/')}}' +"/addfriend/" +$(this).data('uid');
+   swal({
+          title: "Are you sure?",
+          text: "Once added, Request will be sent",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+                         
+             $.ajax({
+                   method: "POST",
+                   url:url,
+                   cache: false,
+                   data:{r:Math.random()}
+                 }).done(function(data){
+                   console.log(data);
+                   if(data.success){
+                     swal("Request sent", data.message, 'success');
+                     location.reload();
+                 //RESET FORM AFTER POST
+                    // $('postform').trigger("reset");
+                     //$(".preview").html("");
+                   }
+                   //console.log(data);
+                 }).fail(function(data){
+                   console.log(data);
+                   alert(data.message);
+                 });
+         
+          } else {
+            swal("Cancelled", "User in not added as friend", "error");
+          }
+        });
+
+ });
+// ADD FRIEND ON BAR END//
+    });
+  </script>    
   </body>
 </html>

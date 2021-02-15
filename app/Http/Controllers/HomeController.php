@@ -41,10 +41,10 @@ class HomeController extends Controller
             ->where('blocked', '0')
             ->get();
 
-            $allFriends = FriendsList::Friends($id);
-            $friends = User::with('profiles')
-            ->whereIn('id',$allFriends)
+            $friends =  Friend::whereRaw("( user_id = $id OR friend_id = $id )")
+            ->where(['approved' => 1, 'blocked' => 0])
             ->get();
+    
         $his_friends = Friend::select('user_id', 'friend_id')->whereRaw("( user_id = $id OR friend_id = $id )")
         ->where('blocked', 0)
         ->get()->toArray();
@@ -78,14 +78,15 @@ class HomeController extends Controller
                  ->where('approved','0')
                  ->where('blocked', '0')
                  ->get();
-                 $allFriends = FriendsList::Friends($id);
-        //dd($allFriends);
-        $friends = User::with('profiles')
-         ->whereIn('id',$allFriends)
-          ->get();
+                 $friends =  Friend::whereRaw("( user_id = $id OR friend_id = $id )")
+                 ->where(['approved' => 1, 'blocked' => 0])
+                 ->get();
+         
         $sentRequest = FriendsList::Friends(Auth::id());
-        $his_friends = Friend::where('user_id', $id)->get();
-        $userinfo = User::whereHas('profiles', function($query) {
+        $his_friends = Friend::select('user_id', 'friend_id')->whereRaw("( user_id = $id OR friend_id = $id )")
+        ->where('blocked', 0)
+        ->get()->toArray();
+         $userinfo = User::whereHas('profiles', function($query) {
             $query->where('city', 'islamabad');
         } )->with(['profiles' => function($query) {
             $query->where('city', 'islamabad');

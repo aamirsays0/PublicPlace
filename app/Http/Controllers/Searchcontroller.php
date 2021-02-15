@@ -25,7 +25,9 @@ class Searchcontroller extends Controller
         dd($request); */
     // $sentRequest = Friend::where('user_id',Auth::id())->pluck('friend_id')->toArray();
        // dd($sentRequest);
-       $his_friends = Friend::where('user_id', $id)->get();
+       $his_friends = Friend::select('user_id', 'friend_id')->whereRaw("( user_id = $id OR friend_id = $id )")
+       ->where('blocked', 0)
+       ->get()->toArray();
        $allFriends = FriendsList::Friends(Auth::id());
        $posts = Post::with(['user','pictures','comments.user', 'reactions'])
            ->whereIn('user_id',$allFriends)
@@ -39,10 +41,10 @@ class Searchcontroller extends Controller
          ->Where('f_name','like', '%'.$request->search.'%')
          ->orderBy('created_at', 'desc')
          ->paginate(10);
-         $allFriends = FriendsList::Friends($id);
-         $friends = User::with('profiles')
-        ->whereIn('id',$allFriends)
-        ->get();
+
+         $friends =  Friend::whereRaw("( user_id = $id OR friend_id = $id )")
+         ->where(['approved' => 1, 'blocked' => 0])
+         ->get();
          $sentRequest = FriendsList::Friends(Auth::id());
          $searchResult = User::with('profiles','friends')
         ->where('name', 'like', '%'.$request->search.'%')

@@ -26,6 +26,7 @@ class EducationController extends Controller
 
     public function index()
     {
+        $sentRequest = FriendsList::Friends(Auth::id());
         $allFriends = FriendsList::Friends(Auth::id());
 
         $friends = User::with('profiles')
@@ -39,11 +40,12 @@ class EducationController extends Controller
         $data['education']= Education::where('user_id', $userid)->orderBy('created_at', 'desc')->get();
         $data['work']= Work::where('user_id', $userid)->orderBy('created_at', 'desc')->get();
         dd($data); */
-        return view('education')->with('userinfo',$userinfo)->with('allActivity',$allActivity)->with('friends', $friends) ;
+        return view('education')->with('userinfo',$userinfo)->with('req', $sentRequest)->with('allActivity',$allActivity)->with('friends', $friends) ;
     }
     
     public function vieweducation($id)
     {
+        $sentRequest = FriendsList::Friends(Auth::id());
         $allFriends = FriendsList::Friends(Auth::id());
 
         $friends = User::with('profiles')
@@ -58,7 +60,7 @@ class EducationController extends Controller
         $data['education']= Education::where('user_id', $userid)->orderBy('created_at', 'desc')->get();
         $data['work']= Work::where('user_id', $userid)->orderBy('created_at', 'desc')->get();
         dd($data); */
-        return view('showusereducation', compact('user_information'))->with('allActivity',$allActivity)->with('friends', $friends) ;
+        return view('showusereducation', compact('user_information'))->with('req', $sentRequest)->with('allActivity',$allActivity)->with('friends', $friends) ;
     }
 
     /**

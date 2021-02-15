@@ -53,7 +53,9 @@
                                           <span class="pull pull-right">Friends</span>
                                         @endif
                                       @else
-                                      @if(array_search($userpost->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
+                                      {{-- @if(array_search($userpost->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
+                                        @if((array_search($userpost->user->id, array_column($his_friends, 'user_id')) !== false) || 
+                                          (array_search($userpost->user->id, array_column($his_friends, 'friend_id')) !== false))
                                       <button class="btn pull pending pull-right" disabled>Pending</button>
                                         @else 
                                         <button class="btn pull addFrndBtn pull-right" data-uid="{{$userpost->user->id}}">Add Friend</button>
@@ -96,7 +98,9 @@
                         <span class="pull">Friends</span>
                       @endif
                     @else
-                    @if(array_search($userpost->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
+                    {{-- @if(array_search($userpost->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
+                          @if((array_search($userpost->user->id, array_column($his_friends, 'user_id')) !== false) || 
+                            (array_search($userpost->user->id, array_column($his_friends, 'friend_id')) !== false))
                       <button class="btn pull pending" disabled>Pending</button>
                       @else 
                       <button class="btn pull addFrndBtn" data-uid="{{$userpost->user->id}}">Add Friend</button>
@@ -254,7 +258,9 @@
                                                           <span class="pull pull-right">Friends</span>
                                                         @endif
                                                       @else
-                                                      @if(array_search($usercomment->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
+                                                      {{-- @if(array_search($usercomment->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
+                                                        @if((array_search($usercomment->user->id, array_column($his_friends, 'user_id')) !== false) || 
+                                                       (array_search($usercomment->user->id, array_column($his_friends, 'friend_id')) !== false))
                                                         <button class="btn pull pending pull-right" disabled>Pending</button>
                                                         @else 
                                                         <button class="btn pull addFrndBtn pull-right" data-uid="{{$usercomment->user->id}}">Add Friend</button>
@@ -366,7 +372,7 @@ $.ajaxSetup({
       });
 
       // ADD FRIEND START//
-      $(".post-detail").on("click",".addFrndBtn",function(){
+      $(".user-info").on("click",".addFrndBtn",function(){
           var url = '{{URL::to('/')}}' +"/addfriend/" +$(this).data('uid');
           swal({
                  title: "Are you sure?",

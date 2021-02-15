@@ -57,11 +57,28 @@
               <div class="col-md-9">
                 <ul class="list-inline profile-menu">
                   <li><a href="{{url('profiles/'.$user_information->id)}}" class="active">Timeline</a></li>
-                  <li><a href="timeline-about.html">About</a></li>
                   <li><a href="{{route('user.album.show',$user_information->id)}}">Album</a></li>
                   <li><a href="{{route('user.friends',$user_information->id)}}">Friends</a></li>
                 </ul>
-                
+                @if($user_information->id !== Auth::user()->id)
+                 <ul class="follow-me list-inline">
+                  <li>
+                     @if(in_array($user_information->id,$req) )
+                          @if (Auth::user()->id !== $user_information->id)
+                             <span class=" btn pull pull-right" style="cursor: auto;">My Friend</span>
+                           @endif
+                      @else
+                          {{-- @if(array_search($user_information->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
+                            @if((array_search($user_information->id, array_column($his_friends, 'user_id')) !== false) || 
+                              (array_search($user_information->id, array_column($his_friends, 'friend_id')) !== false))
+                             <button class="btn pull pending pull-right" disabled>Pending</button>
+                            @else 
+                             <button class="btn pull addFrndBtn pull-right" data-uid="{{$user_information->id}}">Add Friend</button>
+                            @endif
+                       @endif
+                   </li>
+                  </ul>
+                 @endif
               </div>
             </div>
           </div><!--Timeline Menu for Large Screens End-->
@@ -81,10 +98,28 @@
             <div class="mobile-menu">
               <ul class="list-inline">
                   <li><a href="{{url('profiles/'.$user_information->id)}}" class="active">Timeline</a></li>
-                  <li><a href="timeline-about.html">About</a></li>
                   <li><a href="{{route('user.album.show',$user_information->id)}}">Album</a></li>
                   <li><a href="{{route('user.friends',$user_information->id)}}">Friends</a></li>
               </ul>
+              @if($user_information->id !== Auth::user()->id)
+                 <ul class="follow-me list-inline">
+                  <li>
+                     @if(in_array($user_information->id,$req) )
+                          @if (Auth::user()->id !== $user_information->id)
+                             <span class=" btn pull pull-right" style="cursor: auto;">My Friend</span>
+                           @endif
+                      @else
+                          {{-- @if(array_search($user_information->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
+                            @if((array_search($user_information->id, array_column($his_friends, 'user_id')) !== false) || 
+                              (array_search($user_information->id, array_column($his_friends, 'friend_id')) !== false))
+                             <button class="btn pull pending pull-right" disabled>Pending</button>
+                            @else 
+                             <button class="btn pull addFrndBtn pull-right" data-uid="{{$user_information->id}}">Add Friend</button>
+                            @endif
+                       @endif
+                   </li>
+                  </ul>
+                 @endif
             </div>
           </div><!--Timeline Menu for Small Screens End-->
 
@@ -198,7 +233,9 @@
                                           <span class="pull pull-right">Friends</span>
                                         @endif
                                       @else
-                                        @if(array_search($userpost->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
+                                      {{-- @if(array_search($userpost->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
+                                        @if((array_search($userpost->user->id, array_column($his_friends, 'user_id')) !== false) || 
+                                          (array_search($userpost->user->id, array_column($his_friends, 'friend_id')) !== false))
                                         <button class="btn pull pending pull-right" disabled>Pending</button>
                                         @else 
                                         <button class="btn pull addFrndBtn pull-right" data-uid="{{$userpost->user->id}}">Add Friend</button>
@@ -369,7 +406,9 @@
                                                           <span class="pull pull-right">Friends</span>
                                                         @endif
                                                       @else
-                                                        @if(array_search($usercomment->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
+                                                      {{-- @if(array_search($usercomment->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
+                                        @if((array_search($usercomment->user->id, array_column($his_friends, 'user_id')) !== false) || 
+                                          (array_search($usercomment->user->id, array_column($his_friends, 'friend_id')) !== false))
                                                         <button class="btn pull pending pull-right" disabled>Pending</button>
                                                         @else 
                                                         <button class="btn pull addFrndBtn pull-right" data-uid="{{$usercomment->user->id}}">Add Friend</button>
@@ -465,8 +504,12 @@
                   @if($activity->type == "post")
                   <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> You added a Post</a>
                   @else
-                  <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> You {{ $activity->type }}ed on a Post</a>
-                  <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->post->user->profiles->f_name) ? $activity->post->user->profiles->f_name : $activity->post->user->name }}</a>
+                    @if($activity->user->id == $activity->post->user->id)
+                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> You {{ $activity->type }}ed on your Post</a>
+                    @else
+                    <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> You {{ $activity->type }}ed on a Post</a>
+                    <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->post->user->profiles->f_name) ? $activity->post->user->profiles->f_name : $activity->post->user->name }}</a>
+                    @endif 
                   @endif 
                   </p>
                   <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
@@ -482,8 +525,13 @@
                   @if($activity->type == "post")
                   <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }} added a Post</a>
                   @else
-                  <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }} {{ $activity->type }}ed on a Post</a>
-                  <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->post->user->profiles->f_name) ? $activity->post->user->profiles->f_name : $activity->post->user->name }}</a>
+                      @if($activity->user->id == $activity->post->user->id)
+                       <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }} {{ $activity->type }}ed on his Post</a>
+                       @else
+                         <a href="{{ route('posts.show', $activity->post->id) }}" class="profile-link" style="text-transform: capitalize"> {{ isset($activity->user->profiles->f_name) ? ucfirst($activity->user->profiles->f_name) : ucfirst($activity->user->name) }} {{ $activity->type }}ed on a Post</a>                   
+                         <a href="{{ route('profiles.show', $activity->post->user->id) }}"> by {{ isset($activity->post->user->profiles->f_name) ? $activity->post->user->profiles->f_name : $activity->post->user->name }}</a>
+                       @endif   
+    
                   @endif   
                   </p>
                   <p class="text-muted">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</p>
@@ -575,7 +623,97 @@ $.ajaxSetup({
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
       });
- 
+       // ADD FRIEND START//
+$(".user-info").on("click",".addFrndBtn",function(){
+   var url = '{{URL::to('/')}}' +"/addfriend/" +$(this).data('uid');
+   swal({
+          title: "Are you sure?",
+          text: "Once added, Request will be sent",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+                         
+             $.ajax({
+                   method: "POST",
+                   url:url,
+                   cache: false,
+                   data:{r:Math.random()}
+                 }).done(function(data){
+                   console.log(data);
+                   if(data.success){
+                     swal("Request sent", data.message, 'success');
+                     location.reload();
+                 //RESET FORM AFTER POST
+                    // $('postform').trigger("reset");
+                     //$(".preview").html("");
+                   }
+                   //console.log(data);
+                 }).fail(function(data){
+                   console.log(data);
+                   alert(data.message);
+                 });
+         
+          } else {
+            swal("Cancelled", "User in not added as friend", "error");
+          }
+        });
+
+
+
+
+ });
+// ADD FRIEND END//
+       // ADD FRIEND ON BAR//
+       $(".follow-me").on("click",".addFrndBtn",function(){
+   var url = '{{URL::to('/')}}' +"/addfriend/" +$(this).data('uid');
+   swal({
+          title: "Are you sure?",
+          text: "Once added, Request will be sent",
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if (isConfirm) {
+                         
+             $.ajax({
+                   method: "POST",
+                   url:url,
+                   cache: false,
+                   data:{r:Math.random()}
+                 }).done(function(data){
+                   console.log(data);
+                   if(data.success){
+                     swal("Request sent", data.message, 'success');
+                     location.reload();
+                 //RESET FORM AFTER POST
+                    // $('postform').trigger("reset");
+                     //$(".preview").html("");
+                   }
+                   //console.log(data);
+                 }).fail(function(data){
+                   console.log(data);
+                   alert(data.message);
+                 });
+         
+          } else {
+            swal("Cancelled", "User in not added as friend", "error");
+          }
+        });
+
+
+
+
+ });
+// ADD FRIEND ON BAR END//
+
 //reaction start
 $(".reaction").on("click",".reactionBtn", function(){
       var url = '{{URL::to('/')}}' +"/react";
