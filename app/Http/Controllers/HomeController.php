@@ -36,61 +36,33 @@ class HomeController extends Controller
     //Latest post Showing
         $id = Auth::id();
         $friendreq = Friend::with('user')
-                ->where("friend_id",$id)
-                 ->where('approved','0')
-                 ->where('blocked', '0')
-                 ->get();
-    
-                //dd($friends);
-                
-            /* $friends = Friend::with(['user','friendInfo'])
-               ->where('approved','1')
-               ->where('blocked','0')
-               ->where("friend_id",$id)
-               ->orWhere("user_id",$id)
+            ->where("friend_id",$id)
+            ->where('approved','0')
+            ->where('blocked', '0')
             ->get();
-              $friendsList =array($id);
-               foreach($friends as $friend){
-                   if($friend->user_id == $id){
-                       $friendsList[]= $friend->friend_id;
-                   }
-                   else{
-                       $friendsList[] = $friend->user_id;
-                   }
-               }
-               //dd($friends);
-               $friendsList = FriendsList::Friends($id);
-               //dd($friendsList);
-              */
-              $allFriends = FriendsList::Friends($id);
-              $friends = User::with('profiles')
-              ->whereIn('id',$allFriends)
-              ->get();
-              $his_friends = Friend::select('user_id', 'friend_id')->whereRaw("( user_id = $id OR friend_id = $id )")->get()->toArray();
-            //   dd($his_friends);
-           $allpost = Post::
-           with('pictures')
-           ->with('videos')
-           ->with('comments')
-           ->with('reactions')->whereIn('privacy', ['public', 'friends'])
-           ->orderBy('created_at', 'desc')
-        //    Post::with(['user','pictures','comments.user', 'reactions'])
-        //    ->whereIn('user_id',$allFriends)
-        //    ->whereIn('privacy', ['public', 'friends'])
-        //    ->orderBy('created_at', 'desc')
- //          ->skip(0)
-   //        ->take(10)
-     //      ->get();
-           ->paginate(10);
-           $sentRequest = FriendsList::Friends(Auth::id());
 
-           $stories = Story::with('user')
-           ->where('user_id', '!=', auth()->id())
-           ->where('created_at', '>=', Carbon::now()->subDay())
-           ->select('user_id', DB::raw('count(*) as total'))
-           ->groupBy('user_id')->get();
-           //dd($allpost); 
-        //return view('home', compact('allpost'));
+            $allFriends = FriendsList::Friends($id);
+            $friends = User::with('profiles')
+            ->whereIn('id',$allFriends)
+            ->get();
+        $his_friends = Friend::select('user_id', 'friend_id')->whereRaw("( user_id = $id OR friend_id = $id )")
+        ->where('blocked', 0)
+        ->get()->toArray();
+        // dd(array_search(auth()->id(), array_column($his_friends, 'user_id')) !== false ? "Ali" : "Raza" );
+        $allpost = Post:: with('pictures')
+        ->with('videos')
+        ->with('comments')
+        ->with('reactions')->whereIn('privacy', ['public', 'friends'])
+        ->orderBy('created_at', 'desc')->paginate(10);
+
+        $sentRequest = FriendsList::Friends(Auth::id());
+
+        $stories = Story::with('user')
+        ->where('user_id', '!=', auth()->id())
+        ->where('created_at', '>=', Carbon::now()->subDay())
+        ->select('user_id', DB::raw('count(*) as total'))
+        ->groupBy('user_id')->get();
+
         return view('home', compact('his_friends', 'stories'))
         ->with('posts', $allpost)
         ->with('requests', $friendreq)

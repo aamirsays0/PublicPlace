@@ -152,15 +152,18 @@
                             <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="user">
                              @endif
                            <div class="friend-info">
-                                  <h5><a href="{{url('profiles/'.$post->user_id)}}" class="profile-link">
+                                  <h5>
+                                    <a href="{{url('profiles/'.$post->user_id)}}" class="profile-link">
                                    {{$post->user->profiles?$post->user->profiles->f_name.' '.$post->user->profiles->l_name:$post->user->name}}</a>
-                                                     
+                                                       
                                       @if(in_array($post->user->id,$req) )
                                         @if (Auth::user()->id !== $post->user->id)
                                           <span class="pull pull-right">Friends</span>
                                         @endif
                                       @else
-                                        @if(array_search($post->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
+                                        {{-- @if(array_search($post->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
+                                        @if((array_search($post->user->id, array_column($his_friends, 'user_id')) !== false) || 
+                                        (array_search($post->user->id, array_column($his_friends, 'friend_id')) !== false))
                                         <button class="btn pull pending pull-right" disabled>Pending</button>
                                         @else 
                                         <button class="btn pull addFrndBtn pull-right" data-uid="{{$post->user->id}}">Add Friend</button>
@@ -206,7 +209,9 @@
                         <span class="pull">Friends</span>
                       @endif
                     @else
-                      @if(array_search($post->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
+                      {{-- @if(array_search($post->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
+                      @if((array_search($post->user->id, array_column($his_friends, 'user_id')) !== false) || 
+                      (array_search($post->user->id, array_column($his_friends, 'friend_id')) !== false))
                       <button class="btn pull pending" disabled>Pending</button>
                       @else 
                       <button class="btn pull addFrndBtn" data-uid="{{$post->user->id}}">Add Friend</button>
