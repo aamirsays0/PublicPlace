@@ -84,21 +84,21 @@
         </div><!-- Post Create Box End-->
 
         {{-- Create and see stories from here --}}
-         <div id="carouselExampleControls" class="carousel slide row stories-corner" data-ride="carousel">
-         <div class="col-md-2 col-sm-4 text-center">
+        <div class="stories-corner">
+          <div class="row stories-slider">
+            <div class="col-md-2 col-sm-4 text-center">
               <a href="{{ route('stories.create') }}">
                     @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
                       <img src="{{asset('storage/profile/'.Auth::id().'_profile.jpg')}}" alt="user"/>
                     @else
                       <img src="{{ asset('images/noimage.jpg') }}" id="uploadImage" alt="user">
                     @endif
-                   <small>Your Story</small>
+                  <small>Your Story</small>
               </a>
             </div>
-          <div class="carousel-inner  row w-80 mx-auto">
             @if (isset($stories) && $stories->count() > 0)
               @foreach ($stories as $story)
-               <div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3  {{ $loop->first ? 'active' : '' }} text-center" style="width: 16.6666667%;">
+              <div class="col-md-2 col-sm-4 text-center">
                 <a href="{{ route('stories.friends.show', $story->user->id) }}">
                     @if (file_exists(public_path('storage/profile/'.$story->user->id.'_profile.jpg')) )
                       <img src="{{asset('storage/profile/'.$story->user->id.'_profile.jpg')}}" alt="user"/>
@@ -107,19 +107,11 @@
                       @endif
                       <small>{{  $story->user->name }}</small>
                   </a>
-               </div>
-    @endforeach
+              </div>
+              @endforeach
             @endif
-  </div>
-  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev" style="background-color: black; width: 3%;">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="sr-only">Previous</span>
-  </a>
-  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next" style="background-color: black; width: 3%;">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="sr-only">Next</span>
-  </a>
-</div>
+          </div>
+        </div>
        <div class="scroll scoll-page-content" >
       
        @forelse($posts as $post)
@@ -930,7 +922,26 @@ $("#contentpostContainer").on("click",".postcommentToggleBtn", function(){
 // $('#publishpost').click(function() {
 //   $('#publishpost').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...').addClass('disabled');
 // });
+
+
     </script>
+
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script src="{{asset('assets/slick/slick/slick.min.js')}}"></script>
+
+<script>
+    $(document).ready(function() {
+
+$('.stories-slider').slick({
+  slidesToShow: 6,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 2000,
+});
+    
+})
+</script>
 
 @endsection
 @push('style')

@@ -41,6 +41,7 @@ class HomeController extends Controller
             ->where('blocked', '0')
             ->get();
 
+            $allFriends = FriendsList::Friends($id);
             $friends =  Friend::whereRaw("( user_id = $id OR friend_id = $id )")
             ->where(['approved' => 1, 'blocked' => 0])
             ->get();

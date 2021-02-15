@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-<h3 class=" text-center">Messaging</h3>
+<h3 class="text-left">{{ __("Chats") }}</h3>
             <!-- Chat Room
             ================================================= -->
             <div class="chat-room">
@@ -157,7 +157,6 @@
         //ajax setup
   //select user
         $(".contact-list").on("click",".chat_lists",function(){
-          
             $.ajaxSetup({
                 headers: {
                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

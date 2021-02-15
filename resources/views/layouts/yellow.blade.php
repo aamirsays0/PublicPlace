@@ -18,7 +18,11 @@
     ================================================= -->
 		<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}" />
 		<link rel="stylesheet" href="{{asset('css/bootstrap.css')}}" />
-		<link rel="stylesheet" href="{{asset('css/style.css')}}" />
+    {{-- Slick Slider --}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/slick/slick/slick.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/slick/slick/slick-theme.css') }}"/>
+
+    <link rel="stylesheet" href="{{asset('css/style.css')}}" />
     <link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}" />
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}" />
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/duotone.css" integrity="sha384-R3QzTxyukP03CMqKFe0ssp5wUvBPEyy9ZspCB+Y01fEjhMwcXixTyeot+S40+AjZ" crossorigin="anonymous"/>
@@ -91,6 +95,8 @@
     <script src="{{asset('js/bootstrap.min.js')}}"></script>
     <script src="{{asset('js/jquery.sticky-kit.min.js')}}"></script>
     <script src="{{asset('js/jquery.scrollbar.min.js')}}"></script>
+    <script src="{{asset('assets/slick/slick/slick.min.js')}}"></script>
+  
     <script src="{{asset('js/masonry.pkgd.min.js')}}"></script>
     <script src="{{asset('js/script.js')}}"></script>
     <script src="{{asset('js/lightbox.min.js')}}"></script>

@@ -24,7 +24,7 @@
               <hr>
               <ul class="online-users list-inline list-unstyled">
               @forelse($friends as $friend)
-              @php
+                @php
                     $friends_data = $friend->user_id == auth()->id() ? $friend->friendInfo : $friend->user;
                 @endphp
                 @if($friends_data->id != Auth::id())
@@ -37,7 +37,7 @@
                    </a></li>
                  @endif
                  @empty
-              <h3>no friends yet, search for new friends</h3>
+              <h4>No friends yet, Search for New Friends</h4>
               @endforelse 
               </ul>
               

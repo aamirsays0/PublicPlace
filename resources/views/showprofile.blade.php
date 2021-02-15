@@ -65,7 +65,7 @@
                   <li>
                      @if(in_array($user_information->id,$req) )
                           @if (Auth::user()->id !== $user_information->id)
-                             <span class=" btn pull pull-right" style="cursor: auto;">My Friend</span>
+                             <span class=" btn pull pull-right" style="cursor: auto; color:#0000">My Friend</span>
                            @endif
                       @else
                           {{-- @if(array_search($user_information->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
@@ -73,7 +73,7 @@
                               (array_search($user_information->id, array_column($his_friends, 'friend_id')) !== false))
                              <button class="btn pull pending pull-right" disabled>Pending</button>
                             @else 
-                             <button class="btn pull addFrndBtn pull-right" data-uid="{{$user_information->id}}">Add Friend</button>
+                             <button class="btn pull addFrndBtn pull-right" style="color: black;" data-uid="{{$user_information->id}}">Add Friend</button>
                             @endif
                        @endif
                    </li>
@@ -106,7 +106,7 @@
                   <li>
                      @if(in_array($user_information->id,$req) )
                           @if (Auth::user()->id !== $user_information->id)
-                             <span class=" btn pull pull-right" style="cursor: auto;">My Friend</span>
+                             <span class=" btn pull pull-right" style="cursor: auto; color:#0000"">My Friend</span>
                            @endif
                       @else
                           {{-- @if(array_search($user_information->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
@@ -114,7 +114,7 @@
                               (array_search($user_information->id, array_column($his_friends, 'friend_id')) !== false))
                              <button class="btn pull pending pull-right" disabled>Pending</button>
                             @else 
-                             <button class="btn pull addFrndBtn pull-right" data-uid="{{$user_information->id}}">Add Friend</button>
+                             <button class="btn pull addFrndBtn pull-right" style="color: black;" data-uid="{{$user_information->id}}">Add Friend</button>
                             @endif
                        @endif
                    </li>
@@ -321,13 +321,15 @@
                     </a>
                     <a href="{{ route('posts.show', $userpost->id) }}" class="btn btn-info fa fa-eye"></a>
 
-                    @if($userpost->user_id == Auth::id())
                     {!! Form::open(['url' => 'posts/'.$userpost->id,'method' => 'delete','class' => 'btn d-inline', 'id' => 'delete-button']) !!}
-                    <button class="btn btn-danger fa fa-trash"></button>
+                      @if($userpost->user_id == Auth::id())
+
+                      <button class="btn btn-danger fa fa-trash"></button>
+                      @endif
+
                     {!! Form::close() !!}                   
                     <!-- DELETE ICON -->
                     <!--<a href={{url('post'.'/'.$userpost->id) }}" onclick="event.preventDefault(); document.getElementById('delete-post').submit();" class="fa fa-trash"></a><form id="delete-post" action="{{ url('post'.'/'.$userpost->id)}}" method="DELETE" style="display: none;"@csrf</form>-->
-                    @endif
 
                     
                   </div>

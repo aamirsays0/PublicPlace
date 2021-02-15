@@ -58,7 +58,7 @@
                                           <span class="pull pull-right">Friends</span>
                                         @endif
                                       @else
-                                        @if(array_search($comment->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
+                                        @if( isset($his_friends) && array_search($comment->user->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' )))
                                         <button class="btn pull pending pull-right" disabled>Pending</button>
                                         @else 
                                         <button class="btn pull addFrndBtn pull-right" data-uid="{{$comment->user->id}}">Add Friend</button>
@@ -100,7 +100,10 @@
                         <i class="fa fa-trash"></i>
                     </div>
                 @endif
-                <hr>
+
+                <div class="row">
+
+                </div>
             </div>
         @endforeach
 

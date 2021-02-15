@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-<h3 class=" text-center">Messaging</h3>
+<h3 class="text-left">Chats</h3>
             <!-- Chat Room
             ================================================= -->
             <div class="chat-room">
@@ -14,7 +14,7 @@
 
                   <!-- Contact List in Left-->
                   <ul class="nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer">
-                  @forelse($friends as $user)
+                  @forelse($users as $user)
                     @if($user->id == Auth::id())
                          @continue
                     @endif
