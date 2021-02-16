@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Education;
 use App\User;
+use App\Friend;
 use App\work;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,11 +57,11 @@ class EducationController extends Controller
        $userinfo= User::with(['education','works'])->find($id);
        $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(4)->get();
       //dd($userinfo);
-      /*   $userid = Auth::id();
-        $data['education']= Education::where('user_id', $userid)->orderBy('created_at', 'desc')->get();
-        $data['work']= Work::where('user_id', $userid)->orderBy('created_at', 'desc')->get();
-        dd($data); */
-        return view('showusereducation', compact('user_information'))->with('req', $sentRequest)->with('allActivity',$allActivity)->with('friends', $friends) ;
+      $ids = Auth::id();
+      $his_friends = Friend::select('user_id', 'friend_id')->whereRaw("( user_id = $ids OR friend_id = $ids )")
+      ->where('blocked', 0)
+      ->get()->toArray();
+        return view('showusereducation', compact('user_information','his_friends'))->with('req', $sentRequest)->with('allActivity',$allActivity)->with('friends', $friends) ;
     }
 
     /**

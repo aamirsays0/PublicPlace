@@ -285,8 +285,12 @@ $data[] = $name;
             $user_information = User::with('profiles')->findOrFail($id);
             $userinfo = User::with('profiles')->find($id);
             $countryList = config('country.list');
+            $ids = Auth::id();
+            $his_friends = Friend::select('user_id', 'friend_id')->whereRaw("( user_id = $ids OR friend_id = $ids )")
+            ->where('blocked', 0)
+            ->get()->toArray();
             $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(4)->get(); 
-            return view('showfriendsprofile', compact('user_information'))
+            return view('showfriendsprofile', compact('user_information','his_friends'))
             ->with('country',$countryList)->with('req', $sentRequest)->with('allActivity',$allActivity)->with ('friends', $friends) ;;
 
             if(!empty($user)) {
@@ -299,14 +303,17 @@ $data[] = $name;
         $images = Picture::whereHas('posts', function($query) use ($id) {
             $query->where('user_id', '=', $id);
         })->orderBy('created_at','DESC')->get();
-        
+        $ids = Auth::id();
+        $his_friends = Friend::select('user_id', 'friend_id')->whereRaw("( user_id = $ids OR friend_id = $ids )")
+        ->where('blocked', 0)
+        ->get()->toArray();
         $videos = Video::whereHas('posts', function($query) use ($id) {
             $query->where('user_id', '=', $id);
         })->orderBy('created_at','DESC')->get();
         $sentRequest = FriendsList::Friends(Auth::id());
         $user_information = User::with('profiles')->findOrFail($id);
         $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(10)->get(); 
-        return view('userAlbum', compact('images', 'videos', 'user_information'))->with('images', $images)->with('videos', $videos)->with('req', $sentRequest)->with('allActivity',$allActivity);
+        return view('userAlbum', compact('images', 'videos', 'user_information','his_friends'))->with('images', $images)->with('videos', $videos)->with('req', $sentRequest)->with('allActivity',$allActivity);
 
     
     }
