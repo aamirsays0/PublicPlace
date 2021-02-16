@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\Picture;
 use App\Friend;
+use App\Reaction;
 use App\Story;
 use App\Custom\FriendsList;
 use App\User;
@@ -57,14 +58,14 @@ class HomeController extends Controller
         ->orderBy('created_at', 'desc')->paginate(10);
 
         $sentRequest = FriendsList::Friends(Auth::id());
-
+        $likes = Reaction::where(['type'=> 'l','user_id'=> $id])->get();
         $stories = Story::with('user')
         ->where('user_id', '!=', auth()->id())
         ->where('created_at', '>=', Carbon::now()->subDay())
         ->select('user_id', DB::raw('count(*) as total'))
         ->groupBy('user_id')->get();
 
-        return view('home', compact('his_friends', 'stories'))
+        return view('home', compact('his_friends', 'stories','likes'))
         ->with('posts', $allpost)
         ->with('requests', $friendreq)
         ->with('friends', $friends)->with('req', $sentRequest);

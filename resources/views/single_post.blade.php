@@ -76,8 +76,8 @@
                                           <h5 style="color: #7f8c8d">Friends</h5>
                                         </td>
                                         <td>
-                                          <h5 style="color: #7f8c8d"><b>892</b></h5>
-                                          <h5 style="color: #7f8c8d">Following</h5>
+                                        <h5 style="color: #7f8c8d">{{$likes->count()}}</h5>
+                                          <h5 style="color: #7f8c8d">Likes</h5>
                                         </td>
                                     </tr>
                                 </table>
