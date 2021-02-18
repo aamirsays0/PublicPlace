@@ -58,7 +58,7 @@ class HomeController extends Controller
         ->orderBy('created_at', 'desc')->paginate(10);
 
         $sentRequest = FriendsList::Friends(Auth::id());
-        $likes = Reaction::where(['type'=> 'l','user_id'=> $id])->get();
+        $likes = Reaction::select('type','user_id')->whereRaw("( user_id = $id AND type = 'l' )")->get();
         $stories = Story::with('user')
         ->where('user_id', '!=', auth()->id())
         ->where('created_at', '>=', Carbon::now()->subDay())
