@@ -46,7 +46,7 @@ class StoryCommentController extends Controller
         ]);
 
         $data = [
-            'profile_pic' => asset('storage/profile/'.auth()->id().'_profile.png'),
+            'profile_pic' => asset('storage/profile/'.auth()->id().'_profile.jpg'),
             'user_name'   => auth()->user()->name,
             'comment'     => $request->comment,
             'comment_id'  => $comment->id

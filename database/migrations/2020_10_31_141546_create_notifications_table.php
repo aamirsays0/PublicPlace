@@ -15,14 +15,10 @@ class CreateNotificationsTable extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('post_id')->nullable();
-            $table->foreign('post_id')
-            ->references('id')->on('posts')
-            ->onDelete('cascade');
             $table->enum('type', ['react','comment','post','share']);
             $table->unsignedInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->boolean('viewed')->default('0');
+            $table->boolean('notification')->default('0');
             $table->timestamps();
         });
     }

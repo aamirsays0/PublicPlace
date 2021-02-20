@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Notification extends Model
 {
     protected $fillable = [
-        'post_id', 'type', 'user_id', 'viewed'
+        'type', 'user_id', 'notification'
     ];
     public function post(){
         return $this->belongTo('App\Post');

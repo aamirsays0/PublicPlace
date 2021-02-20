@@ -20,7 +20,7 @@
                     @endif
             <!-- Post Content
             ================================================= -->
-            <div class="post-content  postid-{{$userpost->id}}">            
+            <div class="post-content  postid-{{$userpost->id}}" style="overflow: unset">            
               <div class="post-container">
                    @if (file_exists(public_path('storage/profile/'.$userpost->user_id.'_profile.jpg')) )
                    <img src="{{asset('storage/profile/'.$userpost->user_id.'_profile.jpg')}}" alt="user" class=" img-responsive profile-photo-md pull-left" />
@@ -76,8 +76,8 @@
                                           <h5 style="color: #7f8c8d">Friends</h5>
                                         </td>
                                         <td>
-                                          <h5 style="color: #7f8c8d"><b>892</b></h5>
-                                          <h5 style="color: #7f8c8d">Following</h5>
+                                        <h5 style="color: #7f8c8d">{{ $userpost->user->reactions()->count() }}</h5>
+                                          <h5 style="color: #7f8c8d">Likes</h5>
                                         </td>
                                     </tr>
                                 </table>
@@ -276,8 +276,8 @@
                                                           <h5 style="color: #7f8c8d">Friends</h5>
                                                         </td>
                                                         <td>
-                                                          <h5 style="color: #7f8c8d"><b>892</b></h5>
-                                                          <h5 style="color: #7f8c8d">Following</h5>
+                                                        <h5 style="color: #7f8c8d">{{ $usercomment->user->reactions()->count() }}</h5>
+                                                          <h5 style="color: #7f8c8d">Likes</h5>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -664,9 +664,16 @@ $.ajax({
                           <small class="text-muted">${res.data.time}</small>
                           <h5>${ res.data.comment }</h5>
                       </div>
-                      <div class="actions deleteComment" data-id="${ res.data.comment_id }">
-                          <i class="fa fa-trash"></i>
-                      </div>
+                              @if (Auth::check())
+                                @if(count((array) $userpost->comments) > 0)
+                                @if($usercomment->user->id == Auth::user()->id)
+                                {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment','style' => 'position: absolute; right: 0%']) !!}
+                                   <span class="label label-danger deleteComment"><i class="fa fa-trash"></i></span>
+                                {!! Form::close() !!}
+                                @endif
+                                @endif
+                               @endif
+
                       <hr/>
                   </div>`;
 

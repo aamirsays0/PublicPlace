@@ -49,7 +49,6 @@
                   <div class="tools">
                   
 					        <ul class="publishing-tools list-inline list-unstyled" style="padding: 0">
-                        <li class="list-inline-item"><a href="#"><i class="ion-compose ion-icons-colors"></i></a></li>
                         <li class="list-inline-item">
                         <label for="post-images" title="Upload Images">
                         <i class="ion-images fa-lg ion-icons-colors"></i>
@@ -404,7 +403,7 @@
                                                           <h5 style="color: #7f8c8d">Friends</h5>
                                                         </td>
                                                         <td>
-                                                          <h5 style="color: #7f8c8d"><b>892</b></h5>
+                                                        <h5 style="color: #7f8c8d">{{ $usercomment->user->reactions()->count() }}</h5>
                                                           <h5 style="color: #7f8c8d">Likes</h5>
                                                         </td>
                                                     </tr>
@@ -453,14 +452,9 @@
                     @else
                        <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-sm" id="uploadImage" alt="">
                     @endif
-                    {!! Form::open([
-                    'route'=> ['posts.comment',$post->id],
-                      'class'=>'form']) !!}
-                    <div class="form-group">
-                    <input type="text" name="postcomment" class="form-control" placeholder="Post a comment">
-                    <button class="btn btn-light form-control" style="  border: 1px solid grey;" type="submit" name="commentBtn">Comment</button>
+                    <div class="form-group w-100">
+                    <input type="text" name="postcomment" class="form-control" id="comment" placeholder="Post a comment">
                     </div>
-                    {!! Form::close() !!}
                    </div>
                    </div>
                 </div>
@@ -943,6 +937,56 @@ $('.stories-slider').slick({
 });
     
 })
+</script>
+{{-- Add Comment --}}
+
+<script>
+  //  Submit comment on enter
+  //  Submit comment on enter
+  document.getElementById('comment').addEventListener('keypress', function(event) {
+      if (event.keyCode == 13) {
+          event.preventDefault();
+          $.ajax({
+              url: "{{ route('posts.comment.ajax', $post->id) }}",
+              method:"POST",
+              data: {
+                  comment: $(this).val(),
+                  post_id: '{{ $post->id }}'
+              },
+              success: function(res) {
+                  console.log(res)
+
+                  $('#comment').val("")
+
+                  const comment = `<div class="comment-wrapper" id="${ res.data.comment_id }">
+                      <img src="${ res.data.profile_pic }" alt="user" class="profile-photo-md"/>
+                      <div class="comment-body">
+                          <h5 class="commenter-name">${ res.data.user_name }</h5>
+                          <small class="text-muted">${res.data.time}</small>
+                          <h5>${ res.data.comment }</h5>
+                      </div>
+                              @if (Auth::check())
+                                @if(count((array) $post->comments) > 0)
+                                @if($usercomment->user->id == Auth::user()->id)
+                                {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment','style' => 'position: absolute; right: 0%']) !!}
+                                   <span class="label label-danger deleteComment"><i class="fa fa-trash"></i></span>
+                                {!! Form::close() !!}
+                                @endif
+                                @endif
+                               @endif
+
+                      <hr/>
+                  </div>`;
+
+                  $('.commentContainer').append(comment)
+
+              },
+              error: function(err) {
+                  console.log(err)
+              }            
+          })
+      }
+  });
 </script>
 
 @endsection

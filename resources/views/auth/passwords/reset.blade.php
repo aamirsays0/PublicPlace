@@ -14,9 +14,9 @@
                         <input type="hidden" name="token" value="{{ $token }}">
 
                         <div class="group">
-                            <label for="user" class="label">{{ __('E-Mail Address') }}</label>
+                            <label for="user" class="col-md-3">{{ __('E-Mail Address') }}</label>
 
-                                <input id="user" type="text"  placeholder="Enter your email" class="input {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $email ?? old('email') }}" required autofocus>
+                                <input id="user" type="text" style="color: black;" placeholder="Enter your email" class="input {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $email ?? old('email') }}" required autofocus>
 
                                 @if ($errors->has('email'))
                                     <span class="invalid-feedback" role="alert">
@@ -26,9 +26,9 @@
                         </div>
 
                         <div class="group">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+                            <label for="password" class="col-md-3">{{ __('Password') }}</label>
 
-                                <input id="pass" type="password" class="input {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                                <input id="pass" type="text" style="color: black;" class="input {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
 
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback" role="alert">
@@ -38,8 +38,8 @@
                         </div>
 
                         <div class="group">
-                            <label for="pass" class="label">{{ __('Confirm Password') }}</label>
-                            <input id="pass" type="password" class="input" name="password_confirmation" required>
+                            <label for="pass" class="col-md-3">{{ __('Confirm Password') }}</label>
+                            <input id="pass" type="text" style="color: black;" class="input" name="password_confirmation" required>
                         </div>
 
                         <div class="group">
