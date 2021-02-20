@@ -113,6 +113,7 @@ class FriendController extends Controller
                 ->where('blocked', 0)
                 ->get()->toArray();
 
+        
         $allActivity = Activity::with('post.user')->where('user_id',$id)->orderBy('created_at','desc')->limit(4)->get(); 
         return view('userFriends', compact('user_information','his_friends'))->with('req', $sentRequest)->with('allActivity',$allActivity)->with('friends', $friends);
     }

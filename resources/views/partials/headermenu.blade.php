@@ -14,7 +14,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            {!! Form::open(['url' => 'search','method' => 'get','class' => 'form-inline my-2 my-lg-0', 'style' => 'padding-left: 0px; position: absolute; left: 41%;']) !!}
+            {!! Form::open(['url' => 'search','method' => 'get','class' => 'form-inline my-2 my-lg-0', 'style' => 'padding-left: 0px; position: absolute; left: 26%;']) !!}
                     <span class="form-control-icon mr-sm-2" style="" type=submit><i class="fa fa-search"></i></span> 
                     <input class="form-control mr-sm-3" type="search" placeholder="Search" name="search" aria-label="Search" style="border-radius: 25px;padding-left: 2.875rem;background-color: #10778a;border: 1px;"/>
                     {!! Form::close() !!}
@@ -37,9 +37,9 @@
                   <i class="fa fa-bell dropdown-toggle"><span class="count wb-unread-count indicator-badge">0</span></i>
                  
                 </a>
-                <div id="notificationDropdown" class="dropdown-menu dropdown-menu-right navbar-dropdown preview list drop" style="background-color: #044c59;" aria-labelledby="notificationDropdown">
+                <div id="notificationDropdown" class="dropdown-menu dropdown-menu-right navbar-dropdown preview list drop" style="background-color: #044c59; padding: 1rem; width:250px" aria-labelledby="notificationDropdown">
                 <a class="dropdown-item">
-                 <p class="mb-0 font-weight-normal float-left text-info">You Have <span class="count" id="notecount">0</span> new notifications<span class="badge badge-pill badge-warning float-right" style="margin-left: 20px;" >Mark all as read</span></p>
+                 <p class="mb-0 font-weight-normal text-center text-info">You Have <span class="count" id="notecount">0</span> new notifications<span class="badge badge-pill badge-warning float-right" style="margin-left: 20px;" >Mark all as read</span></p>
                 </a>
                 <div class="dropdown-divider"></div>
                  <div id="noteItemContainer">
@@ -53,11 +53,11 @@
                                 <span><i class="fa fa-caret-down"></i></span>
             
                     </a>
-              <ul class="dropdown-menu page-list">
-                <li>
+              <ul class="dropdown-menu page-list text-center">
+                <li class="text-center w-100" style="margin: 0">
                 <a href="{{url('/activity')}}">Activity</a></li>
-                <li><a href="{{url('/profiles')}}">Setting</a></li>
-                <li>
+                <li class="text-center w-100" style="margin: 0"><a href="{{url('/profiles')}}">Setting</a></li>
+                <li class="text-center w-100" style="margin: 0">
                 <a class="dropdown-item" href="{{ route('logout') }}"
                                                   onclick="event.preventDefault();
                                                                 document.getElementById('logout-form').submit();">

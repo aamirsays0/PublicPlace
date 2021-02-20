@@ -85,4 +85,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\Story', 'user_id');
     }
 
+    public function reactions()
+    {
+        return $this->hasMany('App\Reaction', 'user_id')->whereRaw("( type = 'l' )");
+    }
 }

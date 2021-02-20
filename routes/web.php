@@ -36,6 +36,7 @@ Route::get('/vieweducation/{id}', 'EducationController@vieweducation')->name('vi
 //comment in post
 Route::post('posts/comment/{id}',
  ['as' => 'posts.comment', 'uses' => 'PostController@postcomment']);
+ Route::post('posts/comment/{id}/ajax', 'PostController@postcommentAjax')->name('posts.comment.ajax');
 //react in post
 Route::post('react','PostController@react');
  Route::get('search',

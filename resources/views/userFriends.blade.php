@@ -58,7 +58,7 @@
                   <li><a href="{{route('user.album.show',$user_information->id)}}">Album</a></li>
                   <li><a href="{{route('user.friends',$user_information->id)}}">Friends</a></li>
                 </ul>
-                @if($user_information->id !== Auth::user()->id)
+                {{-- @if($user_information->id === Auth::user()->id)
                  <ul class="follow-me list-inline">
                   <li>
                      @if(in_array($user_information->id,$req) )
@@ -66,7 +66,6 @@
                              <span class=" btn pull pull-right" style="cursor: auto;">My Friend</span>
                            @endif
                       @else
-                          {{-- @if(array_search($user_information->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
                             @if((array_search($user_information->id, array_column($his_friends, 'user_id')) !== false) || 
                               (array_search($user_information->id, array_column($his_friends, 'friend_id')) !== false))
                              <button class="btn pull pending pull-right" disabled>Pending</button>
@@ -76,7 +75,7 @@
                        @endif
                    </li>
                   </ul>
-                 @endif
+                 @endif --}}
 
               </div>
             </div>
@@ -99,7 +98,7 @@
                   <li><a href="{{route('user.album.show',$user_information->id)}}">Album</a></li>
                   <li><a href="{{route('user.friends',$user_information->id)}}" class="active">Friends</a></li>
               </ul>
-              @if($user_information->id !== Auth::user()->id)
+              {{-- @if($user_information->id !== Auth::user()->id)
                  <ul class="follow-me list-inline">
                   <li>
                      @if(in_array($user_information->id,$req) )
@@ -107,7 +106,6 @@
                              <span class=" btn pull pull-right" style="cursor: auto;">My Friend</span>
                            @endif
                       @else
-                          {{-- @if(array_search($user_information->id, array_column($his_friends, array_search(auth()->id(), array_column($his_friends, 'user_id')) ? 'friend_id':'user_id' ))) --}}
                             @if((array_search($user_information->id, array_column($his_friends, 'user_id')) !== false) || 
                               (array_search($user_information->id, array_column($his_friends, 'friend_id')) !== false))
                              <button class="btn pull pending pull-right" disabled>Pending</button>
@@ -117,7 +115,7 @@
                        @endif
                    </li>
                   </ul>
-                 @endif
+                 @endif --}}
 
             </div>
           </div><!--Timeline Menu for Small Screens End-->
@@ -184,11 +182,13 @@
                 <div class="row">
                 @foreach($friends as $friend)
                 @php
-                    $friends_data = $friend->user_id == auth()->id() ? $friend->friendInfo : $friend->user;
+                    $friends_data = $friend->user_id == $user_information->id ? $friend->friendInfo : $friend->user;
                 @endphp
                   <div class="col-md-4 col-sm-6" id="{{ $friend->id }}">
                     <div class="friend-card" style="border: none">
-                        <a href="#" class="unfriend_it friend--trash_icon" data-friend_id="{{ $friend->id }}"><i class="fa fa-trash fa-lg"></i></a>
+                        @if ($user_information->id === auth()->id())
+                          <a href="#" class="unfriend_it friend--trash_icon" data-friend_id="{{ $friend->id }}"><i class="fa fa-trash fa-lg"></i></a>                          
+                        @endif
                         @if (file_exists(public_path('storage/profile/'.$friends_data->id.'_cover.jpg')) )
                         <a href="{{url('profiles/'.$friends_data->id)}}">
                          <img src="{{asset('storage/profile/'.$friends_data->id.'_cover.jpg')}}" alt="profile-cover" class="img-responsive cover friends-list-img" />

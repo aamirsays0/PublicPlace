@@ -27,7 +27,7 @@
           <div class="row">  
             <form action="{{ route('posts.create') }}" enctype="multipart/form-data" class="postform" id="postform" novalidate>
               @csrf
-            	<div class="row">
+            	<div class="col-12">
             		<div class="col-md-6 col-sm-6">
                   <div class="form-group w-100" >
                     @if (file_exists(public_path('storage/profile/'.Auth::id().'_profile.jpg')) )
@@ -48,7 +48,7 @@
             		<div class="col-md-6 col-sm-5">
                   <div class="tools">
                   
-					        <ul class="publishing-tools list-inline list-unstyled">
+					        <ul class="publishing-tools list-inline list-unstyled" style="padding: 0">
                         <li class="list-inline-item"><a href="#"><i class="ion-compose ion-icons-colors"></i></a></li>
                         <li class="list-inline-item">
                         <label for="post-images" title="Upload Images">
@@ -60,12 +60,12 @@
                         <li class="list-inline-item"><label for="post-videos" title="Upload videos"><i class="ion-ios-videocam ion-icons-colors"></i></label><input type="file" id="post-videos" class="d-none" name="videos[]" accept="video/MOV, video/mp4" multiple/></li>
                         <li class="list-inline-item">
                           <select id="privacy" class="form-control privacy1">
-                            <option value="public">public</option>
+                            <option value="public" >public</option>
                             <option value="friends">friends</option>
                           </select>
                         </li>
                     </ul>
-                    <button type="button" id="publishpost" class="btn btn-primary pull-right">Publish</button>
+                    <button type="button" id="publishpost" class="btn btn-primary pull-right btn-sm">Publish</button>
                   </div>
                 </div>
               </div>
@@ -118,7 +118,7 @@
 
             <!-- Post Content
             ================================================= -->
-            <div class="post-content  postid-{{$post->id}}">
+            <div class="post-content  postid-{{$post->id}}" style="overflow: unset">
             
               <div class="post-container">
                       @if (file_exists(public_path('storage/profile/'.$post->user_id.'_profile.jpg')) )
@@ -144,11 +144,15 @@
                             <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-md" id="uploadImage" alt="user">
                              @endif
                            <div class="friend-info">
+                              <div class="row">
+                                <div class="col-md-6">
                                   <h5>
                                     <a href="{{url('profiles/'.$post->user_id)}}" class="profile-link">
-                                   {{$post->user->profiles?$post->user->profiles->f_name.' '.$post->user->profiles->l_name:$post->user->name}}</a>
-                                                       
-                                      @if(in_array($post->user->id,$req) )
+                                    {{$post->user->profiles?$post->user->profiles->f_name.' '.$post->user->profiles->l_name:$post->user->name}}</a>
+                                  </h5>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                  @if(in_array($post->user->id,$req) )
                                         @if (Auth::user()->id !== $post->user->id)
                                           <span class="pull pull-right">Friends</span>
                                         @endif
@@ -158,10 +162,11 @@
                                         (array_search($post->user->id, array_column($his_friends, 'friend_id')) !== false))
                                         <button class="btn pull pending pull-right" disabled>Pending</button>
                                         @else 
-                                        <button class="btn pull addFrndBtn pull-right" data-uid="{{$post->user->id}}">Add Friend</button>
+                                        <button class="btn pull  pull-right" data-uid="{{$post->user->id}}">Add Friend</button>
                                         @endif
                                       @endif
-                                    </h5>
+                                </div>
+                              </div>
                                   <h5 style="color: #7f8c8d"><i class="fa fa-envelope"></i>  {{$post->user->email}}</h5>
                                   <h5 style="color: #7f8c8d"><i class="fa fa-map-marker" aria-hidden="true"></i>  {{$post->user->profiles?$post->user->profiles->city:"No city details"}}, {{$post->user->profiles?$post->user->profiles->country:"No country details"}}</h5>
                                   <h5 style="color: #7f8c8d">{{ $post->user->profiles?$post->user->profiles->description:"No Description" }}</h5>
@@ -178,7 +183,7 @@
                                           <h5 style="color: #7f8c8d">Friends</h5>
                                         </td>
                                         <td>
-                                        <h5 style="color: #7f8c8d">{{$likes->count()}}</h5>
+                                        <h5 style="color: #7f8c8d">{{ $post->user->reactions()->count() }}</h5>
                                           <h5 style="color: #7f8c8d">Likes</h5>
                                         </td>
                                     </tr>
@@ -506,11 +511,8 @@
                'Just Now</p></div></a><div class="dropdown-divider"></div>';
   }
 
-  console.log(data, "Pusher data");
-         
-  $("#notificationDropdown span.count").text(
-    parseInt($("#notificationDropdown span.count").text())
-    +1);
+  let notificationsCounter =  parseInt($("#notificationDropdown span.count").text());
+  console.log("Notifications Counter", notificationsCounter  + 1)
   $("#noteItemContainer").prepend(template);
  });
 </script>

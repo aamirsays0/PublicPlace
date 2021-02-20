@@ -211,14 +211,9 @@
                          @else
                          <img src="{{ asset('images/noimage.jpg') }}"  class="profile-photo-sm" id="uploadImage"  alt="" />
                          @endif                    
-                  {!! Form::open([
-                    'route'=> ['posts.comment',$userpost->id],
-                      'class'=>'form']) !!}
-                    <div class="form-group">
-                    <input type="text" name="postcomment" class="form-control" placeholder="Post a comment">
-                    <button class="btn btn-light form-control" style="  border: 1px solid grey;" type="submit" name="commentBtn">Comment</button>
+                    <div class="form-group w-100">
+                    <input type="text" name="postcomment" class="form-control" id="comment" placeholder="Post a comment">
                     </div>
-                    {!! Form::close() !!}
                    </div>
                    </div>
 
@@ -642,6 +637,49 @@ $.ajax({
 })
 
     </script>
+
+    {{-- Add Comment --}}
+
+<script>
+  //  Submit comment on enter
+  document.getElementById('comment').addEventListener('keypress', function(event) {
+      if (event.keyCode == 13) {
+          event.preventDefault();
+          $.ajax({
+              url: "{{ route('posts.comment.ajax', $userpost->id) }}",
+              method:"POST",
+              data: {
+                  comment: $(this).val(),
+                  post_id: '{{ $userpost->id }}'
+              },
+              success: function(res) {
+                  console.log(res)
+
+                  $('#comment').val("")
+
+                  const comment = `<div class="comment-wrapper" id="${ res.data.comment_id }">
+                      <img src="${ res.data.profile_pic }" alt="user" class="profile-photo-md"/>
+                      <div class="comment-body">
+                          <h5 class="commenter-name">${ res.data.user_name }</h5>
+                          <small class="text-muted">${res.data.time}</small>
+                          <h5>${ res.data.comment }</h5>
+                      </div>
+                      <div class="actions deleteComment" data-id="${ res.data.comment_id }">
+                          <i class="fa fa-trash"></i>
+                      </div>
+                      <hr/>
+                  </div>`;
+
+                  $('.commentContainer').append(comment)
+
+              },
+              error: function(err) {
+                  console.log(err)
+              }            
+          })
+      }
+  });
+</script>
 
 @endsection
 @push('style')

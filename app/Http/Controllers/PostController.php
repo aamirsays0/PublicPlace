@@ -195,7 +195,8 @@ class PostController extends Controller
          $sentRequest = FriendsList::Friends(Auth::id());
         $friendreq = Friend::with('user')
                 ->where("friend_id",Auth::id())
-                 ->where('approved','0')->get();
+                 ->where(['approved' => '0', 'blocked' => '0'])                 
+                 ->get();
         /* 
 
         $friends = Friend::with(['user','friendinfo'])
@@ -287,6 +288,40 @@ class PostController extends Controller
 
         }
     }
+
+    public function postcommentAjax(Request $request,$id){
+        $this->validate($request, [
+            'comment' => 'required'
+        ]);
+        
+        //echo $id;
+        //dd($request->toArray());
+        $newComment = new Comment();
+        $newComment->comment = $request->comment;
+        $newComment->user_id= Auth::id();
+        Post::Find($id)->comments()->save($newComment);
+
+        $this->reaction($id, 'comment');
+        
+        if($newComment->id){
+            
+            $data = [
+                'profile_pic' => asset('storage/profile/'.auth()->id().'_profile.jpg'),
+                'user_name'   => auth()->user()->name,
+                'comment'     => $request->comment,
+                'comment_id'  => $newComment->id,
+                'time'        => $newComment->created_at->diffForHumans()
+            ];
+
+            return response()->json([ 'message' => 'Comment Added Successfully', 'data' => $data ], 200);
+
+        }
+        else{
+            return response()->json([ 'message' => 'Unable to add comment'], 500);
+
+        }
+    }
+
     public function deleteComment(comment $comment)
     {
         if (auth()->user()->is($comment->user)) {

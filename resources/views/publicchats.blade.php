@@ -189,11 +189,7 @@
                             return `<li class="user_chat" onclick="getChat(${el.friends_data.id}, ${$withUser})">
                             <a href="#" data-toggle="tab">
                             <div class="contact">
-                            @if (file_exists('http://${window.location.host}/storage/profile/${el.friends_data.id}_profile.jpg')) )
-                              <img src="http://${window.location.host}/storage/profile/${el.friends_data.id}_profile.jpg" alt="" class="profile-photo-sm pull-left"style="position: absolute; top: 15%;">
-                            @else
-                              <img src="{{ asset('images/noimage.jpg') }}" alt="" class="profile-photo-sm pull-left"style="position: absolute; top: 15%;">
-                            @endif
+                              <img src="{{ asset('storage/profile/${el.friends_data.id}_profile.jpg') }}" alt="${el.friends_data.name}" class="profile-photo-sm pull-left"style="position: absolute; top: 15%;">
                                 <div class="msg-preview">
                                 <h5>${el.friends_data.name}</h5>
                                 </div>
