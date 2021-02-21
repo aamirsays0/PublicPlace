@@ -619,22 +619,22 @@ $.ajax({
           }
         });
     });
-    $('.deleteComment').click(function (e){
-      console.log("asodk")
-    e.preventDefault();
-    let form = $(this).parents('form');
-    swal({
-        title: 'Are you sure?',
-        text: 'Once deleted, Comment cannot be recovered',
-        icon: 'warning',
-        buttons: ["Cancel it", "Yes, sure"],
-        dangerMode: true,
-    }).then(function(value) {
-        if(value){
-            form.submit();
-        }
-    });
-})
+    $(document).on('click', '.deleteComment', function (e){
+        console.log("clicked")
+        e.preventDefault();
+        let form = $(this).parents('form');
+        swal({
+            title: 'Are you sure?',
+            text: 'Once deleted, Comment cannot be recovered',
+            icon: 'warning',
+            buttons: ["Cancel it", "Yes, sure"],
+            dangerMode: true,
+        }).then(function(value) {
+            if(value){
+                form.submit();
+            }
+        });
+    })
 
     </script>
 
@@ -664,16 +664,9 @@ $.ajax({
                           <small class="text-muted">${res.data.time}</small>
                           <h5>${ res.data.comment }</h5>
                       </div>
-                              @if (Auth::check())
-                                @if(count((array) $userpost->comments) > 0)
-                                @if($usercomment->user->id == Auth::user()->id)
-                                {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment','style' => 'position: absolute; right: 0%']) !!}
-                                   <span class="label label-danger deleteComment"><i class="fa fa-trash"></i></span>
-                                {!! Form::close() !!}
-                                @endif
-                                @endif
-                               @endif
-
+                      {!! Form::open(['url' => 'deleteComment/${res.data.comment_id}','method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment','style' => 'position: absolute; right: 0%']) !!}
+                          <span class="label label-danger deleteComment"><i class="fa fa-trash"></i></span>
+                      {!! Form::close() !!}
                       <hr/>
                   </div>`;
 

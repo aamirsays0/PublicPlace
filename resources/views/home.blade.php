@@ -345,7 +345,7 @@
                   @endforelse
                   
                   </div> -->
-                  <div class="comment-widgets m-b-20 commentContainer" style="display: none;">
+                  <div class="comment-widgets m-b-20 commentContainer" style="display: none;" id="{{ $post->id }}">
                   @forelse($post->comments as $usercomment)
                     <div class="d-flex flex-row comment-row"style="padding-left: 0px; cursor: auto;">
                         <div class="p-2"><span class="round">
@@ -453,7 +453,7 @@
                        <img src="{{ asset('images/noimage.jpg') }}" class="profile-photo-sm" id="uploadImage" alt="">
                     @endif
                     <div class="form-group w-100">
-                    <input type="text" name="postcomment" class="form-control" id="comment" placeholder="Post a comment">
+                      <input type="text" name="postcomment" class="form-control comment" data-postid="{{ $post->id }}" id="comment" placeholder="Post a comment">
                     </div>
                    </div>
                    </div>
@@ -900,7 +900,7 @@ $("#contentpostContainer").on("click",".postcommentToggleBtn", function(){
           }
         });
     });
-    $('.deleteComment').click(function (e){
+    $(document).on('click', '.deleteComment',function (e){
     e.preventDefault();
     let form = $(this).parents('form');
     swal({
@@ -943,15 +943,16 @@ $('.stories-slider').slick({
 <script>
   //  Submit comment on enter
   //  Submit comment on enter
-  document.getElementById('comment').addEventListener('keypress', function(event) {
+  $(document).on('keypress', '.comment', function(event) {
+      let postid = $(this).data('postid')
       if (event.keyCode == 13) {
           event.preventDefault();
           $.ajax({
-              url: "{{ route('posts.comment.ajax', $post->id) }}",
+              url: `posts/comment/${postid}/ajax`,
               method:"POST",
               data: {
                   comment: $(this).val(),
-                  post_id: '{{ $post->id }}'
+                  post_id: postid
               },
               success: function(res) {
                   console.log(res)
@@ -965,20 +966,13 @@ $('.stories-slider').slick({
                           <small class="text-muted">${res.data.time}</small>
                           <h5>${ res.data.comment }</h5>
                       </div>
-                              @if (Auth::check())
-                                @if(count((array) $post->comments) > 0)
-                                @if($usercomment->user->id == Auth::user()->id)
-                                {!! Form::open(['url' => 'deleteComment/'.$usercomment->id,'method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment','style' => 'position: absolute; right: 0%']) !!}
-                                   <span class="label label-danger deleteComment"><i class="fa fa-trash"></i></span>
-                                {!! Form::close() !!}
-                                @endif
-                                @endif
-                               @endif
-
+                      {!! Form::open(['url' => 'deleteComment/${postid}','method' => 'delete','class' => 'btn d-inline', 'route'=>'delete.comment','style' => 'position: absolute; right: 0%']) !!}
+                          <span class="label label-danger deleteComment"><i class="fa fa-trash"></i></span>
+                      {!! Form::close() !!}
                       <hr/>
                   </div>`;
 
-                  $('.commentContainer').append(comment)
+                  $(`.commentContainer#${postid}`).append(comment)
 
               },
               error: function(err) {
