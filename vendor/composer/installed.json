@@ -4117,27 +4117,27 @@
     },
     {
         "name": "realrashid/sweet-alert",
-        "version": "v3.2.1",
-        "version_normalized": "3.2.1.0",
+        "version": "v3.2.2",
+        "version_normalized": "3.2.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/realrashid/sweet-alert.git",
-            "reference": "5c07913e4679ddc75e26d9333ee6480f46018e94"
+            "reference": "2441267a295833480b2c8e55532f4190d1004d47"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/realrashid/sweet-alert/zipball/5c07913e4679ddc75e26d9333ee6480f46018e94",
-            "reference": "5c07913e4679ddc75e26d9333ee6480f46018e94",
+            "url": "https://api.github.com/repos/realrashid/sweet-alert/zipball/2441267a295833480b2c8e55532f4190d1004d47",
+            "reference": "2441267a295833480b2c8e55532f4190d1004d47",
             "shasum": ""
         },
         "require": {
-            "laravel/framework": "^5.4|^6.0|^7.0|^8.0",
+            "laravel/framework": "^5.4|^7.0|^8.0",
             "php": "^7.2|^8.0"
         },
         "require-dev": {
             "symfony/thanks": "^1.0"
         },
-        "time": "2021-01-14T21:46:42+00:00",
+        "time": "2021-02-17T18:21:20+00:00",
         "type": "library",
         "extra": {
             "laravel": {
