@@ -375,7 +375,9 @@ class PostController extends Controller
             $data['type'] = 'reaction';
             $data['sender_id'] = Auth::id();
             $this->p->trigger('user-'.$post->user_id, 'new-post', $data);
-            $this->helper->setNotification($post->user_id);
+            if (auth()->id() !== $post->user_id) {
+                $this->helper->setNotifications($post->user_id);
+            }
             
             return response()->json([
                 'success' => true,

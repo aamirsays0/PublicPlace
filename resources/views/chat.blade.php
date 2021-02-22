@@ -104,7 +104,6 @@
         method: "GET",
         url:"{{ route('notification.show', auth()->id()) }}",
         success: function(res) {
-          console.log("Notifications", res.notifications.notifications)
           parseInt($("#notificationDropdown span.count").text(res.notifications.notifications));
         },
         error: function(err) {
@@ -159,7 +158,6 @@
               method: "GET",
               url:"{{ route('notification.show', auth()->id()) }}",
               success: function(res) {
-                console.log("Notifications", res.notifications.notifications)
                 parseInt($("#notificationDropdown span.count").text(res.notifications.notifications));
               },
               error: function(err) {
