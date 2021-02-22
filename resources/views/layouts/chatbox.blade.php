@@ -264,5 +264,22 @@ border-bottom: 10px solid transparent;
     @yield('script')
 
     
+  <script>
+    $(document).ready(function() {
+        $('.count-indicator').on('click', function() {
+            $.ajax({
+                method: "DELETE",
+                url:"{{ route('notification.destroy', auth()->id()) }}",
+                success: function(res) {
+                  parseInt($("#notificationDropdown span.count").text("0"));
+                },
+                error: function(err) {
+                  console.log(err)
+                }
+        
+              });
+        })
+    })
+  </script>
   </body>
 </html>

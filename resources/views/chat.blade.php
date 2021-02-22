@@ -100,6 +100,19 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
     $(document).ready(function(){
+      $.ajax({
+        method: "GET",
+        url:"{{ route('notification.show', auth()->id()) }}",
+        success: function(res) {
+          console.log("Notifications", res.notifications.notifications)
+          parseInt($("#notificationDropdown span.count").text(res.notifications.notifications));
+        },
+        error: function(err) {
+          console.log(err)
+        }
+
+      });
+
       var baseurl = '{{URL::to('/')}}' +"/";
       // listen pusher start
         Pusher.logToConsole = true;
@@ -141,6 +154,19 @@
             }
           }
             }
+            
+            $.ajax({
+              method: "GET",
+              url:"{{ route('notification.show', auth()->id()) }}",
+              success: function(res) {
+                console.log("Notifications", res.notifications.notifications)
+                parseInt($("#notificationDropdown span.count").text(res.notifications.notifications));
+              },
+              error: function(err) {
+                console.log(err)
+              }
+
+            });
         
         });
 

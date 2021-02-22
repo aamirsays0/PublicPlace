@@ -353,7 +353,34 @@
     parseInt($("#notificationDropdown span.count").text())
     +1);
   $("#noteItemContainer").prepend(template);
+  $.ajax({
+        method: "GET",
+        url:"{{ route('notification.show', auth()->id()) }}",
+        success: function(res) {
+          console.log("Notifications", res.notifications.notifications)
+          parseInt($("#notificationDropdown span.count").text(res.notifications.notifications));
+        },
+        error: function(err) {
+          console.log(err)
+        }
+
+      });
  });
+
+ $(document).ready(function() {
+  $.ajax({
+        method: "GET",
+        url:"{{ route('notification.show', auth()->id()) }}",
+        success: function(res) {
+          console.log("Notifications", res.notifications.notifications)
+          parseInt($("#notificationDropdown span.count").text(res.notifications.notifications));
+        },
+        error: function(err) {
+          console.log(err)
+        }
+
+      });
+ })
 </script>
 <script>
     var form_data = new FormData();

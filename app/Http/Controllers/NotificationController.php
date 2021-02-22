@@ -44,9 +44,12 @@ class NotificationController extends Controller
      * @param  \App\Notification  $notification
      * @return \Illuminate\Http\Response
      */
-    public function show(Notification $notification)
+    public function show($userid)
     {
-        //
+        // get notifications for current user;
+        $userdata = Notification::where('user_id', $userid)->first();
+
+        return response()->json(['notifications' => $userdata], 200);
     }
 
     /**
@@ -78,8 +81,13 @@ class NotificationController extends Controller
      * @param  \App\Notification  $notification
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Notification $notification)
+    public function destroy($userid)
     {
-        //
+        //clearout notifications per user;
+        $userid = Notification::where('user_id', $userid)->first();
+        if (!empty($userid)) {
+            $userid->delete();
+        }
+        return response()->json(['message' => "Notifications cleared successfully"], 200);
     }
 }

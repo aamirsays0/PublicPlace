@@ -9,6 +9,7 @@ use App\Friend;
 use App\User;
 use App\Reaction;
 use App\Activity;
+use App\Helper\Helper;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Request;
@@ -22,6 +23,7 @@ use Intervention\Image\ImageManagerStatic as Image;
 class PostController extends Controller
 {
     private $p;
+    private $helper;
     /**
      * Display a listing of the resource.
      *
@@ -39,6 +41,8 @@ class PostController extends Controller
             '31895c6c7d3ced73c6bc',
             '1096491', $options
         );
+
+        $this->helper = new Helper;
     }
     
     public function index()
@@ -147,7 +151,9 @@ class PostController extends Controller
             if($request->privacy !== "me"){
 
             foreach($friendsList as $fl){
+                if ($fl === auth()->id()) continue;
                 $this->p->trigger('user-'.$fl, 'new-post', $data);
+                $this->helper->setNotifications($fl);                
             }}
 //
             return response()->json([
@@ -369,6 +375,8 @@ class PostController extends Controller
             $data['type'] = 'reaction';
             $data['sender_id'] = Auth::id();
             $this->p->trigger('user-'.$post->user_id, 'new-post', $data);
+            $this->helper->setNotification($post->user_id);
+            
             return response()->json([
                 'success' => true,
                 'message' => 'Reacted',

@@ -14,9 +14,12 @@ use Illuminate\Support\Facades\DB;
 use App\User;
 use Pusher\Pusher;
 use App\Custom\Push;
+use App\Helper\Helper;
+
 class ChatController extends Controller
 {
     private $p;
+    private $helper;
    
     public function __construct()
     {
@@ -29,7 +32,10 @@ class ChatController extends Controller
             '0e8a23a77d5e825ac0fc',
             '31895c6c7d3ced73c6bc',
             '1096491', $options
-        );    }
+        );    
+    
+        $this->helper = new Helper;
+    }
 
    
     /**
@@ -114,6 +120,7 @@ class ChatController extends Controller
        // broadcast( new MessagesSent($user, $message))->toOthers();
        $this->p->trigger('user-'. $request->input('fid'), 'new-post', $data); 
        $this->p->trigger('user-'. Auth::id(), 'new-post', $data); 
+       $this->helper->setNotifications($request->input('fid'));
        return response()->json(['status' => 'Message Sent !','mid'=>$message->id]);
     }
 

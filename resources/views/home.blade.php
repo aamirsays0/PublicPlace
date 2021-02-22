@@ -508,7 +508,35 @@
   let notificationsCounter =  parseInt($("#notificationDropdown span.count").text());
   console.log("Notifications Counter", notificationsCounter  + 1)
   $("#noteItemContainer").prepend(template);
+
+  $.ajax({
+        method: "GET",
+        url:"{{ route('notification.show', auth()->id()) }}",
+        success: function(res) {
+          console.log("Notifications", res.notifications.notifications)
+          parseInt($("#notificationDropdown span.count").text(res.notifications.notifications));
+        },
+        error: function(err) {
+          console.log(err)
+        }
+
+      });
  });
+
+ $(document).ready(function() {
+  $.ajax({
+        method: "GET",
+        url:"{{ route('notification.show', auth()->id()) }}",
+        success: function(res) {
+          console.log("Notifications", res.notifications.notifications)
+          parseInt($("#notificationDropdown span.count").text(res.notifications.notifications));
+        },
+        error: function(err) {
+          console.log(err)
+        }
+
+      });
+ })
 </script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 <script>
