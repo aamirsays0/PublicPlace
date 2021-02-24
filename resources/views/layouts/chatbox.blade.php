@@ -261,6 +261,8 @@ border-bottom: 10px solid transparent;
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script src="http://unpkg.com/ionicons@4.4.2/dist/ionicons.js"></script>
   	<script src="{{asset('js/jquery.validate.min.js')}}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     @yield('script')
 
     

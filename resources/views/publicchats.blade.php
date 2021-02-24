@@ -79,10 +79,11 @@
                 <div class="clearfix"></div>
             </div>
             {{-- Make is visible when allowed to chat --}}
-            {{-- <div class="row type-message" style="display: none">
+            <div class="row type-message">
               <div class="col-12">
                 <div class="send-message">
-                  <div class="input-group">
+                  <button class="btn btn-primary btn-sm joinchat" style="display:  none" >Join Chat?</button>
+                  <div class="input-group type-message" style="display: none">
                     <input type="text" id="write_msgs" class="form-control" placeholder="Type your message">
                     <span class="input-group-btn">
                       <button id="write_msgss" class="btn btn-default" type="button">Send</button>
@@ -90,7 +91,7 @@
                   </div>
                 </div>
               </div>
-            </div> --}}
+            </div>
           </div>
 
 @endsection
@@ -294,9 +295,9 @@
 
 
     // Show textbox on chat-click;
-    $('.chat_lists').on('click', function() {
-      $('.type-message').show();
-    }) 
+    // $('.chat_lists').on('click', function() {
+    //   $('.type-message').show();
+    // }) 
 
     getChat = function(user_id, host_id) {
       $.ajaxSetup({
@@ -321,6 +322,7 @@
           console.log('chatlog', data)
           if(data.length){
             showMessages(data);
+            $('.joinchat').show();
           }
           else{
             $("#msg_history_container").html("");
@@ -370,6 +372,28 @@
 
       }
     });
+
+    $('.joinchat').on('click', function() {
+      swal("Do you really wanna join in?", {
+            buttons: {
+              cancel: "Cancel",
+              catch: "Join in"
+            }
+          })
+          .then((value) => {
+            switch (value) {
+          
+              case "catch":
+                swal("Gotcha!", "Request Sent!", "success");
+                $('.type-message').show();
+                $('.joinchat').hide();
+                break;
+          
+              default:
+                return;
+            }
+          });
+    })
 
     </script>
 @endsection

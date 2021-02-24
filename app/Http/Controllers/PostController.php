@@ -371,6 +371,7 @@ class PostController extends Controller
             $loved = $reactionsCounter->where('type', 'h')->count();
             $smiled = $reactionsCounter->where('type', 's')->count();
 
+            $data['pid'] = $request->postid;
             $data['message'] = Auth::user()->name.' '.$reactType. ' a Post from ' . $postuser;
             $data['type'] = 'reaction';
             $data['sender_id'] = Auth::id();

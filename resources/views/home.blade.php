@@ -493,6 +493,7 @@
  var channel = pusher.subscribe('user-{{Auth::id()}}');
  
  channel.bind('new-post', function(data){
+   console.log(data)
    //alert(data.message);
    if (data.type == "post"){
   var template = '<a href="{{url('posts/')}}/'+data.pid+'" class="dropdown-item preview-item"><div class="preview-thumbnail"><div class="preview-icon bg-success"><i class="mdi mdi-alert-circle-outline mx-0"></i>\n' +
