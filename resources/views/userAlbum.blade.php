@@ -216,19 +216,19 @@
             </div>
             </div>    
   </div>
-  <div id="menu1" class="tab-content tab-pane"><br>
-  <div class="row">
-    @foreach($videos as $vid)
-      <div class="col-sm-12 col-md-6">
-      <a href="{{ route('posts.show', $vid->post_id) }}">
-        <video style="width: 100%;height: 150px;border-radius: 15px;" controls>
-          <!-- {{$vid->vidname}} -->
-          <source src="{{ asset('storage/postvideos/'.$vid->vidname) }}" type="video/mp4">
-           Your browser does not support the video tag.
-        </video>
-       </a>
-      </div>
-    @endforeach  
+             <div id="menu1" class="tab-content tab-pane"><br>
+             <div class="row">
+               @foreach($videos as $vid)
+                 <div class="col-sm-12 col-md-6">
+                 <a href="{{ route('posts.show', $vid->post_id) }}">
+                   <video style="width: 100%;height: 150px;border-radius: 15px;" controls>
+                     <!-- {{$vid->vidname}} -->
+                     <source src="{{ asset('storage/postvideos/'.$vid->vidname) }}" type="video/mp4">
+                      Your browser does not support the video tag.
+                   </video>
+                  </a>
+                 </div>
+               @endforeach  
   </div>
   </div>
 <!-- tabs end -->
@@ -326,7 +326,6 @@
    
  }
  );
- /* var channel = pusher.subscribe('Public-Place'); */
  var channel = pusher.subscribe('user-{{Auth::id()}}');
  
  channel.bind('new-post', function(data){
